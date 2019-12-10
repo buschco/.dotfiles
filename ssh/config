@@ -1,0 +1,17 @@
+host aws
+	Hostname 34.201.160.55
+	User ubuntu
+	IdentityFile ~/.ssh/myKeyPair.pem
+Host git-codecommit.*.amazonaws.com
+	User APKAJNQR7SCOG3DMZ6WQ
+	IdentityFile ~/.ssh/codecommitaws_rsa
+Host github.com
+	User git
+	IdentityFile ~/.ssh/git_rsa
+Host fau
+	HostName faui00r.informatik.uni-erlangen.de
+	User pa99dato	
+	UseKeychain yes
+Host *
+   AddKeysToAgent yes
+   UseKeychain yes

@@ -1,0 +1,22 @@
+[user]
+	name = buschco
+	email = colin@busch.dev
+[credential]
+	helper = !aws codecommit credential-helper $@
+	UseHttpPath = true
+[pull]
+	rebase = true
+[alias]
+	dog = log --all --decorate --oneline --graph
+	st = status
+	br = branch
+	pu = push origin HEAD
+	di = diff
+	bl = branch --list
+	co = checkout
+	sco = !sh -c \"git branch -a | grep -v remotes | grep $1 | xargs git checkout\"
+	cyp = cherry-pick
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+[core]
+	pager = diff-so-fancy | less --tabs=4 -RFX
+	excludesfile = /Users/colin/.gitignore_global
