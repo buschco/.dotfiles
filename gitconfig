@@ -11,6 +11,7 @@
 	st = status
 	br = branch
 	pu = push origin HEAD
+	putag = push --follow-tags
 	di = diff
 	bl = branch --list
 	co = checkout

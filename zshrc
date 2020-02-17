@@ -26,6 +26,9 @@ export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/emulator
 
+# init rbenv (see: https://github.com/rbenv/rbenv)
+eval "$(rbenv init -)"
+
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/colin/.oh-my-zsh"
 # Set name of the theme to load --- if set to "random", it will
@@ -122,7 +125,12 @@ USER=''
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias c=clear
+alias fga="cd ~/Documents/dwins.nosync/Financeguru"
+alias priv="cd ~/Documents/code.nosync/"
+
+# git aliases
 alias gfm="git co master && git fetch --all && git pull && git co -"
+alias gpb="git fetch --all && git pull"
 alias gca="git add . && git commit --amend"
 alias gcp="git cherry-pick"
 alias gfb="git fetch --all && git pull"
@@ -187,7 +195,7 @@ chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
 chpwd_profile_dwins() {
   [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
-  print "Switching profile ${CHPWD_PROFILE} -> $profile"
+  print "Switching profile ${CHPWD_PROFILE} -> $profile \n"
   export GIT_AUTHOR_NAME="Colin Busch"
   export GIT_COMMITTER_NAME="Colin Busch"
   export GIT_AUTHOR_EMAIL="colin@dwins.de"
@@ -224,6 +232,11 @@ chpwd_profiles
 
 docker-run() {
   docker run -it --rm -v $(pwd):/project -w /project "$@"
+}
+
+esp-build-and-flash() {
+  echo "$@"
+  docker-run esp-rtos make -C "$@" all && make -C "$@" erase_flash && make -C "$@" flash && make -C "$@" monitor
 }
 
 # git log show with fzf
