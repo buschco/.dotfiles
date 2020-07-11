@@ -1,6 +1,7 @@
 [user]
 	name = buschco
 	email = colin@busch.dev
+	signingkey = F5F293E85EA0AA19
 [credential]
 	helper = !aws codecommit credential-helper $@
 	UseHttpPath = true
@@ -21,3 +22,9 @@
 [core]
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	excludesfile = /Users/colin/.gitignore_global
+	editor = nvim
+[commit]
+	gpgsign = true
+[gpg]
+        program = /usr/local/bin/gpg
+

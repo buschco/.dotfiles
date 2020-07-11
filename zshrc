@@ -1,17 +1,23 @@
 # If you come from bash you might have to change your $PATH.
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:
 
+# for esp flashing
+export SDK_PATH="/Users/colin/Documents/code.nosync/esp-open-rtos"
+
 # Add MacGPG2 to PATH (do I need this?)
 #export PATH="/usr/local/MacGPG2/bin:$PATH"
 
 # Using docker now see below
 #export PATH="/Library/TeX/texbin:$PATH"
 
+# Add GPG
+export GPG_TTY=`tty`
+
 # Add latex docker scripts to PATH (LaTeX-Workshop vscode plugin)
 export PATH="$HOME/.latex-docker-scripts/bin:$PATH"
 
 # Add homebrew sbin to PATH
-export PATH="/usr/local/sbin:$PATH"
+# export PATH="/usr/local/sbin:$PATH"
 
 # Add fastlane to PATH (react-native)
 export PATH="$HOME/.fastlane/bin:$PATH"
@@ -29,6 +35,27 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 # init rbenv (see: https://github.com/rbenv/rbenv)
 eval "$(rbenv init -)"
 
+# enable nvm (see: https://github.com/nvm-sh/nvm)
+# export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# try to speed up startup by loading nvm when its needed
+export NVM_DIR="$HOME/.nvm"
+mkdir -p "$NVM_DIR"
+nvm() {
+    echo "Lazy loading nvm..."
+    # Remove nvm function
+    unfunction "$0"
+    # Load nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+    # Load bash_completion
+    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+    # Call nvm
+    $0 "$@"
+}
+alias ag='ag --path-to-ignore ~/.ignore'
+export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/colin/.oh-my-zsh"
 # Set name of the theme to load --- if set to "random", it will
@@ -36,7 +63,6 @@ export ZSH="/Users/colin/.oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="spaceship"
-
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
@@ -101,7 +127,7 @@ USER=''
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -134,24 +160,34 @@ alias gpb="git fetch --all && git pull"
 alias gca="git add . && git commit --amend"
 alias gcp="git cherry-pick"
 alias gfb="git fetch --all && git pull"
+alias gbdel="git branch -D"
 
 export AWS_DEFAULT_REGION="eu-central-1"
 export AWS_ACCESS_KEY_ID="***REMOVED***"
 export AWS_SECRET_ACCESS_KEY="***REMOVED***"
-
-SPACESHIP_PROMPT_SEPARATE_LINE=false
-SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_PROMPT_SEPARATE_LINE=true
+SPACESHIP_PROMPT_ADD_NEWLINE=true
+SPACESHIP_CHAR_PREFIX="\n"
+SPACESHIP_CHAR_SUFFIX=" "
+SPACESHIP_CHAR_SYMBOL="➜"
 SPACESHIP_PROMPT_ORDER=(
   time          # Time stamps section
-  user          # Username section
+  # user        # Username section
   dir           # Current directory section
   git           # Git section (git_branch + git_status)
   exec_time     # Execution time
   jobs          # Background jobs indicator
   exit_code     # Exit code section
+  # ruby          # Current Ruby version
+  # node          # Current Node version
+  char
 )
+
+# SPACESHIP_RUBY_PREFIX=""
+# SPACESHIP_NODE_PREFIX=""
+# SPACESHIP_RUBY_SYMBOL="♦"
 SPACESHIP_GIT_STATUS_PREFIX=" "
-SPACESHIP_GIT_STATUS_SUFFIX=" "
+SPACESHIP_GIT_STATUS_SUFFIX=""
 SPACESHIP_GIT_STATUS_UNTRACKED="🔍 " #Indicator for untracked changes
 SPACESHIP_GIT_STATUS_ADDED="🌟 "     #Indicator for added changes
 SPACESHIP_GIT_STATUS_MODIFIED="💫 "  #Indicator for unstaged files
@@ -193,9 +229,10 @@ function chpwd_profiles() {
 
 chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
+
 chpwd_profile_dwins() {
   [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
-  print "Switching profile ${CHPWD_PROFILE} -> $profile \n"
+  print "Switching profile ${CHPWD_PROFILE} -> $profile"
   export GIT_AUTHOR_NAME="Colin Busch"
   export GIT_COMMITTER_NAME="Colin Busch"
   export GIT_AUTHOR_EMAIL="colin@dwins.de"
@@ -203,6 +240,7 @@ chpwd_profile_dwins() {
   export AWS_ACCESS_KEY_ID="***REMOVED***"
   export AWS_SECRET_ACCESS_KEY="***REMOVED***"
   export AWS_DEFAULT_REGION="eu-central-1"
+  export GIT_GPG_KEY="F5F293E85EA0AA19"
 }
 
 chpwd_profile_default() {
@@ -215,20 +253,20 @@ chpwd_profile_default() {
   export AWS_ACCESS_KEY_ID="***REMOVED***"
   export AWS_SECRET_ACCESS_KEY="***REMOVED***"
   export AWS_DEFAULT_REGION="eu-central-1"
+  export AWS_REGION="eu-central-1"
+  export GIT_GPG_KEY="2F303DC774BE5735"
+}
+
+setgpgkey() {
+  echo "Setting $GIT_GPG_KEY to current repo..."
+  git config user.signingkey $GIT_GPG_KEY
+  echo "The new key is:"
+  git config --list | grep $GIT_GPG_KEY
 }
 
 zstyle ':chpwd:profiles:/Users/colin/Documents/dwins.nosync(|/|/*)' profile dwins
 
 chpwd_profiles
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
-# tabtab source for slss package
-# uninstall by removing these lines or running `tabtab uninstall slss`
-[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh
 
 docker-run() {
   docker run -it --rm -v $(pwd):/project -w /project "$@"
@@ -270,3 +308,7 @@ gli() {
   $gitlog | $fzf
 }
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
