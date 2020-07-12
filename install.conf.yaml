@@ -7,10 +7,10 @@
         create: true
     ~/.vimrc: vimrc
     ~/.zshrc: zshrc
-    ~/.config/nvim/init.vim: init.vim 
+    ~/.config/nvim/init.vim:
         path: nvim/init.vim
         create: true
-    ~/.config/nvim/coc-settings.json: coc-settings.json 
+    ~/.config/nvim/coc-settings.json:
         path: nvim/coc-settings.json
         create: true
 
