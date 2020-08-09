@@ -1,18 +1,22 @@
 call plug#begin("~/.vim/plugged")
 	" Plugin Section
 	Plug 'tpope/vim-surround'
-	Plug 'pangloss/vim-javascript'
+	" Plug 'pangloss/vim-javascript'
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 	Plug 'junegunn/fzf.vim'
 	Plug 'haya14busa/incsearch.vim'
 	Plug 'haya14busa/incsearch-fuzzy.vim'
 	Plug 'airblade/vim-gitgutter'	
-"	Plug 'buschco/vim-horizon'
-	Plug 'Rigellute/rigel'
-	Plug 'mxw/vim-jsx'
+        Plug 'buschco/vim-horizon'
+	" Plug 'Rigellute/rigel'
+        Plug 'yuezk/vim-js'
+	Plug 'HerringtonDarkholme/yats.vim'
+        Plug 'maxmellon/vim-jsx-pretty' 
 	Plug 'justinmk/vim-sneak'
         Plug 'tpope/vim-fugitive'
+        Plug 'AndrewRadev/linediff.vim'
+        Plug 'unblevable/quick-scope'
 call plug#end()
 
 " Use ctrl-[hjkl] to select the active split!
@@ -28,6 +32,17 @@ nmap <silent> <c-l> :wincmd l<CR>
 " fold syntax
 :set foldmethod=syntax
 
+" open netrw files in new tab
+let g:netrw_browse_split = 3
+
+" see syntac group in statusline
+function! SyntaxItem()
+  return synIDattr(synID(line("."),col("."),1),"name")
+endfunction
+set statusline+=%{SyntaxItem()}
+
+" fix fold on safe
+:set foldlevelstart=99
 " not folded on open https://stackoverflow.com/questions/8316139/how-to-set-the-default-to-unfolded-when-you-open-a-file
 au BufRead * normal zR
 
@@ -35,11 +50,10 @@ au BufRead * normal zR
 set expandtab
 set shiftwidth=2
 
-set termguicolors
-"colorscheme horizon
 syntax enable
-colorscheme rigel
-
+set termguicolors
+colorscheme horizon
+"colorscheme rigel
 set relativenumber
 " Distplay changes (gitgutter)
 function! GitStatus()
@@ -133,8 +147,8 @@ endif
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> [g <Plug>(coc-diagnostic-prev-error)
+nmap <silent> ]g <Plug>(coc-diagnostic-next-error)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)

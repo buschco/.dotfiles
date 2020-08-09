@@ -152,6 +152,7 @@ export LANG=en_US.UTF-8
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias c=clear
 alias fga="cd ~/Documents/dwins.nosync/Financeguru"
+alias dwins="cd ~/Documents/dwins.nosync"
 alias priv="cd ~/Documents/code.nosync/"
 
 # git aliases
@@ -161,10 +162,14 @@ alias gca="git add . && git commit --amend"
 alias gcp="git cherry-pick"
 alias gfb="git fetch --all && git pull"
 alias gbdel="git branch -D"
+alias gpu="git pu" # requires another git alias 
+alias gfp="git pu --force" # requires another git alias
 
 export AWS_DEFAULT_REGION="eu-central-1"
 export AWS_ACCESS_KEY_ID="***REMOVED***"
 export AWS_SECRET_ACCESS_KEY="***REMOVED***"
+
+SPACESHIP_GIT_BRANCH_COLOR='red'
 SPACESHIP_PROMPT_SEPARATE_LINE=true
 SPACESHIP_PROMPT_ADD_NEWLINE=true
 SPACESHIP_CHAR_PREFIX="\n"

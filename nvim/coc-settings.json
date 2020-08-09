@@ -1,4 +1,5 @@
 {
+  "cSpell.diagnosticLevel": "Hint",
   "cSpellExt.enableDictionaries": ["catalan"],
   "cSpell.language": "en,de",
   "cSpell.userWords": [
@@ -14,6 +15,7 @@
     "deepdash",
     "deeplink",
     "geht’s",
-    "optin"
+    "optin",
+    "prefill"
   ]
 }
