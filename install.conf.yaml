@@ -7,6 +7,10 @@
         create: true
     ~/.vimrc: vimrc
     ~/.zshrc: zshrc
+    /usr/local/bin/pdf2searchablepdf:
+        path: bin/pdf2searchablepdf
+    /usr/local/bin/git-cleanup-branches:
+        path: bin/git-cleanup-branches
     ~/.config/nvim/init.vim:
         path: nvim/init.vim
         create: true

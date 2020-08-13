@@ -25,6 +25,9 @@ export PATH="$HOME/.fastlane/bin:$PATH"
 # Add open ssl to Path
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 
+# editor of choice
+export EDITOR=nvim
+
 # Add android tools to PATH (react-native)
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/tools

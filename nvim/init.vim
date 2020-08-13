@@ -13,11 +13,14 @@ call plug#begin("~/.vim/plugged")
         Plug 'yuezk/vim-js'
 	Plug 'HerringtonDarkholme/yats.vim'
         Plug 'maxmellon/vim-jsx-pretty' 
-	Plug 'justinmk/vim-sneak'
+        " Plug 'justinmk/vim-sneak'
         Plug 'tpope/vim-fugitive'
         Plug 'AndrewRadev/linediff.vim'
         Plug 'unblevable/quick-scope'
 call plug#end()
+
+" Stamp _ register into word over cursor
+nnoremap S "_diwP
 
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
