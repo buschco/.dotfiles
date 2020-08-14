@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# from https://github.com/maxjacobson/dotfiles/blob/6d1124eca7d3b097ac244c1d14d607fea1c3dd2a/bin/git-cleanup-branches
+# see https://www.hardscrabble.net/2018/git-cleanup-branches/
+
 set -euo pipefail
 
 file="/tmp/git-cleanup-branches-$(uuidgen)"
