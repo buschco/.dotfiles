@@ -19,6 +19,9 @@ call plug#begin("~/.vim/plugged")
         Plug 'unblevable/quick-scope'
 call plug#end()
 
+" :W behaves like :w
+cnoreabbrev W w
+
 " Stamp _ register into word over cursor
 nnoremap S "_diwP
 
@@ -33,7 +36,7 @@ nmap <silent> <c-l> :wincmd l<CR>
 :set smartcase
 
 " fold syntax
-:set foldmethod=syntax
+:set foldmethod=manual
 
 " open netrw files in new tab
 let g:netrw_browse_split = 3
@@ -79,7 +82,16 @@ noremap <silent><expr> z/ incsearch#go(<SID>config_fuzzyall())
 noremap <silent><expr> z? incsearch#go(<SID>config_fuzzyall({'command': '?'}))
 noremap <silent><expr> zg? incsearch#go(<SID>config_fuzzyall({'is_stay': 1}))
 
-command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
+command! -nargs=* Ag call fzf#vim#ag
+            \ (<q-args>,
+            \ '--hidden --path-to-ignore ~/.ignore --ignore .git',
+            \ fzf#vim#with_preview
+            \ ({'options': '--delimiter : --nth 4..'}), <bang>0)
+
+" command! -bang -nargs=* Ag call fzf#vim#ag
+"      \ ('--hidden --path-to-ignore ~/.ignore --ignore .git', 
+"      \ fzf#vim#with_preview
+"      \ ({'options': '--delimiter : --nth 4..'}), <bang>0)
 
 " fzf keymaps
 nnoremap <C-p> :FZF<CR>

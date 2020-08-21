@@ -1,0 +1,7 @@
+ios/Pods/
+node_modules/
+bin/
+fastlane/
+licenses/
+*.map
+*.bundle

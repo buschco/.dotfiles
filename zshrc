@@ -56,8 +56,9 @@ nvm() {
     # Call nvm
     $0 "$@"
 }
-alias ag='ag --path-to-ignore ~/.ignore'
-export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+
+export FZF_DEFAULT_COMMAND='ag --hidden --path-to-ignore ~/.ignore --ignore .git -g ""'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/colin/.oh-my-zsh"
