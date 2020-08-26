@@ -101,13 +101,14 @@
 font:
   # Normal (roman) font face
   normal:
+    family: Fira Code
     #Font family
     
     # Default:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: Fira Code, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace
+    # family: "Fira Code"
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -744,4 +745,4 @@ font:
 
   # Print all received window events.
   #print_events: false
-a
+
