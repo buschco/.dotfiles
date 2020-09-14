@@ -17,6 +17,9 @@ call plug#begin("~/.vim/plugged")
         Plug 'tpope/vim-fugitive'
         Plug 'AndrewRadev/linediff.vim'
         Plug 'unblevable/quick-scope'
+        Plug 'tpope/vim-unimpaired'
+        Plug 'tpope/vim-repeat'
+        Plug 'junegunn/goyo.vim'
 call plug#end()
 
 " :W behaves like :w
