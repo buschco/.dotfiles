@@ -25,6 +25,12 @@ call plug#end()
 " :W behaves like :w
 cnoreabbrev W w
 
+" :o behaves like :i
+nnoremap o i
+
+" :O behaves like :I
+nnoremap O I
+
 " Stamp _ register into word over cursor
 nnoremap S "_diwP
 
