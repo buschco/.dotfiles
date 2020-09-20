@@ -170,8 +170,12 @@ alias gpu="git pu" # requires another git alias
 alias gfp="git pu --force" # requires another git alias
 
 export AWS_DEFAULT_REGION="eu-central-1"
-export AWS_ACCESS_KEY_ID="***REMOVED***"
-export AWS_SECRET_ACCESS_KEY="***REMOVED***"
+
+function bwaws() {
+  export BW_SESSION=$(bw unlock --raw)
+  export AWS_ACCESS_KEY_ID=$(bw get username c4ba157d-b6fe-4291-9396-ac3c009d9c10)
+  export AWS_SECRET_ACCESS_KEY=$(bw get password c4ba157d-b6fe-4291-9396-ac3c009d9c10)
+}
 
 SPACESHIP_GIT_BRANCH_COLOR='red'
 SPACESHIP_PROMPT_SEPARATE_LINE=true
@@ -209,7 +213,7 @@ SPACESHIP_GIT_STATUS_BEHIND="❄️ "    #Indicator for unpulled changes (behind
 SPACESHIP_GIT_STATUS_DIVERGED="🌱 "  #Indicator for diverged changes (diverged with remote branch)
 
 function s3link() {
-	aws s3 cp "$1" s3://share.busch.dev/ && aws s3 presign s3://share.busch.dev/"$1" --expires-in 600000
+    aws s3 cp "$1" s3://share.busch.dev/ && aws s3 presign s3://share.busch.dev/"$1" --expires-in 600000
 }
 
 function chpwd_profiles() {
@@ -246,8 +250,6 @@ chpwd_profile_dwins() {
   export GIT_COMMITTER_NAME="Colin Busch"
   export GIT_AUTHOR_EMAIL="colin@dwins.de"
   export GIT_COMMITTER_EMAIL="colin@dwins.de"
-  export AWS_ACCESS_KEY_ID="***REMOVED***"
-  export AWS_SECRET_ACCESS_KEY="***REMOVED***"
   export AWS_DEFAULT_REGION="eu-central-1"
   export GIT_GPG_KEY="F5F293E85EA0AA19"
 }
@@ -259,8 +261,6 @@ chpwd_profile_default() {
   export GIT_COMMITTER_NAME="buschco"
   export GIT_AUTHOR_EMAIL="colin@busch.dev"
   export GIT_COMMITTER_EMAIL="colin@busch.dev"
-  export AWS_ACCESS_KEY_ID="***REMOVED***"
-  export AWS_SECRET_ACCESS_KEY="***REMOVED***"
   export AWS_DEFAULT_REGION="eu-central-1"
   export AWS_REGION="eu-central-1"
   export GIT_GPG_KEY="2F303DC774BE5735"

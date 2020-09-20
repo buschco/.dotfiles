@@ -23,6 +23,7 @@
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	excludesfile = /Users/colin/.gitignore_global
 	editor = nvim
+	trustctime = false
 [commit]
 	gpgsign = true
 [gpg]
