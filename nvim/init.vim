@@ -1,25 +1,28 @@
 call plug#begin("~/.vim/plugged")
-	" Plugin Section
-	Plug 'tpope/vim-surround'
-	" Plug 'pangloss/vim-javascript'
-	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-	Plug 'junegunn/fzf.vim'
-	Plug 'haya14busa/incsearch.vim'
-	Plug 'haya14busa/incsearch-fuzzy.vim'
-	Plug 'airblade/vim-gitgutter'	
-        Plug 'buschco/vim-horizon'
-	" Plug 'Rigellute/rigel'
-        Plug 'yuezk/vim-js'
-	Plug 'HerringtonDarkholme/yats.vim'
-        Plug 'maxmellon/vim-jsx-pretty' 
-        " Plug 'justinmk/vim-sneak'
-        Plug 'tpope/vim-fugitive'
-        Plug 'AndrewRadev/linediff.vim'
-        Plug 'unblevable/quick-scope'
-        Plug 'tpope/vim-unimpaired'
-        Plug 'tpope/vim-repeat'
-        Plug 'junegunn/goyo.vim'
+  " Plugin Section
+  Plug 'tpope/vim-surround'
+  " Plug 'pangloss/vim-javascript'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  Plug 'junegunn/fzf.vim'
+  Plug 'haya14busa/incsearch.vim'
+  Plug 'haya14busa/incsearch-fuzzy.vim'
+  Plug 'airblade/vim-gitgutter'	
+  Plug 'buschco/vim-horizon'
+  " Plug 'Rigellute/rigel'
+  Plug 'yuezk/vim-js'
+  Plug 'HerringtonDarkholme/yats.vim'
+  Plug 'maxmellon/vim-jsx-pretty' 
+  " Plug 'justinmk/vim-sneak'
+  Plug 'tpope/vim-fugitive'
+  Plug 'AndrewRadev/linediff.vim'
+  Plug 'unblevable/quick-scope'
+  Plug 'tpope/vim-unimpaired'
+  Plug 'tpope/vim-repeat'
+  " high concentrate mode
+  Plug 'junegunn/goyo.vim'
+  Plug 'junegunn/limelight.vim'
+  Plug 'lervag/vimtex'
 call plug#end()
 
 " :W behaves like :w
