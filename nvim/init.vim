@@ -1,7 +1,6 @@
 call plug#begin("~/.vim/plugged")
   " Plugin Section
   Plug 'tpope/vim-surround'
-  " Plug 'pangloss/vim-javascript'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
@@ -9,20 +8,18 @@ call plug#begin("~/.vim/plugged")
   Plug 'haya14busa/incsearch-fuzzy.vim'
   Plug 'airblade/vim-gitgutter'	
   Plug 'buschco/vim-horizon'
-  " Plug 'Rigellute/rigel'
   Plug 'yuezk/vim-js'
   Plug 'HerringtonDarkholme/yats.vim'
   Plug 'maxmellon/vim-jsx-pretty' 
-  " Plug 'justinmk/vim-sneak'
   Plug 'tpope/vim-fugitive'
   Plug 'AndrewRadev/linediff.vim'
   Plug 'unblevable/quick-scope'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-repeat'
-  " high concentrate mode
   Plug 'junegunn/goyo.vim'
   Plug 'junegunn/limelight.vim'
   Plug 'lervag/vimtex'
+  Plug 'udalov/kotlin-vim'
 call plug#end()
 
 " :W behaves like :w
@@ -52,6 +49,9 @@ nmap <silent> <c-l> :wincmd l<CR>
 
 " open netrw files in new tab
 let g:netrw_browse_split = 3
+
+" remove warning at start
+let g:tex_flavor = 'latex'
 
 " see syntac group in statusline
 function! SyntaxItem()
@@ -269,3 +269,4 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+intro

@@ -2,6 +2,12 @@
   "cSpell.diagnosticLevel": "Hint",
   "cSpellExt.enableDictionaries": ["german"],
   "cSpell.language": "en,de",
+  "languageserver": {
+    "kotlin": {
+      "command": "~/lsp/kotlin/server/bin/kotlin-language-server",
+      "filetypes": ["kotlin"]
+    }
+  },
   "cSpell.enabledLanguageIds": [
     "vim",
     "asciidoc",
