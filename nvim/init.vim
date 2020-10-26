@@ -10,6 +10,7 @@ call plug#begin("~/.vim/plugged")
   Plug 'buschco/vim-horizon'
   Plug 'yuezk/vim-js'
   Plug 'HerringtonDarkholme/yats.vim'
+  Plug 'leafgarland/typescript-vim'
   Plug 'maxmellon/vim-jsx-pretty' 
   Plug 'tpope/vim-fugitive'
   Plug 'AndrewRadev/linediff.vim'
@@ -20,7 +21,11 @@ call plug#begin("~/.vim/plugged")
   Plug 'junegunn/limelight.vim'
   Plug 'lervag/vimtex'
   Plug 'udalov/kotlin-vim'
+  Plug 'itchyny/lightline.vim'
 call plug#end()
+
+" set filetypes as typescript.tsx
+autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
 
 " :W behaves like :w
 cnoreabbrev W w
@@ -53,12 +58,6 @@ let g:netrw_browse_split = 3
 " remove warning at start
 let g:tex_flavor = 'latex'
 
-" see syntac group in statusline
-function! SyntaxItem()
-  return synIDattr(synID(line("."),col("."),1),"name")
-endfunction
-set statusline+=%{SyntaxItem()}
-
 " fix fold on safe
 :set foldlevelstart=99
 " not folded on open https://stackoverflow.com/questions/8316139/how-to-set-the-default-to-unfolded-when-you-open-a-file
@@ -71,8 +70,18 @@ set shiftwidth=2
 syntax enable
 set termguicolors
 colorscheme horizon
-"colorscheme rigel
+
+" remove --- INSERT ---
+set noshowmode
+set nosmd   " short for 'showmode'
+set noru    " short for 'ruler'
+set laststatus=2
+set noshowcmd
+set cmdheight=1
+
+"show numbers relative
 set relativenumber
+
 " Distplay changes (gitgutter)
 function! GitStatus()
   let [a,m,r] = GitGutterGetHunkSummary()
@@ -80,6 +89,37 @@ function! GitStatus()
 endfunction
 set statusline+=%{GitStatus()}
 set signcolumn=yes
+
+
+function! SyntaxItem()
+  return synIDattr(synID(line("."),col("."),1),"name")
+endfunction
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+" statusline
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" lightline
+let g:lightline = {
+  \ 'colorscheme': 'horizon',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'cocstatus', 'readonly', 'filename', 'modified' ] ],
+  \   'right': [ [ 'lineinfo' ],
+  \              [ 'percent' ],
+  \              [ 'syntaxItem' ] ]
+  \ },
+  \ 'component_function': {
+  \   'cocstatus': 'coc#status',
+  \   'syntaxItem': 'SyntaxItem',
+  \   'gitbranch': 'FugitiveHead'
+  \ }
+\}
+
+
+" Use auocmd to force lightline update.
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 " incsearch fzf
 function! s:config_fuzzyall(...) abort
@@ -128,7 +168,7 @@ set nobackup
 set nowritebackup
 
 " Give more space for displaying messages.
-set cmdheight=2
+" set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -246,11 +286,6 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
 " Show all diagnostics.

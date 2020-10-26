@@ -19,6 +19,12 @@
     ~/.config/nvim/coc-settings.json:
         path: nvim/coc-settings.json
         create: true
+    ~/Documents/conde.nosync/fourwins/.vim/cSpell.json:
+        path: dwins/react/vim/cSpell.json
+        create: true
+    ~/Documents/code.nosync/fourwins/.vim/coc-settings.json:
+        path: dwins/react/vim/coc-settings.json
+        create: true
     ~/Documents/dwins.nosync/Financeguru/.vim/cSpell.json:
         path: dwins/react/vim/cSpell.json
         create: true

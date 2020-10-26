@@ -19,6 +19,9 @@ export PATH="$HOME/.latex-docker-scripts/bin:$PATH"
 # Add homebrew sbin to PATH
 # export PATH="/usr/local/sbin:$PATH"
 
+# add homebrew python to $PATH
+alias python=/usr/local/bin/python3 
+
 # Add fastlane to PATH (react-native)
 export PATH="$HOME/.fastlane/bin:$PATH"
 
@@ -175,6 +178,13 @@ function bwaws() {
   export BW_SESSION=$(bw unlock --raw)
   export AWS_ACCESS_KEY_ID=$(bw get username c4ba157d-b6fe-4291-9396-ac3c009d9c10)
   export AWS_SECRET_ACCESS_KEY=$(bw get password c4ba157d-b6fe-4291-9396-ac3c009d9c10)
+}
+
+
+function bwawsdwins() {
+  export BW_SESSION=$(bw unlock --raw)
+  export AWS_ACCESS_KEY_ID=$(bw get username 0eae59de-f6f9-4206-91c2-ac4d00b9ee15) 
+  export AWS_SECRET_ACCESS_KEY=$(bw get password 0eae59de-f6f9-4206-91c2-ac4d00b9ee15)
 }
 
 SPACESHIP_GIT_BRANCH_COLOR='red'
