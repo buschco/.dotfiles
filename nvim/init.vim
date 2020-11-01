@@ -153,6 +153,9 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit'
   \}
 
+" map ag to search current word under cursor
+nmap <silent> ag :Ag <C-R>=expand("<cword>")<CR><CR>
+
 " vim-javascript
 let g:javascript_plugin_flow = 0
 
