@@ -22,6 +22,7 @@ call plug#begin("~/.vim/plugged")
   Plug 'lervag/vimtex'
   Plug 'udalov/kotlin-vim'
   Plug 'itchyny/lightline.vim'
+  Plug 'wincent/terminus'
 call plug#end()
 
 " set filetypes as typescript.tsx
@@ -45,12 +46,20 @@ nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
 
+" open registers on space y 
+nnoremap <silent> <space>y  :registers<cr>
+
 " smartcase for /
 :set ignorecase
 :set smartcase
 
 " fold syntax
-:set foldmethod=manual
+" :set foldmethod=manual
+:set foldmethod=indent
+" {} will jump over folds
+:set foldopen-=block
+" idk what this does :D 
+:set foldlevel=1
 
 " open netrw files in new tab
 let g:netrw_browse_split = 3
@@ -81,6 +90,10 @@ set cmdheight=1
 
 "show numbers relative
 set relativenumber
+set nu rnu
+
+" EXPERIMENTAL
+set scrolloff=20
 
 " Distplay changes (gitgutter)
 function! GitStatus()
@@ -118,6 +131,20 @@ let g:lightline = {
 \}
 
 
+" distraction free mode
+function! s:goyo_enter()
+  set noshowmode
+  Limelight
+endfunction
+
+function! s:goyo_leave()
+  set showmode
+  Limelight!
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
 " Use auocmd to force lightline update.
 autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
@@ -144,23 +171,34 @@ command! -nargs=* Ag call fzf#vim#ag
 "      \ ('--hidden --path-to-ignore ~/.ignore --ignore .git', 
 "      \ fzf#vim#with_preview
 "      \ ({'options': '--delimiter : --nth 4..'}), <bang>0)
+"
+
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
 
 " fzf keymaps
 nnoremap <C-p> :FZF<CR>
 let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit'
   \}
 
 " map ag to search current word under cursor
-nmap <silent> ag :Ag <C-R>=expand("<cword>")<CR><CR>
+" nmap <silent> ag :Ag <C-R>=expand("<cword>")<CR><CR>
+nmap <silent> <space>w :Ag <C-R>=expand("<cword>")<CR><CR>
 
 " vim-javascript
 let g:javascript_plugin_flow = 0
 
 " CocPrettier
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
+"command! -nargs=0 Prettier :CocCommand prettier.formatFile
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
 " Coc
 " TextEdit might fail if hidden is not set.
@@ -307,4 +345,4 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-intro
+

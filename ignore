@@ -1,7 +1,9 @@
 ios/Pods/
 node_modules/
 bin/
-fastlane/
 licenses/
 *.map
 *.bundle
+src/reducers/__tests__/bigdata-user.json
+test-utils/data/insuranceTariffSearchResponse.json
+

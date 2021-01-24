@@ -1,5 +1,13 @@
 {
-  "prettier.eslintIntegration": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "json",
+    "yaml",
+    "markdown",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
   "eslint.autoFixOnSave": true,
   "javascript.suggestionActions.enabled": false,
   "javascript.validate.enable": false,
@@ -19,11 +27,14 @@
     "Formik",
     "GMBH",
     "Genuis",
+    "HALFYEARLY",
     "Hashs",
     "Ifcs",
     "MOBILITAET",
     "Mgmt",
+    "Ombudsstelle",
     "PRECHECK",
+    "PRESIGNUP",
     "Recoms",
     "SEPA",
     "Seperator",
@@ -35,6 +46,7 @@
     "camelcase",
     "check",
     "colinbusch",
+    "counterparty",
     "countup",
     "darkmode",
     "defaulthash",
@@ -49,6 +61,7 @@
     "idnow",
     "inlinesvg",
     "integ",
+    "kref",
     "lightgray",
     "lightgreen",
     "luhn",
@@ -78,4 +91,3 @@
     "xmlns"
   ]
 }
-

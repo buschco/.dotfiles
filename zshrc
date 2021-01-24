@@ -21,6 +21,8 @@ export PATH="$HOME/.latex-docker-scripts/bin:$PATH"
 
 # add homebrew python to $PATH
 alias python=/usr/local/bin/python3 
+alias python3=/usr/local/bin/python3 
+
 
 # Add fastlane to PATH (react-native)
 export PATH="$HOME/.fastlane/bin:$PATH"
@@ -161,6 +163,7 @@ alias c=clear
 alias fga="cd ~/Documents/dwins.nosync/Financeguru"
 alias dwins="cd ~/Documents/dwins.nosync"
 alias priv="cd ~/Documents/code.nosync/"
+alias c4="cd ~/Documents/code.nosync/fourwins"
 
 # git aliases
 alias gfm="git co master && git fetch --all && git pull && git co -"
@@ -262,6 +265,8 @@ chpwd_profile_dwins() {
   export GIT_COMMITTER_EMAIL="colin@dwins.de"
   export AWS_DEFAULT_REGION="eu-central-1"
   export GIT_GPG_KEY="F5F293E85EA0AA19"
+  export VAULT_IAM_ROLE=developer
+  export VAULT_ADDR=https://vault-integ.dwins.de
 }
 
 chpwd_profile_default() {
@@ -331,3 +336,7 @@ gli() {
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/colin/.sdkman"
+[[ -s "/Users/colin/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/colin/.sdkman/bin/sdkman-init.sh"
