@@ -1,7 +1,7 @@
 [user]
 	name = buschco
 	email = colin@busch.dev
-	signingkey = F5F293E85EA0AA19
+	signingkey = EF6D81826CD7030FFF3C4E0DF5F293E85EA0AA19
 [credential]
 	helper = !aws codecommit credential-helper $@
 	UseHttpPath = true
@@ -29,3 +29,8 @@
 [gpg]
         program = /usr/local/bin/gpg
 
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

@@ -8,6 +8,7 @@
     "typescript",
     "typescriptreact"
   ],
+  "prettier.eslintIntegration": false,
   "eslint.autoFixOnSave": true,
   "javascript.suggestionActions.enabled": false,
   "javascript.validate.enable": false,

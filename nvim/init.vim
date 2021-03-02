@@ -23,6 +23,7 @@ call plug#begin("~/.vim/plugged")
   Plug 'udalov/kotlin-vim'
   Plug 'itchyny/lightline.vim'
   Plug 'wincent/terminus'
+  Plug 'vuciv/vim-bujo'
 call plug#end()
 
 " set filetypes as typescript.tsx
