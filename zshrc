@@ -278,14 +278,6 @@ chpwd_profile_default() {
   export GIT_COMMITTER_EMAIL="colin@busch.dev"
   export AWS_DEFAULT_REGION="eu-central-1"
   export AWS_REGION="eu-central-1"
-  export GIT_GPG_KEY="2F303DC774BE5735"
-}
-
-setgpgkey() {
-  echo "Setting $GIT_GPG_KEY to current repo..."
-  git config user.signingkey $GIT_GPG_KEY
-  echo "The new key is:"
-  git config --list | grep $GIT_GPG_KEY
 }
 
 zstyle ':chpwd:profiles:/Users/colin/Documents/dwins.nosync(|/|/*)' profile dwins
