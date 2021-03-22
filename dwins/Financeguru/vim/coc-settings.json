@@ -1,6 +1,7 @@
 {
-  "javascript.suggestionActions.enabled": false,
   "javascript.validate.enable": false,
+  "typescript.suggest.autoImports": false,
+  "javascript.suggest.autoImports": true,
   "typescript.suggestionActions.enabled": false,
-  "tsserver.enable": false
+  "javascript.suggestionActions.enabled": true
 }
