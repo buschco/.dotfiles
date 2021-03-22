@@ -9,7 +9,7 @@
 	rebase = true
 [alias]
 	dog = log --all --decorate --oneline --graph
-	st = status
+	s = status
 	br = branch
 	pu = push origin HEAD
 	putag = push --follow-tags

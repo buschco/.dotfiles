@@ -166,14 +166,15 @@ alias priv="cd ~/Documents/code.nosync/"
 alias c4="cd ~/Documents/code.nosync/fourwins"
 
 # git aliases
-alias gfm="git co master && git fetch --all && git pull && git co -"
+alias gfm="git co main && git fetch --all && git pull && git co -"
+alias gfma="git co master && git fetch --all && git pull && git co -"
 alias gpb="git fetch --all && git pull"
 alias gca="git add . && git commit --amend"
 alias gcp="git cherry-pick"
 alias gfb="git fetch --all && git pull"
 alias gbdel="git branch -D"
 alias gpu="git pu" # requires another git alias 
-alias gfp="git pu --force" # requires another git alias
+alias gpu!="git pu --force" # requires another git alias
 
 export AWS_DEFAULT_REGION="eu-central-1"
 

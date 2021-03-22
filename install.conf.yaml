@@ -1,33 +1,28 @@
-- clean: ['~']
+- clean: ["~"]
 
 - link:
     ~/.gitconfig: gitconfig
     ~/.ssh/config:
-        path: ssh/config
-        create: true
+      path: ssh/config
+      create: true
     ~/.vimrc: vimrc
     ~/.alacritty.yml: alacritty.yml
     ~/.zshrc: zshrc
-    ~/.ignore: ignore 
+    ~/.ignore: ignore
     /usr/local/bin/pdf2searchablepdf:
-        path: bin/pdf2searchablepdf
+      path: bin/pdf2searchablepdf
     /usr/local/bin/git-cleanup-branches:
-        path: bin/git-cleanup-branches
+      path: bin/git-cleanup-branches
     ~/.config/nvim/init.vim:
-        path: nvim/init.vim
-        create: true
+      path: nvim/init.vim
+      create: true
     ~/.config/nvim/coc-settings.json:
-        path: nvim/coc-settings.json
-        create: true
-    ~/Documents/conde.nosync/fourwins/.vim/cSpell.json:
-        path: dwins/react/vim/cSpell.json
-        create: true
-    ~/Documents/code.nosync/fourwins/.vim/coc-settings.json:
-        path: dwins/react/vim/coc-settings.json
-        create: true
-    ~/Documents/dwins.nosync/Financeguru/.vim/cSpell.json:
-        path: dwins/react/vim/cSpell.json
-        create: true
+      path: nvim/coc-settings.json
+      create: true
+    ~/.config/nvim/cSpell.json:
+      path: nvim/cSpell.json
+      create: true
+    # Flow requires some typescript settings disabled
     ~/Documents/dwins.nosync/Financeguru/.vim/coc-settings.json:
-        path: dwins/react/vim/coc-settings.json
-        create: true
+      path: dwins/Financeguru/vim/coc-settings.json
+      create: true

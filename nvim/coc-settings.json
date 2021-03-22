@@ -3,6 +3,7 @@
   "coc.preferences.formatOnSaveFiletypes": [
     "json",
     "yaml",
+    "yml",
     "markdown",
     "javascript",
     "javascriptreact",
@@ -13,6 +14,11 @@
   "cSpell.diagnosticLevel": "Hint",
   "cSpellExt.enableDictionaries": ["german"],
   "cSpell.language": "en,de",
+  "javascript.validate.enable": true,
+  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.suggest.names": false,
+  "typescript.suggestionActions.enabled": true,
+  "tsserver.enable": true,
   "languageserver": {
     "kotlin": {
       "command": "~/lsp/kotlin/server/bin/kotlin-language-server",
@@ -55,27 +61,5 @@
     "typescriptreact",
     "yaml",
     "yml"
-  ],
-
-  "cSpell.userWords": [
-    "Abortable",
-    "Customizer",
-    "Dsgvo",
-    "Formik",
-    "Hifi",
-    "PRIO",
-    "Unmemoized",
-    "Unmount",
-    "anonymized",
-    "connectfour",
-    "datepicker",
-    "deepdash",
-    "deeplink",
-    "dwins",
-    "geht’s",
-    "optin",
-    "prefill",
-    "rerenders",
-    "semibold"
   ]
 }
