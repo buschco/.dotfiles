@@ -22,6 +22,15 @@
     ~/.config/nvim/cSpell.json:
       path: nvim/cSpell.json
       create: true
+    ~/.config/coc/extensions/package.json:
+      path: nvim/coc-extensions-package.json
+      create: true
+    ~/.config/coc/ultisnips/javascript.snippets:
+      path: nvim/ultisnips/javascript.snippets
+      create: true
+    ~/.config/coc/ultisnips/.snippets:
+      path: nvim/ultisnips/.snippets
+      create: true
     # Flow requires some typescript settings disabled
     ~/Documents/dwins.nosync/Financeguru/.vim/coc-settings.json:
       path: dwins/Financeguru/vim/coc-settings.json
