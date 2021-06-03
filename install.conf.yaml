@@ -19,9 +19,6 @@
     ~/.config/nvim/coc-settings.json:
       path: nvim/coc-settings.json
       create: true
-    ~/.config/nvim/cSpell.json:
-      path: nvim/cSpell.json
-      create: true
     ~/.config/coc/extensions/package.json:
       path: nvim/coc-extensions-package.json
       create: true
