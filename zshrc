@@ -44,23 +44,24 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 eval "$(rbenv init -)"
 
 # enable nvm (see: https://github.com/nvm-sh/nvm)
-# export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # try to speed up startup by loading nvm when its needed
-export NVM_DIR="$HOME/.nvm"
-mkdir -p "$NVM_DIR"
-nvm() {
-    echo "Lazy loading nvm..."
-    # Remove nvm function
-    unfunction "$0"
-    # Load nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-    # Load bash_completion
-    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-    # Call nvm
-    $0 "$@"
-}
+#export NVM_DIR="$HOME/.nvm"
+#mkdir -p "$NVM_DIR"
+#nvm() {
+#    echo "Lazy loading nvm..."
+#    # Remove nvm function
+#    unfunction "$0"
+#    # Load nvm
+#    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+#    # Load bash_completion
+#    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+#    # Call nvm
+#    $0 "$@"
+#}
 
 export FZF_DEFAULT_COMMAND='ag --hidden --path-to-ignore ~/.ignore --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
