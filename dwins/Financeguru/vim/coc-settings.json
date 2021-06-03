@@ -6,6 +6,7 @@
   "javascript.suggest.autoImports": true,
   "typescript.suggestionActions.enabled": false,
   "javascript.suggestionActions.enabled": true,
+  "eslint.packageManager": "yarn",
   "cSpell.words": [
     "Abortable",
     "BGJOB",
