@@ -1,15 +1,5 @@
 {
   "prettier.eslintIntegration": false,
-  "coc.preferences.formatOnSaveFiletypes": [
-    "json",
-    "yaml",
-    "yml",
-    "markdown",
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
   "eslint.autoFixOnSave": true,
   "javascript.validate.enable": true,
   "javascript.suggest.completeFunctionCalls": true,
