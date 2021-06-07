@@ -3,7 +3,6 @@ call plug#begin("~/.vim/plugged")
   Plug 'tpope/vim-surround'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-  Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
   Plug 'junegunn/fzf.vim'
   Plug 'haya14busa/incsearch.vim'
   Plug 'haya14busa/incsearch-fuzzy.vim'
@@ -198,13 +197,9 @@ nmap <silent> <space>w :Ag <C-R>=expand("<cword>")<CR><CR>
 " vim-javascript
 let g:javascript_plugin_flow = 0
 
-" vim-prettier
-let g:prettier#autoformat = 1
-let g:prettier#autoformat_require_pragma = 0
-
 " CocPrettier
 "command! -nargs=0 Prettier :CocCommand prettier.formatFile
-" command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
 " Coc
 " TextEdit might fail if hidden is not set.
@@ -288,8 +283,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-" xmap <leader>f  <Plug>(coc-format-selected)
-" nmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -326,7 +321,7 @@ nmap <silent> <C-s> <Plug>(coc-range-select)
 xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " Add `:Format` command to format current buffer.
-" command! -nargs=0 Format :call CocAction('format')
+command! -nargs=0 Format :call CocAction('format')
 
 " Add `:Fold` command to fold current buffer.
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
