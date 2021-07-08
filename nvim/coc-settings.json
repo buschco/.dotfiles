@@ -8,11 +8,14 @@
     "javascript",
     "javascriptreact",
     "typescript",
-    "typescriptreact"
+    "typescriptreact",
+    "css",
+    "html"
   ],
   "eslint.autoFixOnSave": true,
   "javascript.validate.enable": true,
-  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.suggest.completeFunctionCalls": false,
+  "typescript.suggest.completeFunctionCalls": false,
   "javascript.suggest.names": false,
   "typescript.suggestionActions.enabled": true,
   "tsserver.enable": true,
