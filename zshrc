@@ -23,7 +23,6 @@ export PATH="$HOME/.latex-docker-scripts/bin:$PATH"
 alias python=/usr/local/bin/python3 
 alias python3=/usr/local/bin/python3 
 
-
 # Add fastlane to PATH (react-native)
 export PATH="$HOME/.fastlane/bin:$PATH"
 
@@ -165,6 +164,7 @@ alias fga="cd ~/Documents/dwins.nosync/Financeguru"
 alias dwins="cd ~/Documents/dwins.nosync"
 alias priv="cd ~/Documents/code.nosync/"
 alias c4="cd ~/Documents/code.nosync/fourwins"
+alias dotfiles="cd ~/.dotfiles"
 
 # git aliases
 alias gfm="git co main && git fetch --all && git pull && git co -"
@@ -269,7 +269,7 @@ chpwd_profile_dwins() {
   export GIT_GPG_KEY="F5F293E85EA0AA19"
   export VAULT_IAM_ROLE=developer
   export VAULT_ADDR=https://vault-integ.dwins.de
-  export AWS_PROFILE=work
+  export AWS_PROFILE="work"
 }
 
 chpwd_profile_default() {
@@ -281,7 +281,7 @@ chpwd_profile_default() {
   export GIT_COMMITTER_EMAIL="colin@busch.dev"
   export AWS_DEFAULT_REGION="eu-central-1"
   export AWS_REGION="eu-central-1"
-  export AWS_PROFILE=private
+  export AWS_PROFILE="private"
 }
 
 zstyle ':chpwd:profiles:/Users/colin/Documents/dwins.nosync(|/|/*)' profile dwins
