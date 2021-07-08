@@ -38,8 +38,17 @@ nnoremap o i
 " :O behaves like :I
 nnoremap O I
 
+" ensures that P behaves the same at the end of a line
+set virtualedit=onemore
+
 " Stamp _ register into word over cursor
 nnoremap S "_diwP
+
+" = will yank word into the clipcoard
+nnoremap = "+yiw
+
+" = will yank motion into the clipcoard
+nnoremap + "+y
 
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
@@ -193,6 +202,9 @@ let g:fzf_action = {
 " map ag to search current word under cursor
 " nmap <silent> ag :Ag <C-R>=expand("<cword>")<CR><CR>
 nmap <silent> <space>w :Ag <C-R>=expand("<cword>")<CR><CR>
+nmap <silent> <space>c :Ag <C-R>="<lt>" . expand("<cword>")<CR><CR>
+":Ag <C-R>='<lt>expand("<cword>")<CR><CR>
+"<lt>" expand("<cword>")<CR><CR>
 
 " vim-javascript
 let g:javascript_plugin_flow = 0
@@ -335,7 +347,7 @@ nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
 nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols.
