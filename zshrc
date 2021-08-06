@@ -269,6 +269,7 @@ chpwd_profile_dwins() {
   export GIT_GPG_KEY="F5F293E85EA0AA19"
   export VAULT_IAM_ROLE=developer
   export VAULT_ADDR=https://vault-integ.dwins.de
+  export AWS_REGION="eu-central-1"
   export AWS_PROFILE="work"
 }
 

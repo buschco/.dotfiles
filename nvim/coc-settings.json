@@ -27,6 +27,7 @@
   },
   "cSpell.diagnosticLevel": "Hint",
   "cSpellExt.enableDictionaries": ["german"],
+  "coc.preferences.jumpCommand": "tabe",
   "cSpell.enabledLanguageIds": [
     "vim",
     "asciidoc",
