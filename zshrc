@@ -16,6 +16,9 @@ export GPG_TTY=`tty`
 # Add latex docker scripts to PATH (LaTeX-Workshop vscode plugin)
 export PATH="$HOME/.latex-docker-scripts/bin:$PATH"
 
+# Add homebrew curl to path
+export PATH="/usr/local/opt/curl/bin:$PATH"
+
 # Add homebrew sbin to PATH
 # export PATH="/usr/local/sbin:$PATH"
 

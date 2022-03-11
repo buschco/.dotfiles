@@ -22,15 +22,23 @@ call plug#begin("~/.vim/plugged")
   Plug 'lervag/vimtex'
   Plug 'udalov/kotlin-vim'
   Plug 'itchyny/lightline.vim'
-  Plug 'wincent/terminus'
-  Plug 'vuciv/vim-bujo'
+  Plug 'pantharshit00/vim-prisma'
 call plug#end()
+
+" vim-fugitive vertical
+set diffopt+=vertical
+
+nmap <leader>gf :diffget //2<CR>
+nmap <leader>gh :diffget //3<CR>
 
 " set filetypes as typescript.tsx
 autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
 
 " :W behaves like :w
 cnoreabbrev W w
+
+" :Wq behaves like :wq
+cnoreabbrev Wq wq
 
 " :o behaves like :i
 nnoremap o i
@@ -62,6 +70,24 @@ nnoremap <silent> <space>y  :registers<cr>
 " smartcase for /
 :set ignorecase
 :set smartcase
+
+" netrw no banner
+let g:netrw_banner = 0
+let g:netrw_browse_split = 3
+let g:netrw_winsize = 30
+let g:netrw_hide = 0
+
+augroup netrw_mapping
+  autocmd!
+  autocmd filetype netrw call NetrwMapping()
+augroup END
+
+function! NetrwMapping()
+  nmap <buffer> H u
+  nmap <buffer> h -^
+  nmap <buffer> l <CR>
+  nmap <buffer> P <C-w>z
+endfunction
 
 " fold syntax
 " :set foldmethod=manual
@@ -213,6 +239,10 @@ let g:javascript_plugin_flow = 0
 "command! -nargs=0 Prettier :CocCommand prettier.formatFile
 command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
+"scroll with mouse 
+"https://stackoverflow.com/a/12080433/5444033
+set mouse=a
+
 " Coc
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -357,5 +387,5 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 

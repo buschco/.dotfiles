@@ -12,7 +12,9 @@
     "css",
     "html"
   ],
+  "eslint.packageManager": "yarn",
   "eslint.autoFixOnSave": true,
+  "flow.stopFlowOnExit": false,
   "javascript.validate.enable": true,
   "javascript.suggest.completeFunctionCalls": false,
   "typescript.suggest.completeFunctionCalls": false,
@@ -25,7 +27,11 @@
       "filetypes": ["kotlin"]
     }
   },
+  "cSpell.showCommandsInEditorContextMenu": false,
   "cSpell.diagnosticLevel": "Hint",
+  "diagnostic.locationlistLevel": "information",
+  "diagnostic.messageLevel": "information",
+  "diagnostic.hintSign": "",
   "cSpellExt.enableDictionaries": ["german"],
   "coc.preferences.jumpCommand": "tabe",
   "cSpell.enabledLanguageIds": [
@@ -252,5 +258,10 @@
     "fastlane",
     "formik",
     "hmset"
+  ],
+  "cSpell.userWords": [
+    "Versichungsunternehmen",
+    "postgres",
+    "supabase"
   ]
 }

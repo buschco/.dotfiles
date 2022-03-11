@@ -35,6 +35,21 @@ function ${1} () {
 }
 endsnippet
 
+snippet selector "simple selector" b
+type ${1} = {| 
+
+|}
+
+const get${1}: (state: AppState) => ${1} =
+  createSelector(
+    'get${1}',
+    [],
+    (): ${1} => {
+      return { };
+    }
+  );
+endsnippet
+
 snippet okeys "convert object to array" b
 Object.keys(${1}).
 endsnippet

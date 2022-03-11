@@ -1,17 +1,19 @@
 {
   "dependencies": {
     "coc-cspell-dicts": ">=1.0.2",
-    "coc-eslint": ">=1.4.5",
+    "coc-eslint": ">=1.5.4",
     "coc-flow": ">=0.1.3",
-    "coc-git": ">=2.3.3",
+    "coc-git": ">=2.4.7",
     "coc-highlight": ">=1.2.8",
-    "coc-json": ">=1.3.4",
-    "coc-prettier": ">=1.1.22",
-    "coc-snippets": ">=2.4.2",
+    "coc-json": ">=1.4.1",
+    "coc-prettier": ">=1.1.25",
+    "coc-prisma": ">=0.11.0",
+    "coc-snippets": ">=2.4.7",
     "coc-spell-checker": ">=1.2.0",
-    "coc-tsserver": ">=1.7.0",
-    "coc-vimtex": ">=1.0.4",
-    "coc-yaml": ">=1.3.1",
+    "coc-tailwindcss": ">=0.7.0",
+    "coc-tsserver": ">=1.9.9",
+    "coc-vimtex": ">=1.1.1",
+    "coc-yaml": ">=1.6.1",
     "coc-yank": ">=1.2.0"
   }
 }

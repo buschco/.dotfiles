@@ -1,4 +1,5 @@
 {
+  "prettier.eslintIntegration": false,
   "tsserver.enableJavascript": true,
   "tsserver.enable": true,
   "javascript.validate.enable": false,
