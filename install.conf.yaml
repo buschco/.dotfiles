@@ -6,8 +6,8 @@
       path: ssh/config
       create: true
     ~/.vimrc: vimrc
-    ~/.alacritty.yml: alacritty.yml
     ~/.zshrc: zshrc
+    ~/.finicky.js: .finicky.js
     ~/.ignore: ignore
     /usr/local/bin/pdf2searchablepdf:
       path: bin/pdf2searchablepdf
