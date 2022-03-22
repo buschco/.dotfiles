@@ -7,9 +7,11 @@ module.exports = {
     {
       match: [
         "https://sentry.io/organizations/dwins-gmbh/*",
-        "https://meet.google.com/*"
+        "https://meet.google.com/*",
+        "http://localhost:7007*",
+        "http://localhost:3000*",
       ],
-      browser: "Google Chrome"
-    }
-  ]
-}
+      browser: "Google Chrome",
+    },
+  ],
+};
