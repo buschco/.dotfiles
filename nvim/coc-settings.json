@@ -1,5 +1,6 @@
 {
   "prettier.eslintIntegration": false,
+  "colors.filetypes": ["*"],
   "coc.preferences.formatOnSaveFiletypes": [
     "json",
     "yaml",
@@ -259,9 +260,5 @@
     "formik",
     "hmset"
   ],
-  "cSpell.userWords": [
-    "Versichungsunternehmen",
-    "postgres",
-    "supabase"
-  ]
+  "cSpell.userWords": ["Versichungsunternehmen", "postgres", "supabase"]
 }

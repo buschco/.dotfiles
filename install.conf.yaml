@@ -25,6 +25,9 @@
     ~/.config/coc/ultisnips/javascript.snippets:
       path: nvim/ultisnips/javascript.snippets
       create: true
+    ~/.config/coc/ultisnips/typescript.snippets:
+      path: nvim/ultisnips/typescript.snippets
+      create: true
     ~/.config/coc/ultisnips/.snippets:
       path: nvim/ultisnips/.snippets
       create: true
