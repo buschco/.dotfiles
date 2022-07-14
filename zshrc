@@ -12,6 +12,7 @@ export SDK_PATH="/Users/colin/Documents/code.nosync/esp-open-rtos"
 
 # Add GPG
 export GPG_TTY=`tty`
+# gpgconf --launch gpg-agent
 
 # Add latex docker scripts to PATH (LaTeX-Workshop vscode plugin)
 export PATH="$HOME/.latex-docker-scripts/bin:$PATH"

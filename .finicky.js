@@ -10,6 +10,7 @@ module.exports = {
         "https://meet.google.com/*",
         "http://localhost:7007*",
         "http://localhost:3000*",
+        "http://www.blobby-online.com/*"
       ],
       browser: "Google Chrome",
     },

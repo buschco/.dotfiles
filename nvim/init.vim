@@ -23,6 +23,7 @@ call plug#begin("~/.vim/plugged")
   Plug 'udalov/kotlin-vim'
   Plug 'itchyny/lightline.vim'
   Plug 'pantharshit00/vim-prisma'
+  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
 " vim-fugitive vertical

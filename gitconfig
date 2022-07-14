@@ -7,17 +7,16 @@
 	UseHttpPath = true
 [pull]
 	rebase = true
+[push]
+        default = current
 [alias]
 	dog = log --all --decorate --oneline --graph
 	s = status
 	br = branch
-	pu = push origin HEAD
+	pu = push
 	putag = push --follow-tags
-	di = diff
-	bl = branch --list
 	co = checkout
 	sco = !sh -c \"git branch -a | grep -v remotes | grep $1 | xargs git checkout\"
-	cyp = cherry-pick
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 [core]
 	pager = diff-so-fancy | less --tabs=4 -RFX

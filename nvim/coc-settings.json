@@ -26,6 +26,14 @@
     "kotlin": {
       "command": "~/lsp/kotlin/server/bin/kotlin-language-server",
       "filetypes": ["kotlin"]
+    },
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.work", "go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
     }
   },
   "cSpell.showCommandsInEditorContextMenu": false,
@@ -113,7 +121,6 @@
     "PRESIGNUP",
     "Recoms",
     "SEPA",
-    "Seperator",
     "UEBERWEISUNG",
     "accu",
     "api",
@@ -239,7 +246,6 @@
     "reselect",
     "scrollable",
     "SEPA",
-    "Seperator",
     "smth",
     "spendings",
     "spotify",
