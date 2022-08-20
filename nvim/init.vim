@@ -24,6 +24,7 @@ call plug#begin("~/.vim/plugged")
   Plug 'itchyny/lightline.vim'
   Plug 'pantharshit00/vim-prisma'
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" Plug 'https://build.dwins.de/cbu/fiona-lsp.git', {'rtp': 'packages/coc', 'do': 'yarn install --frozen-lockfile && yarn coc:package', 'branch': 'main' }
 call plug#end()
 
 " vim-fugitive vertical
