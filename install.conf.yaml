@@ -16,9 +16,6 @@
     ~/.config/nvim/init.vim:
       path: nvim/init.vim
       create: true
-    ~/.config/nvim/scripts.vim:
-      path: nvim/scripts.vim
-      create: true
     ~/.config/nvim/coc-settings.json:
       path: nvim/coc-settings.json
       create: true

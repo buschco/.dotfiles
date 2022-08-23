@@ -2,6 +2,7 @@
   "prettier.eslintIntegration": false,
   "colors.filetypes": ["*"],
   "coc.preferences.formatOnSaveFiletypes": [
+    "go",
     "json",
     "yaml",
     "yml",
@@ -24,16 +25,8 @@
   "tsserver.enable": true,
   "languageserver": {
     "kotlin": {
-      "command": "~/lsp/kotlin/server/bin/kotlin-language-server",
+      "command": "kotlin-language-server",
       "filetypes": ["kotlin"]
-    },
-    "golang": {
-      "command": "gopls",
-      "rootPatterns": ["go.work", "go.mod", ".vim/", ".git/", ".hg/"],
-      "filetypes": ["go"],
-      "initializationOptions": {
-        "usePlaceholders": true
-      }
     }
   },
   "cSpell.showCommandsInEditorContextMenu": false,

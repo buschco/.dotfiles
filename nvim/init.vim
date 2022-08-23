@@ -20,13 +20,13 @@ call plug#begin("~/.vim/plugged")
   Plug 'junegunn/goyo.vim'
   Plug 'junegunn/limelight.vim'
   Plug 'lervag/vimtex'
-  Plug 'udalov/kotlin-vim'
+  " Plug 'udalov/kotlin-vim'
   Plug 'itchyny/lightline.vim'
   Plug 'pantharshit00/vim-prisma'
-  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+  " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-  Plug 'nvim-treesitter/playground'
-" Plug 'https://build.dwins.de/cbu/fiona-lsp.git', {'rtp': 'packages/coc', 'do': 'yarn install --frozen-lockfile && yarn coc:package', 'branch': 'main' }
+  " Plug 'nvim-treesitter/playground'
+  " Plug 'https://build.dwins.de/cbu/fiona-lsp.git', {'rtp': 'packages/coc', 'do': 'yarn install --frozen-lockfile && yarn coc:package', 'branch': 'main' }
 call plug#end()
 
 " vim-fugitive vertical
@@ -95,7 +95,9 @@ endfunction
 
 " fold syntax
 " :set foldmethod=manual
-:set foldmethod=indent
+" :set foldmethod=indent
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
 " {} will jump over folds
 :set foldopen-=block
 " idk what this does :D 
@@ -274,31 +276,15 @@ else
   set signcolumn=yes
 endif
 
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <silent><expr> <C-x><C-z> coc#pum#visible() ? coc#pum#stop() : "\<C-x>\<C-z>"
+" remap for complete to use tab and <cr>
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -393,12 +379,16 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 " nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
-let g:do_filetype_lua = 1
+"let g:do_filetype_lua = 0
+"let g:do_legacy_filetype = 1
+"let g:did_load_filetypes = 0
+au BufRead * if getline(1) =~ '// @flow' | setlocal ft=javascriptreact | endif
+"au! BufRead,BufNewFile *.js if getline(1) =~ '// @flow' | setf javascriptflow | endif
 
 lua << EOF
-vim.g.did_load_filetypes = 0;
---require('tree-sitter-typescript').typescript;
---require('tree-sitter-typescript').tsx;
+local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
+ft_to_parser.javascriptreact = "tsx"
+
 require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all"
   ensure_installed = {
@@ -437,7 +427,7 @@ require('nvim-treesitter.configs').setup {
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
     -- list of language that will be disabled
-    -- disable = { },
+    disable = { "txt", "help" },
 
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
@@ -445,6 +435,7 @@ require('nvim-treesitter.configs').setup {
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
+
   playground = {
     enable = true,
     disable = {},
