@@ -26,7 +26,7 @@ call plug#begin("~/.vim/plugged")
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'nvim-treesitter/playground'
-  " Plug 'https://build.dwins.de/cbu/fiona-lsp.git', {'rtp': 'packages/coc', 'do': 'yarn install --frozen-lockfile && yarn coc:package', 'branch': 'main' }
+  Plug 'https://build.dwins.de/fiona/fiona.git', {'rtp': 'packages/coc', 'do': 'yarn install --frozen-lockfile && yarn workspace @fiona/coc package', 'branch': 'main' }
 call plug#end()
 
 " vim-fugitive vertical

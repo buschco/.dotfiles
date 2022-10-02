@@ -17,7 +17,7 @@
   "eslint.packageManager": "yarn",
   "eslint.autoFixOnSave": true,
   "flow.stopFlowOnExit": false,
-  "javascript.validate.enable": true,
+  "javascript.validate.enable": false,
   "javascript.suggest.completeFunctionCalls": false,
   "typescript.suggest.completeFunctionCalls": false,
   "javascript.suggest.names": false,
