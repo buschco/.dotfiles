@@ -22,6 +22,8 @@
   "typescript.suggest.completeFunctionCalls": false,
   "javascript.suggest.names": false,
   "typescript.suggestionActions.enabled": true,
+  "typescript.autoClosingTags": false,
+  "javascript.autoClosingTags": false,
   "tsserver.enable": true,
   "languageserver": {
     "kotlin": {

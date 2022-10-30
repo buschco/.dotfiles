@@ -26,6 +26,7 @@ call plug#begin("~/.vim/plugged")
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'nvim-treesitter/playground'
+  " Plug 'junkblocker/git-time-lapse'
   Plug 'https://build.dwins.de/fiona/fiona.git', {'rtp': 'packages/coc', 'do': 'yarn install --frozen-lockfile && yarn workspace @fiona/coc package', 'branch': 'main' }
 call plug#end()
 
@@ -128,7 +129,7 @@ set nosmd   " short for 'showmode'
 set noru    " short for 'ruler'
 set laststatus=2
 set noshowcmd
-set cmdheight=1
+set cmdheight=0
 
 "show numbers relative
 set relativenumber
