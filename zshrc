@@ -33,6 +33,9 @@ export PATH="$HOME/.fastlane/bin:$PATH"
 # Add open ssl to Path
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 
+# Add rust to Path
+source "$HOME/.cargo/env"
+
 # editor of choice
 export EDITOR=nvim
 

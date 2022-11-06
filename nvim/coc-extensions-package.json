@@ -15,7 +15,8 @@
     "coc-tsserver": ">=1.11.11",
     "coc-vimtex": ">=1.1.5",
     "coc-yaml": ">=1.8.0",
-    "coc-yank": ">=1.2.1"
+    "coc-yank": ">=1.2.1",
+    "coc-rust-analyzer": ">=0.69.4"
   },
   "disabled": [],
   "locked": []

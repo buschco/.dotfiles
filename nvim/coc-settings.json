@@ -12,7 +12,8 @@
     "typescript",
     "typescriptreact",
     "css",
-    "html"
+    "html",
+    "rust"
   ],
   "eslint.packageManager": "yarn",
   "eslint.autoFixOnSave": true,
