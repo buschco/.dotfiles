@@ -271,6 +271,7 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit'
   \}
 
+nmap <silent> <space>b :Buffers<CR>
 " map ag to search current word under cursor
 " nmap <silent> ag :Ag <C-R>=expand("<cword>")<CR><CR>
 nmap <silent> <space>w :Ag <C-R>=expand("<cword>")<CR><CR>

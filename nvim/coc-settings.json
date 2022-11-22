@@ -38,7 +38,7 @@
   "diagnostic.messageLevel": "information",
   "diagnostic.hintSign": "",
   "cSpellExt.enableDictionaries": ["german"],
-  "coc.preferences.jumpCommand": "tabe",
+  "coc.preferences.jumpCommand": "tab drop",
   "cSpell.enabledLanguageIds": [
     "vim",
     "asciidoc",

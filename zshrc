@@ -2,7 +2,10 @@
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:
 
 # for esp flashing
-export SDK_PATH="/Users/colin/Documents/code.nosync/esp-open-rtos"
+# export SDK_PATH="/Users/colin/Documents/code.nosync/esp-open-rtos"
+
+export PATH=$PATH:$HOME/esp/xtensa-lx106-elf/bin
+export IDF_PATH="/Users/colin/Documents/code.nosync/ESP8266_RTOS_SDK"
 
 # Add MacGPG2 to PATH (do I need this?)
 #export PATH="/usr/local/MacGPG2/bin:$PATH"
