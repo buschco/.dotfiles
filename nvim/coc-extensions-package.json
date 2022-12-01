@@ -19,5 +19,6 @@
     "coc-rust-analyzer": ">=0.69.4"
   },
   "disabled": [],
-  "locked": []
+  "locked": [],
+  "lastUpdate": 1669921496786
 }
