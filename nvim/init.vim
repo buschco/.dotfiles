@@ -78,6 +78,10 @@ nmap <leader>gh :diffget //3<CR>
 " set filetypes as typescript.tsx
 autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
 
+
+" :Bd behaves like :bd
+cnoreabbrev Bd bd
+
 " :W behaves like :w
 cnoreabbrev W w
 
