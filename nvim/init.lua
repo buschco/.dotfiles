@@ -287,12 +287,39 @@ require('gitsigns').setup {
     topdelete = { text = '‾' },
     changedelete = { text = '~' },
   },
+  on_attach = function(bufnr)
+   local gs = package.loaded.gitsigns
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+  end
 }
 
 -- Telescope 
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
+    layout_strategy = 'vertical',
+    layout_config = {
+      vertical = { width = 0.7 },
+      -- other layout configuration here
+    },
     mappings = {
       i = {
         ['<esc>'] = require("telescope.actions").close,
@@ -300,13 +327,6 @@ require('telescope').setup {
         ['<C-d>'] = false,
       },
     },
-  },
-  pickers = {
-    find_files = { theme = "dropdown" },
-    grep_string = { theme = "dropdown" },
-    live_grep = { theme = "dropdown" },
-    buffers = { theme = "dropdown" },
-    diagnostics = { theme = "dropdown" },
   }
 }
 
@@ -315,12 +335,15 @@ pcall(require('telescope').load_extension, 'fzf')
 
 -- telescope bindings
 vim.cmd.cnoreabbrev({ 'Ag', ":Telescope live_grep" })
+vim.keymap.set('n', '<space>c', 
+ function () return ':Telescope live_grep default_text=<' ..  vim.fn.expand '<cword>' .. '<cr>' end,
+ {silent = true, desc = 'find files', expr = true }
+)
 
 vim.keymap.set('n', '<C-p>', require('telescope.builtin').find_files, { desc = 'find files' })
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
 vim.keymap.set('n', '<space>a', require('telescope.builtin').diagnostics, { desc = 'list buffers' })
---nmap <silent> <space>c :Ag <C-R>="<lt>" . expand("<cword>")<CR><CR>
 
 -- lsp setup
 
