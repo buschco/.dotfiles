@@ -19,7 +19,7 @@ require('packer').startup(function(use)
   use 'tpope/vim-repeat'
   use 'unblevable/quick-scope'
 
-  --use { 'neovim/nvim-lspconfig', requires = { 'j-hui/fidget.nvim', 'folke/neodev.nvim', } }
+  use { 'neovim/nvim-lspconfig', requires = { 'j-hui/fidget.nvim', 'folke/neodev.nvim', } }
 
   use { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -318,7 +318,6 @@ require('telescope').setup {
     layout_strategy = 'vertical',
     layout_config = {
       vertical = { width = 0.7 },
-      -- other layout configuration here
     },
     mappings = {
       i = {
@@ -344,6 +343,8 @@ vim.keymap.set('n', '<C-p>', require('telescope.builtin').find_files, { desc = '
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
 vim.keymap.set('n', '<space>a', require('telescope.builtin').diagnostics, { desc = 'list buffers' })
+
+require('Comment').setup()
 
 -- lsp setup
 
@@ -390,29 +391,39 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
+require('lspconfig').flow.setup{
+  cmd = { 'yarn', 'flow', 'lsp' },
+  on_attach = on_attach,
+}
+--
+-- require('lspconfig').tsserver.setup{
+--   on_attach = on_attach,
+--   settings = {
+--     javascript= {
+--       validate = { enable = false },
+--       suggest = { 
+--         completeFunctionCalls = false,
+--         names = false,
+--       },
+--       autoClosingTags = false
+--     },
+--     typescript = {
+--       suggest = { completeFunctionCalls = false }, 
+--       suggestionActions = { enabled = true },
+--       autoClosingTags = false
+--     }
+--   }
+-- }
+
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = false,
+})
 
 require('fidget').setup()
-
--- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
-local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-
-  -- sumneko_lua = {
-  --  Lua = {
-  --   workspace = { checkThirdParty = false },
-  --   telemetry = { enable = false },
-  --  },
-  -- },
-}
-
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
