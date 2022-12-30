@@ -20,6 +20,7 @@ require('packer').startup(function(use)
   use 'unblevable/quick-scope'
 
   use { 'neovim/nvim-lspconfig', requires = { 'j-hui/fidget.nvim', 'folke/neodev.nvim', } }
+  use 'jose-elias-alvarez/null-ls.nvim'
 
   use { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -334,17 +335,71 @@ pcall(require('telescope').load_extension, 'fzf')
 
 -- telescope bindings
 vim.cmd.cnoreabbrev({ 'Ag', ":Telescope live_grep" })
+vim.cmd.cnoreabbrev({ 'A', ":Telescope live_grep" })
 vim.keymap.set('n', '<space>c', 
  function () return ':Telescope live_grep default_text=<' ..  vim.fn.expand '<cword>' .. '<cr>' end,
  {silent = true, desc = 'find files', expr = true }
 )
 
-vim.keymap.set('n', '<C-p>', require('telescope.builtin').find_files, { desc = 'find files' })
+local telescope = require("telescope")
+local telescopeConfig = require("telescope.config")
+
+-- Clone the default Telescope configuration
+local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
+
+-- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#file-and-text-search-in-hidden-files-and-directories
+-- I want to search in hidden/dot files.
+table.insert(vimgrep_arguments, "--hidden")
+-- I don't want to search in the `.git` directory.
+table.insert(vimgrep_arguments, "--glob")
+table.insert(vimgrep_arguments, "!**/.git/*")
+
+telescope.setup({
+  defaults = {
+    -- `hidden = true` is not supported in text grep commands.
+      vimgrep_arguments = vimgrep_arguments,
+    },
+    pickers = {
+      find_files = {
+      -- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
+      find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+    },
+  },
+})
+
+vim.keymap.set('n', '<C-p>', ":Telescope find_files<cr>", { silent = true, desc = 'find files' })
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
-vim.keymap.set('n', '<space>a', require('telescope.builtin').diagnostics, { desc = 'list buffers' })
-
+vim.keymap.set('n', '<space>a', function()
+  require('telescope.builtin').diagnostics({
+    severity_limit = vim.diagnostic.severity["WARN"]
+  })
+end, { desc = 'list buffers' })
 require('Comment').setup()
+
+local null_ls = require("null-ls")
+
+null_ls.setup({
+  sources = {
+    null_ls.builtins.diagnostics.eslint,
+    null_ls.builtins.diagnostics.cspell.with({
+      extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
+      diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
+    }),
+    -- null_ls.builtins.code_actions.cspell,
+    null_ls.builtins.formatting.prettier
+  },
+  on_attach = function(client, bufnr)
+    if client.supports_method 'textDocument/formatting' then
+      vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = augroup,
+        buffer = bufnr,
+        callback = function() vim.lsp.buf.format({ bufnr = bufnr }) end,
+      })
+    end
+  end,
+})
 
 -- lsp setup
 
@@ -384,46 +439,47 @@ local on_attach = function(_, bufnr)
   nmap('<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
-
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
 end
 
-require('lspconfig').flow.setup{
+local lspconfig = require('lspconfig')
+
+lspconfig.flow.setup{
   cmd = { 'yarn', 'flow', 'lsp' },
   on_attach = on_attach,
 }
---
--- require('lspconfig').tsserver.setup{
---   on_attach = on_attach,
---   settings = {
---     javascript= {
---       validate = { enable = false },
---       suggest = { 
---         completeFunctionCalls = false,
---         names = false,
---       },
---       autoClosingTags = false
---     },
---     typescript = {
---       suggest = { completeFunctionCalls = false }, 
---       suggestionActions = { enabled = true },
---       autoClosingTags = false
---     }
---   }
--- }
+
+local configs = require('lspconfig.configs')
+
+if not configs.fiona then
+  configs.fiona = {
+    default_config = {
+      cmd = { 'yarn', 'fiona-lsp', '--stdio' },
+      root_dir = lspconfig.util.find_package_json_ancestor,
+      filetypes = { 'javascriptreact' },
+    },
+  }
+end
+
+lspconfig.fiona.setup{}
+
+lspconfig.tsserver.setup{
+  on_attach = on_attach,
+  filetypes = { 'typescript', 'typescript.tsx' }
+}
 
 vim.diagnostic.config({
   virtual_text = false,
-  signs = true,
+  signs = { 
+    severity = {
+      min = vim.diagnostic.severity["WARN"]
+    }
+  },
   underline = true,
   update_in_insert = false,
   severity_sort = false,
+  -- disables `Diagnostig:\n` header in float preview
+  float = { header = false }
 })
-
-require('fidget').setup()
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -471,6 +527,14 @@ cmp.setup {
 }
 
 -- lsp bindings
-vim.keymap.set('n', '[g', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']g', vim.diagnostic.goto_next)
+vim.keymap.set('n', '[g', function() vim.diagnostic.goto_prev({ 
+    severity = {
+      min = vim.diagnostic.severity["WARN"]
+    }
+}) end)
+vim.keymap.set('n', ']g', function() vim.diagnostic.goto_next({ 
+    severity = {
+      min = vim.diagnostic.severity["WARN"]
+    }
+}) end)
 vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float)

@@ -16,6 +16,8 @@
     ~/.config/nvim/init.vim:
       path: nvim/init.vim
       create: true
+    ~/.cspell.json:
+      path: .cspell.json
     ~/.config/nvim/init.lua:
       path: nvim/init.lua
       create: true
