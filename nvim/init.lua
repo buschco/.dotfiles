@@ -39,6 +39,11 @@ require('packer').startup(function(use)
     after = 'nvim-treesitter',
   }
 
+  use { -- Additional text objects via treesitter
+    'windwp/nvim-ts-autotag',
+    after = 'nvim-treesitter',
+  }
+
   -- Git related plugins
   use 'tpope/vim-fugitive'
   use 'lewis6991/gitsigns.nvim'
@@ -50,7 +55,10 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
+  use {
+    'nvim-telescope/telescope-fzf-native.nvim', 
+    run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+  }
 
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
@@ -190,6 +198,15 @@ vim.api.nvim_create_autocmd({"BufNewFile","BufRead"}, {
   command = "set filetype=typescript.tsx"
 })
 
+local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
+vim.api.nvim_create_autocmd('TextYankPost', {
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+  group = highlight_group,
+  pattern = '*',
+})
+
 local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
 ft_to_parser.javascriptreact = "tsx"
 
@@ -258,8 +275,10 @@ require('nvim-treesitter.configs').setup {
       goto_node = '<cr>',
       show_help = '?',
     },
-  }
+  },
+  autotag = { enable = true }
 };
+
 
 require('lualine').setup {
   options = {
