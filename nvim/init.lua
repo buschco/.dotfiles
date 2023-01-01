@@ -51,6 +51,8 @@ require('packer').startup(function(use)
     'nvim-telescope/telescope-fzf-native.nvim', 
     run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
+
+  use 'fannheyward/telescope-coc.nvim'
 end)
 
 -- Theme
@@ -309,6 +311,12 @@ require('gitsigns').setup {
 
 -- Telescope 
 require('telescope').setup {
+  extensions = {
+    coc = {
+        -- always use Telescope locations to preview definitions/declarations/implementations etc
+        prefer_locations = true, 
+    }
+  },
   defaults = {
     preview = {
       treesitter = true,
@@ -320,7 +328,7 @@ require('telescope').setup {
     layout_config = {
       anchor = 'N',
       prompt_position = 'bottom',
-      vertical = { width = 0.7 },
+      center = { width = 0.7 },
     },
     mappings = {
       i = {
@@ -334,6 +342,8 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+-- Enable telescope coc
+pcall(require('telescope').load_extension, 'coc')
 
 -- telescope bindings
 vim.cmd.cnoreabbrev({ 'Ag', ":Telescope live_grep" })
@@ -372,11 +382,7 @@ telescope.setup({
 vim.keymap.set('n', '<C-p>', ":Telescope find_files<cr>", { silent = true, desc = 'find files' })
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
-vim.keymap.set('n', '<space>a', function()
-  require('telescope.builtin').diagnostics({
-    severity_limit = vim.diagnostic.severity["WARN"]
-  })
-end, { desc = 'list buffers' })
+vim.keymap.set('n', '<space>a', ':Telescope coc workspace_diagnostics<cr>', { desc = 'list all errors' })
 
 -- coc keymaps
 
@@ -537,7 +543,7 @@ vim.opt.statusline:prepend("%{coc#status()}%{get(b:,'coc_current_function','')}"
 ---@diagnostic disable-next-line: redefined-local
 local opts = {silent = true, nowait = true}
 -- Show all diagnostics
-vim.keymap.set("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
+-- vim.keymap.set("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
 -- Manage extensions
 vim.keymap.set("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
 -- Show commands
