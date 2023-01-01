@@ -2,6 +2,7 @@
   "language": "en,de",
   "dictionaries": ["german"],
   "words": [
+    "pagetitle",
     "fiona",
     "Abortable",
     "Customizer",
