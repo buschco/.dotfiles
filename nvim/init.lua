@@ -74,27 +74,6 @@ require('packer').startup(function(use)
   end
 end)
 
--- When we are bootstrapping a configuration, it doesn't
--- make sense to execute the rest of the init.lua.
---
--- You'll need to restart nvim, and then it will work.
-if is_bootstrap then
-  print '=================================='
-  print '    Plugins are being installed'
-  print '    Wait until Packer completes,'
-  print '       then restart nvim'
-  print '=================================='
-  return
-end
-
--- Automatically source and re-compile packer whenever you save this init.lua
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  command = 'source <afile> | silent! LspStop | silent! LspStart | PackerCompile',
-  group = packer_group,
-  pattern = vim.fn.expand '$MYVIMRC',
-})
-
 -- Theme
 vim.opt.syntax = 'enable'
 vim.opt.termguicolors = true
@@ -413,7 +392,12 @@ require('Comment').setup()
 require("lsp-format").setup {}
 
 local null_ls = require("null-ls")
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+
+-- TODO
+-- - improve speed of prettier 
+-- - improve speed of eslint
+-- - eslint replace code action works terrible
+
 null_ls.setup({
   sources = {
     null_ls.builtins.diagnostics.eslint,
@@ -423,7 +407,6 @@ null_ls.setup({
       extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
       diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
     }),
-    -- null_ls.builtins.code_actions.cspell,
     null_ls.builtins.formatting.prettier
   },
   on_attach = require("lsp-format").on_attach
