@@ -34,6 +34,9 @@ require('packer').startup(function(use)
   use 'lewis6991/gitsigns.nvim'
 
   use 'nvim-lualine/lualine.nvim'
+  use {'akinsho/bufferline.nvim', tag = "v3.*" }
+  use "tiagovla/scope.nvim"
+
   use 'numToStr/Comment.nvim'
 
   use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
@@ -258,6 +261,19 @@ require('nvim-treesitter.configs').setup {
   },
   autotag = { enable = true }
 };
+
+require("scope").setup {}
+require("bufferline").setup {
+  options = {
+    mode = 'tabs',
+    show_buffer_icons = false,
+    truncate_names = false,
+    show_buffer_close_icons = false,
+    show_close_icon = false,
+  }
+}
+
+vim.keymap.set('n', 'tt', ":BufferLinePick<CR>", { silent = true, desc = 'pick tab' })
 
 require('lualine').setup {
   options = {
