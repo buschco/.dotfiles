@@ -190,7 +190,10 @@ ft_to_parser.javascriptreact = "tsx"
 require('Comment').setup()
 
 -- colorizer
-require('colorizer').setup()
+require('colorizer').setup(
+  {"*"},
+  { rgb_fn = true }
+)
 
 -- Treesitter
 require('nvim-treesitter.configs').setup {
