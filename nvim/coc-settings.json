@@ -261,6 +261,8 @@
     "fastlane",
     "formik",
     "hmset",
-"Versichungsunternehmen", "postgres", "supabase"
-  ],
+    "Versichungsunternehmen",
+    "postgres",
+    "supabase"
+  ]
 }

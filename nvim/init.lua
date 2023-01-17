@@ -432,8 +432,8 @@ vim.keymap.set("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
 
 -- Use `[g` and `]g` to navigate diagnostics
 -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
-vim.keymap.set("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
-vim.keymap.set("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
+vim.keymap.set("n", "[g", "<Plug>(coc-diagnostic-prev-error)", {silent = true})
+vim.keymap.set("n", "]g", "<Plug>(coc-diagnostic-next-error)", {silent = true})
 
 -- GoTo code navigation
 vim.keymap.set("n", "gd", "<Plug>(coc-definition)", {silent = true})

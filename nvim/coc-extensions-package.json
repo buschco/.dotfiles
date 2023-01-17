@@ -9,12 +9,12 @@
     "coc-prisma": ">=0.11.0",
     "coc-snippets": ">=3.1.2",
     "coc-spell-checker": ">=1.2.0",
-    "coc-tailwindcss": ">=0.7.0",
     "coc-tsserver": ">=1.11.11",
     "coc-vimtex": ">=1.1.5",
     "coc-yaml": ">=1.8.0",
     "coc-yank": ">=1.2.1",
-    "coc-rust-analyzer": ">=0.69.4"
+    "coc-rust-analyzer": ">=0.69.4",
+    "@yaegassy/coc-tailwindcss3": ">=0.4.5"
   },
   "disabled": [],
   "locked": [],
