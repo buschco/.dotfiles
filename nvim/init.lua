@@ -263,6 +263,8 @@ require('nvim-treesitter.configs').setup {
 
 require("bufferline").setup {
   options = {
+    left_trunc_marker = '…',
+    right_trunc_marker = '…',
     mode = 'tabs',
     show_buffer_icons = false,
     truncate_names = false,
@@ -323,6 +325,8 @@ require('gitsigns').setup {
   end
 }
 
+local actions = require("telescope.actions")
+
 -- Telescope 
 require('telescope').setup {
   extensions = {
@@ -346,9 +350,12 @@ require('telescope').setup {
     },
     mappings = {
       i = {
-        ['<esc>'] = require("telescope.actions").close,
+        ['<esc>'] = actions.close,
         ['<C-u>'] = false,
         ['<C-d>'] = false,
+        ["<Tab>"] = actions.toggle_selection + actions.move_selection_better,
+        ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_worse,
+        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
       },
     },
   }
