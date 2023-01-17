@@ -25,17 +25,13 @@ require('packer').startup(function(use)
     after = 'nvim-treesitter',
   }
 
-  use {
-    'windwp/nvim-ts-autotag',
-    after = 'nvim-treesitter',
-  }
+  -- use { 'nvim-treesitter/playground', after = 'nvim-treesitter', }
 
   use 'tpope/vim-fugitive'
   use 'lewis6991/gitsigns.nvim'
 
   use 'nvim-lualine/lualine.nvim'
   use {'akinsho/bufferline.nvim', tag = "v3.*" }
-  use "tiagovla/scope.nvim"
 
   use 'numToStr/Comment.nvim'
 
@@ -265,7 +261,6 @@ require('nvim-treesitter.configs').setup {
   autotag = { enable = true }
 };
 
-require("scope").setup {}
 require("bufferline").setup {
   options = {
     mode = 'tabs',
@@ -566,7 +561,7 @@ local opts = {silent = true, nowait = true}
 -- Manage extensions
 vim.keymap.set("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
 -- Show commands
-vim.keymap.set("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
+-- vim.keymap.set("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
 -- Find symbol of current document
 vim.keymap.set("n", "<space>o", ":<C-u>CocList outline<cr>", opts)
 -- Search workspace symbols
