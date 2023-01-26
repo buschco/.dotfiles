@@ -11,6 +11,19 @@ require('packer').startup(function(use)
   use 'unblevable/quick-scope'
   use 'norcalli/nvim-colorizer.lua'
 
+  use { 'neovim/nvim-lspconfig', requires = { 'j-hui/fidget.nvim', 'folke/neodev.nvim', } }
+  use "lukas-reineke/lsp-format.nvim"
+
+  use { -- Autocompletion
+    'hrsh7th/nvim-cmp',
+    requires = {
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-nvim-lsp',
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip'
+    },
+  }
+
   use 'jose-elias-alvarez/null-ls.nvim'
 
   use {
@@ -25,6 +38,10 @@ require('packer').startup(function(use)
     after = 'nvim-treesitter',
   }
 
+  use {
+    'windwp/nvim-ts-autotag',
+    after = 'nvim-treesitter',
+  }
   -- use { 'nvim-treesitter/playground', after = 'nvim-treesitter', }
 
   use 'tpope/vim-fugitive'
@@ -37,21 +54,11 @@ require('packer').startup(function(use)
 
   use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
 
-
-  use { 'neoclide/coc.nvim', branch = 'release' }
-  use {
-    'https://build.dwins.de/fiona/fiona.git', 
-    rtp = 'packages/coc', 
-    run = 'yarn install --frozen-lockfile && yarn workspace @fiona/coc package',
-    branch = 'main' 
-  }
-
   use {
     'nvim-telescope/telescope-fzf-native.nvim', 
     run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   }
 
-  use 'fannheyward/telescope-coc.nvim'
 end)
 
 -- Theme
@@ -62,8 +69,8 @@ vim.cmd [[colorscheme horizon]]
 -- Coc Related options
 
 -- Some servers have issues with backup files, see #649
-vim.opt.backup = false
-vim.opt.writebackup = false
+--vim.opt.backup = false
+--vim.opt.writebackup = false
 
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
@@ -342,12 +349,6 @@ local actions = require("telescope.actions")
 
 -- Telescope 
 require('telescope').setup {
-  extensions = {
-    coc = {
-        -- always use Telescope locations to preview definitions/declarations/implementations etc
-        prefer_locations = true, 
-    }
-  },
   defaults = {
     preview = {
       treesitter = true,
@@ -376,12 +377,11 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
--- Enable telescope coc
-pcall(require('telescope').load_extension, 'coc')
 
 -- telescope bindings
 vim.cmd.cnoreabbrev({ 'Ag', ":Telescope live_grep" })
 vim.cmd.cnoreabbrev({ 'A', ":Telescope live_grep" })
+vim.keymap.set('n', '<space>a', require('telescope.builtin').diagnostics) 
 vim.keymap.set('n', '<space>c', 
  function () return ':Telescope live_grep default_text=<' ..  vim.fn.expand '<cword>' .. '<cr>' end,
  {silent = true, desc = 'find files', expr = true }
@@ -416,180 +416,211 @@ telescope.setup({
 vim.keymap.set('n', '<C-p>', ":Telescope find_files<cr>", { silent = true, desc = 'find files' })
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
-vim.keymap.set('n', '<space>a', ':Telescope coc workspace_diagnostics<cr>', { desc = 'list all errors' })
 
--- coc keymaps
+-- LSP
 
--- Autocomplete
-function _G.check_back_space()
-    local col = vim.fn.col('.') - 1
-    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
-end
--- Use Tab for trigger completion with characters ahead and navigate
--- NOTE: There's always a completion item selected by default, you may want to enable
--- no select by setting `"suggest.noselect": true` in your configuration file
--- NOTE: Use command ':verbose imap <tab>' to make sure Tab is not mapped by
--- other plugins before putting this into your config
-local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
-vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
-vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
+require("lsp-format").setup {}
 
--- Make <CR> to accept selected completion item or notify coc.nvim to format
--- <C-g>u breaks current undo, please make your own choice
-vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
+local null_ls = require("null-ls")
 
--- Use <c-j> to trigger snippets
-vim.keymap.set("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
--- Use <c-space> to trigger completion
-vim.keymap.set("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
+null_ls.setup({
+  sources = {
+    null_ls.builtins.diagnostics.eslint_d,
+    null_ls.builtins.code_actions.eslint_d,
+    null_ls.builtins.formatting.eslint_d,
+    null_ls.builtins.diagnostics.cspell.with({
+      extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
+      diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
+    }),
+    null_ls.builtins.code_actions.cspell,
+    null_ls.builtins.formatting.prettierd
+  },
+  on_attach = require("lsp-format").on_attach
+})
 
--- Use `[g` and `]g` to navigate diagnostics
--- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
-vim.keymap.set("n", "[g", "<Plug>(coc-diagnostic-prev-error)", {silent = true})
-vim.keymap.set("n", "]g", "<Plug>(coc-diagnostic-next-error)", {silent = true})
+local lspconfig = require('lspconfig')
 
--- GoTo code navigation
-vim.keymap.set("n", "gd", "<Plug>(coc-definition)", {silent = true})
-vim.keymap.set("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
-vim.keymap.set("n", "gi", "<Plug>(coc-implementation)", {silent = true})
-vim.keymap.set("n", "gr", "<Plug>(coc-references)", {silent = true})
-
-
--- Use K to show documentation in preview window
-function _G.show_docs()
-    local cw = vim.fn.expand('<cword>')
-    if vim.fn.index({'vim', 'help'}, vim.bo.filetype) >= 0 then
-        vim.api.nvim_command('h ' .. cw)
-    elseif vim.api.nvim_eval('coc#rpc#ready()') then
-        vim.fn.CocActionAsync('doHover')
-    else
-        vim.api.nvim_command('!' .. vim.o.keywordprg .. ' ' .. cw)
+local on_attach = function(_, bufnr)
+  local nmap = function(keys, func, desc)
+    if desc then
+      desc = 'LSP: ' .. desc
     end
+      
+    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+  end
+
+  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+  nmap('<leader>aw', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+  nmap('<space>s', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+
+  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+  nmap('[g', function() vim.diagnostic.goto_prev({ 
+      severity = { min = vim.diagnostic.severity["WARN"] }
+  }) end, 'prev error')
+
+  nmap(']g', function() vim.diagnostic.goto_next({ 
+      severity = { min = vim.diagnostic.severity["WARN"] }
+  }) end, 'next error')
 end
-vim.keymap.set("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
 
+lspconfig.flow.setup{
+  cmd = { 'yarn', 'flow', 'lsp' },
+  on_attach = on_attach,
+}
 
--- Highlight the symbol and its references on a CursorHold event(cursor is idle)
-vim.api.nvim_create_augroup("CocGroup", {})
-vim.api.nvim_create_autocmd("CursorHold", {
-    group = "CocGroup",
-    command = "silent call CocActionAsync('highlight')",
-    desc = "Highlight symbol under cursor on CursorHold"
+local configs = require('lspconfig.configs')
+
+if not configs.fiona then
+  configs.fiona = {
+    default_config = {
+      cmd = { 'yarn', 'fiona-lsp', '--stdio' },
+      root_dir = lspconfig.util.find_package_json_ancestor,
+      filetypes = { 'javascriptreact' },
+    },
+  }
+end
+
+lspconfig.fiona.setup{}
+
+lspconfig.tsserver.setup{
+  on_attach = on_attach,
+  filetypes = {
+    'typescript', 
+    'typescript.tsx',
+    --'javascriptreact',
+  }
+}
+
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = { 
+    severity = {
+      min = vim.diagnostic.severity["WARN"]
+    }
+  },
+  underline = true,
+  update_in_insert = false,
+  severity_sort = false,
+  -- disables `Diagnostig:\n` header in float preview
+  float = { header = false }
 })
 
+local luasnip = require 'luasnip'
+local t = luasnip.text_node
+local f = luasnip.function_node
+local i = luasnip.insert_node
+local s = luasnip.snippet
+local function copy(args)
+  return args[1]
+end
 
--- Symbol renaming
-vim.keymap.set("n", "<leader>rn", "<Plug>(coc-rename)", {silent = true})
+luasnip.add_snippets("javascriptreact", {
+-- const get${1}: Selector<${2}> = createFSelector(
+--     'get${1}',
+--     [],
+--     () => {
+--       return { };
+--     }
+-- );
+  s("selector", {
+    t("const get"), 
+    f(copy, 1), 
+    t(": Selector<number> = createFSelector('get"),
+    i(1),
+    t({"',","[],","() => {","return { }","}",");"})
+  }),
+-- function ${1} ():ThunkAction {
+-- 	return (dispatch, getState) => {
+-- 		
+-- 	}
+-- }
+  s("action", {
+    t("function "), 
+    i(1),
+    t({
+      " ():ThunkAction {",
+      "return (dispatch, getState) => {",
+      "",
+      "}",
+      "}"
+    })
+  }),
+-- console.log('cbu', ${1})
+  s("conso", {
+    t("console.log('cbu',"), 
+    i(1),
+    t(")")
+  }),
 
-
--- Formatting selected code
-vim.keymap.set("x", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
-vim.keymap.set("n", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
-
-
--- Setup formatexpr specified filetype(s)
-vim.api.nvim_create_autocmd("FileType", {
-    group = "CocGroup",
-    pattern = "typescript,json",
-    command = "setl formatexpr=CocAction('formatSelected')",
-    desc = "Setup formatexpr specified filetype(s)."
+-- // @flow
+-- import * as React from 'react';
+--
+-- function ${1}(): React.Node {
+--   return <></>;
+-- }
+--
+-- export default ${1};
+  s("fcomp", {
+    t({
+      "// @flow",
+      "import * as React from 'react';",
+      "", "function "
+    }),
+    i(1),
+    t({
+      "(): React.Node {",
+      "return <></>;",
+      "}",
+      "export default "
+    }),
+    f(copy, 1), 
+  })
 })
 
--- Update signature help on jump placeholder
-vim.api.nvim_create_autocmd("User", {
-    group = "CocGroup",
-    pattern = "CocJumpPlaceholder",
-    command = "call CocActionAsync('showSignatureHelp')",
-    desc = "Update signature help on jump placeholder"
-})
+local cmp = require 'cmp'
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert {
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+  },
+  sources = {
+    { name = 'buffer' },
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+  },
+}
 
--- Apply codeAction to the selected region
--- Example: `<leader>aap` for current paragraph
-local opts = {silent = true, nowait = true}
-vim.keymap.set("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
-vim.keymap.set("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
-
--- Remap keys for apply code actions at the cursor position.
-vim.keymap.set("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
--- Remap keys for apply code actions affect whole buffer.
-vim.keymap.set("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
--- Remap keys for applying codeActions to the current buffer
-vim.keymap.set("n", "<leader>ac", "<Plug>(coc-codeaction)", opts)
--- Apply the most preferred quickfix action on the current line.
-vim.keymap.set("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
-
--- Remap keys for apply refactor code actions.
-vim.keymap.set("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = true })
-vim.keymap.set("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
-vim.keymap.set("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
-
--- Run the Code Lens actions on the current line
-vim.keymap.set("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
-
-
--- Map function and class text objects
--- NOTE: Requires 'textDocument.documentSymbol' support from the language server
-vim.keymap.set("x", "if", "<Plug>(coc-funcobj-i)", opts)
-vim.keymap.set("o", "if", "<Plug>(coc-funcobj-i)", opts)
-vim.keymap.set("x", "af", "<Plug>(coc-funcobj-a)", opts)
-vim.keymap.set("o", "af", "<Plug>(coc-funcobj-a)", opts)
-vim.keymap.set("x", "ic", "<Plug>(coc-classobj-i)", opts)
-vim.keymap.set("o", "ic", "<Plug>(coc-classobj-i)", opts)
-vim.keymap.set("x", "ac", "<Plug>(coc-classobj-a)", opts)
-vim.keymap.set("o", "ac", "<Plug>(coc-classobj-a)", opts)
-
-
--- Remap <C-f> and <C-b> to scroll float windows/popups
----@diagnostic disable-next-line: redefined-local
-local opts = {silent = true, nowait = true, expr = true}
-vim.keymap.set("n", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
-vim.keymap.set("n", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
-vim.keymap.set("i", "<C-f>",
-       'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
-vim.keymap.set("i", "<C-b>",
-       'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
-vim.keymap.set("v", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
-vim.keymap.set("v", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
-
-
--- Use CTRL-S for selections ranges
--- Requires 'textDocument/selectionRange' support of language server
-vim.keymap.set("n", "<C-s>", "<Plug>(coc-range-select)", {silent = true})
-vim.keymap.set("x", "<C-s>", "<Plug>(coc-range-select)", {silent = true})
-
-
--- Add `:Format` command to format current buffer
-vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
-
--- " Add `:Fold` command to fold current buffer
-vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", {nargs = '?'})
-
--- Add `:OR` command for organize imports of the current buffer
-vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
-
--- Add (Neo)Vim's native statusline support
--- NOTE: Please see `:h coc-status` for integrations with external plugins that
--- provide custom statusline: lightline.vim, vim-airline
-vim.opt.statusline:prepend("%{coc#status()}%{get(b:,'coc_current_function','')}")
-
--- Mappings for CoCList
--- code actions and coc stuff
----@diagnostic disable-next-line: redefined-local
-local opts = {silent = true, nowait = true}
--- Show all diagnostics
--- vim.keymap.set("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
--- Manage extensions
-vim.keymap.set("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
--- Show commands
--- vim.keymap.set("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
--- Find symbol of current document
-vim.keymap.set("n", "<space>o", ":<C-u>CocList outline<cr>", opts)
--- Search workspace symbols
-vim.keymap.set("n", "<space>s", ":<C-u>CocList -I symbols<cr>", opts)
--- Do default action for next item
-vim.keymap.set("n", "<space>j", ":<C-u>CocNext<cr>", opts)
--- Do default action for previous item
-vim.keymap.set("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
--- Resume latest coc list
-vim.keymap.set("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
-
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
