@@ -28,8 +28,8 @@ console.log('cbu', ${1})
 endsnippet
 
 snippet action "simple action thunk" b
-function ${1} () {
-	return (dispatch: mixed => any, getState: AppStateFunc) => {
+function ${1} ():ThunkAction {
+	return (dispatch, getState) => {
 		
 	}
 }
@@ -52,33 +52,24 @@ const [${1},set ${1}] = React.useState<boolean>(false);
 endsnippet
 
 snippet selector "simple selector" b
-type ${1} = {| 
-
-|}
-
-const get${1}: (state: AppState) => ${1} =
-  createSelector(
+const get${1}: Selector<${2}> = createFSelector(
     'get${1}',
     [],
-    (): ${1} => {
+    () => {
       return { };
     }
-  );
+);
 endsnippet
 
 snippet fcomp "create flow react component" b
 // @flow
-import React from 'react';
+import * as React from 'react';
 
-function ${1}() {
+function ${1}(): React.Node {
   return <></>;
 }
 
 export default ${1};
 
-
 endsnippet
 
-snippet okeys "convert object to array" b
-Object.keys(${1}).
-endsnippet

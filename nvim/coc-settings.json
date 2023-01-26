@@ -25,6 +25,7 @@
   "typescript.suggestionActions.enabled": true,
   "typescript.autoClosingTags": false,
   "javascript.autoClosingTags": false,
+  "tsserver.experimental.enableProjectDiagnostics": true,
   "tsserver.enable": true,
   "languageserver": {
     "kotlin": {

@@ -187,7 +187,20 @@ require('Comment').setup()
 
 -- colorizer
 require('colorizer').setup(
-  {"*"},
+  {
+    "javascript",
+    "javascriptreact",
+    "kotlin",
+    "json",
+    "yaml",
+    "typescript",
+    "typescriptreact",
+    "markdown",
+    "css",
+    "html",
+    "rust",
+    "go",
+  },
   { rgb_fn = true }
 )
 
