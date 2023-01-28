@@ -24,6 +24,8 @@ require('packer').startup(function(use)
     },
   }
 
+  use "ray-x/lsp_signature.nvim"
+
   use 'jose-elias-alvarez/null-ls.nvim'
 
   use {
@@ -170,6 +172,12 @@ vim.keymap.set('n', '<space>y', ':registers<CR>')
 vim.api.nvim_create_autocmd({"BufRead"}, {
   pattern = {"*.js"},
   command = "if getline(1) =~ '// @flow' | setlocal ft=javascriptreact | endif",
+})
+
+-- autofix eslint
+vim.api.nvim_create_autocmd({"BufWritePre"}, {
+  pattern = {"*.js", "*.ts", "*.txs", "*jsx"},
+  command = "EslintFixAll",
 })
 
 vim.api.nvim_create_autocmd({"BufNewFile","BufRead"}, {
@@ -381,7 +389,12 @@ pcall(require('telescope').load_extension, 'fzf')
 -- telescope bindings
 vim.cmd.cnoreabbrev({ 'Ag', ":Telescope live_grep" })
 vim.cmd.cnoreabbrev({ 'A', ":Telescope live_grep" })
-vim.keymap.set('n', '<space>a', require('telescope.builtin').diagnostics) 
+vim.keymap.set('n', '<space>a', function ()
+  return require('telescope.builtin').diagnostics({ 
+    severity_limit = 1
+  })
+end
+) 
 vim.keymap.set('n', '<space>c', 
  function () return ':Telescope live_grep default_text=<' ..  vim.fn.expand '<cword>' .. '<cr>' end,
  {silent = true, desc = 'find files', expr = true }
@@ -425,9 +438,9 @@ local null_ls = require("null-ls")
 
 null_ls.setup({
   sources = {
-    null_ls.builtins.diagnostics.eslint_d,
-    null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.formatting.eslint_d,
+    --null_ls.builtins.diagnostics.eslint_d,
+    --null_ls.builtins.code_actions.eslint_d,
+    --null_ls.builtins.formatting.eslint_d,
     null_ls.builtins.diagnostics.cspell.with({
       extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
       diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
@@ -441,6 +454,13 @@ null_ls.setup({
 local lspconfig = require('lspconfig')
 
 local on_attach = function(_, bufnr)
+
+  require "lsp_signature".on_attach({
+    bind = true,
+    hint_prefix = "",
+    handler_opts = { border = "none" },
+  }, bufnr)
+
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -486,6 +506,11 @@ end
 
 lspconfig.fiona.setup{}
 
+
+lspconfig.eslint.setup{
+  on_attach = on_attach,
+}
+
 lspconfig.tsserver.setup{
   on_attach = on_attach,
   filetypes = {
@@ -518,6 +543,7 @@ local function copy(args)
   return args[1]
 end
 
+-- TODO typescript
 luasnip.add_snippets("javascriptreact", {
 -- const get${1}: Selector<${2}> = createFSelector(
 --     'get${1}',
@@ -616,8 +642,8 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
-    { name = 'buffer' },
     { name = 'nvim_lsp' },
+    { name = 'buffer' },
     { name = 'luasnip' },
   },
 }
