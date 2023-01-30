@@ -14,7 +14,27 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = '\\'
 vim.g.maplocalleader = '\\'
 
-require('lazy').setup('plugins')
+require('lazy').setup(
+  'plugins',
+  {
+    ui = {
+      icons = {
+        cmd = "⌘",
+        config = "🛠",
+        event = "📅",
+        ft = "📂",
+        init = "⚙",
+        keys = "🗝",
+        plugin = "🔌",
+        runtime = "💻",
+        source = "📄",
+        start = "🚀",
+        task = "📌",
+        lazy = "💤 ",
+      },
+    },
+  }
+)
 
 -- Theme
 vim.opt.syntax = 'enable'
