@@ -1,67 +1,86 @@
-require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+vim.g.mapleader = '\\'
+vim.g.maplocalleader = '\\'
+
+require('lazy').setup({
 
   -- Theme
   -- use 'buschco/vim-horizon'
-  use '~/Documents/code.nosync/vim-horizon'
+  { dir = '~/Documents/code.nosync/vim-horizon' },
 
-  use 'tpope/vim-surround'
-  use 'tpope/vim-unimpaired'
-  use 'tpope/vim-repeat'
-  use 'unblevable/quick-scope'
-  use 'norcalli/nvim-colorizer.lua'
+  'tpope/vim-surround',
+  'tpope/vim-unimpaired',
+  'tpope/vim-repeat',
+  'unblevable/quick-scope',
+  'norcalli/nvim-colorizer.lua',
 
-  use { 'neovim/nvim-lspconfig', requires = { 'j-hui/fidget.nvim', 'folke/neodev.nvim', } }
-  use "lukas-reineke/lsp-format.nvim"
+  { 'neovim/nvim-lspconfig',
+    dependencies  = {
+      'j-hui/fidget.nvim',
+      'folke/neodev.nvim', 
+    } 
+  },
 
-  use { -- Autocompletion
+  'lukas-reineke/lsp-format.nvim',
+
+  { -- Autocompletion
     'hrsh7th/nvim-cmp',
-    requires = {
+    dependencies = {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-nvim-lsp',
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip'
     },
-  }
+  },
 
-  use "ray-x/lsp_signature.nvim"
+  'ray-x/lsp_signature.nvim',
+  'jose-elias-alvarez/null-ls.nvim',
 
-  use 'jose-elias-alvarez/null-ls.nvim'
-
-  use {
+  {
     'nvim-treesitter/nvim-treesitter',
-    run = function()
+    build = function()
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
-  }
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+      'windwp/nvim-ts-autotag',
+      -- 'nvim-treesitter/playground', 
+    }
+  },
 
-  use {
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    after = 'nvim-treesitter',
-  }
+  'tpope/vim-fugitive',
+  'lewis6991/gitsigns.nvim',
 
-  use {
-    'windwp/nvim-ts-autotag',
-    after = 'nvim-treesitter',
-  }
-  -- use { 'nvim-treesitter/playground', after = 'nvim-treesitter', }
+  'nvim-lualine/lualine.nvim',
+  {'akinsho/bufferline.nvim', version = "v3.*" },
 
-  use 'tpope/vim-fugitive'
-  use 'lewis6991/gitsigns.nvim'
+  'numToStr/Comment.nvim',
 
-  use 'nvim-lualine/lualine.nvim'
-  use {'akinsho/bufferline.nvim', tag = "v3.*" }
+  { 'nvim-telescope/telescope.nvim', 
+    branch = '0.1.x',
+    dependencies  = { 
+      'nvim-lua/plenary.nvim'
+    }
+  },
 
-  use 'numToStr/Comment.nvim'
-
-  use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
-
-  use {
+  {
     'nvim-telescope/telescope-fzf-native.nvim', 
     run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
-  }
+  },
 
-end)
+})
 
 -- Theme
 vim.opt.syntax = 'enable'
