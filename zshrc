@@ -347,3 +347,8 @@ export NVM_DIR="$HOME/.nvm"
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/colin/.sdkman"
 [[ -s "/Users/colin/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/colin/.sdkman/bin/sdkman-init.sh"
+
+# pnpm
+export PNPM_HOME="/Users/colin/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+# pnpm end

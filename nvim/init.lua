@@ -174,8 +174,8 @@ ft_to_parser.javascriptreact = "tsx"
 require('Comment').setup()
 
 -- colorizer
-require('colorizer').setup(
-  {
+require('colorizer').setup({
+  filetypes = {
     "javascript",
     "javascriptreact",
     "kotlin",
@@ -189,8 +189,11 @@ require('colorizer').setup(
     "rust",
     "go",
   },
-  { rgb_fn = true }
-)
+  user_default_options = { 
+    rgb_fn = true,
+    tailwind = true
+  }
+})
 
 -- Treesitter
 require('nvim-treesitter.configs').setup {
@@ -351,6 +354,7 @@ require('telescope').setup {
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_better,
         ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_worse,
         ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        ["<C-x>"] = actions.delete_buffer,
       },
     },
   }
@@ -364,7 +368,7 @@ vim.cmd.cnoreabbrev({ 'Ag', ":Telescope live_grep" })
 vim.cmd.cnoreabbrev({ 'A', ":Telescope live_grep" })
 vim.keymap.set('n', '<space>a', function ()
   return require('telescope.builtin').diagnostics({ 
-    severity_limit = 1
+    severity_limit = 2
   })
 end
 ) 
@@ -407,26 +411,10 @@ vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = '
 
 require("lsp-format").setup {}
 
-local null_ls = require("null-ls")
-
-null_ls.setup({
-  sources = {
-    --null_ls.builtins.diagnostics.eslint_d,
-    --null_ls.builtins.code_actions.eslint_d,
-    --null_ls.builtins.formatting.eslint_d,
-    null_ls.builtins.diagnostics.cspell.with({
-      extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
-      diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
-    }),
-    null_ls.builtins.code_actions.cspell,
-    null_ls.builtins.formatting.prettierd
-  },
-  on_attach = require("lsp-format").on_attach
-})
-
 local lspconfig = require('lspconfig')
 
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
+  require("lsp-format").on_attach(client)
 
   require "lsp_signature".on_attach({
     bind = true,
@@ -460,6 +448,23 @@ local on_attach = function(_, bufnr)
   }) end, 'next error')
 end
 
+local null_ls = require("null-ls")
+
+null_ls.setup({
+  sources = {
+    --null_ls.builtins.diagnostics.eslint_d,
+    --null_ls.builtins.code_actions.eslint_d,
+    --null_ls.builtins.formatting.eslint_d,
+    null_ls.builtins.diagnostics.cspell.with({
+      extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
+      diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
+    }),
+    null_ls.builtins.code_actions.cspell,
+    null_ls.builtins.formatting.prettierd
+  },
+  on_attach = on_attach
+})
+
 lspconfig.flow.setup{
   cmd = { 'yarn', 'flow', 'lsp' },
   on_attach = on_attach,
@@ -477,10 +482,19 @@ if not configs.fiona then
   }
 end
 
-lspconfig.fiona.setup{}
+lspconfig.fiona.setup{
+  on_attach = on_attach
+}
 
+lspconfig.tailwindcss.setup{
+  on_attach = on_attach
+}
 
 lspconfig.eslint.setup{
+  on_attach = on_attach,
+}
+
+lspconfig.jsonls.setup{
   on_attach = on_attach,
 }
 
@@ -507,7 +521,14 @@ vim.diagnostic.config({
   float = { header = false }
 })
 
-local luasnip = require 'luasnip'
+local luasnip = require('luasnip')
+
+-- fix FT for @flow files
+vim.api.nvim_create_autocmd({"InsertLeave"}, {
+  pattern = {"*"},
+  command = ":LuaSnipUnlinkCurrent"
+})
+
 local t = luasnip.text_node
 local f = luasnip.function_node
 local i = luasnip.insert_node
@@ -580,12 +601,26 @@ luasnip.add_snippets("javascriptreact", {
   })
 })
 
-local cmp = require 'cmp'
+local cmp = require('cmp')
+local compare = cmp.config.compare
+
 cmp.setup {
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
+  },
+  sorting = {
+    comparators = {
+      compare.offset,
+      compare.exact,
+      compare.score,
+      compare.recently_used,
+      compare.kind,
+      compare.sort_text,
+      compare.length,
+      compare.order,
+    }
   },
   mapping = cmp.mapping.preset.insert {
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -593,13 +628,11 @@ cmp.setup {
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+      select = false,
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
       else
         fallback()
       end
@@ -607,8 +640,6 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
       else
         fallback()
       end

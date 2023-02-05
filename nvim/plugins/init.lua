@@ -8,7 +8,7 @@ return {
   'tpope/vim-unimpaired',
   'tpope/vim-repeat',
   'unblevable/quick-scope',
-  'norcalli/nvim-colorizer.lua',
+  'NvChad/nvim-colorizer.lua',
 
   { 'neovim/nvim-lspconfig',
     dependencies  = {
