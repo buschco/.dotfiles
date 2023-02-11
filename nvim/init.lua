@@ -498,6 +498,9 @@ lspconfig.flow.setup{
 
 local configs = require('lspconfig.configs')
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
 if not configs.fiona then
   configs.fiona = {
     default_config = {
@@ -509,22 +512,71 @@ if not configs.fiona then
 end
 
 lspconfig.fiona.setup{
-  on_attach = on_attach
+  on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 lspconfig.tailwindcss.setup{
-  on_attach = on_attach
+  on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 lspconfig.eslint.setup{
   on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 lspconfig.jsonls.setup{
   on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    json = {
+      schemas = {
+        {
+          description = 'TypeScript compiler configuration file',
+          fileMatch = {'tsconfig.json', 'tsconfig.*.json'},
+          url = 'http://json.schemastore.org/tsconfig'
+        },
+        {
+          description = 'Babel configuration',
+          fileMatch = {'.babelrc.json', '.babelrc', 'babel.config.json'},
+          url = 'http://json.schemastore.org/lerna'
+        },
+        {
+          description = 'ESLint config',
+          fileMatch = {'.eslintrc.json', '.eslintrc'},
+          url = 'http://json.schemastore.org/eslintrc'
+        },
+        {
+          description = 'Prettier config',
+          fileMatch = {'.prettierrc', '.prettierrc.json', 'prettier.config.json'},
+          url = 'http://json.schemastore.org/prettierrc'
+        },
+        {
+          description = 'node based packgage.json',
+          fileMatch = {'package.json'},
+          url = 'https://json.schemastore.org/package.json'
+        }
+      }
+    },
+  }
+}
+
+lspconfig.yamlls.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  settings = {
+    yaml = {
+      schemas = {
+        ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+        ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = "/.gitlab-ci.yml"
+      },
+    },
+  }
 }
 
 lspconfig.tsserver.setup{
+  capabilities = capabilities,
   on_attach = on_attach,
   filetypes = {
     'typescript', 
@@ -677,5 +729,3 @@ cmp.setup {
   },
 }
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)

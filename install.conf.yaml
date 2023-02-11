@@ -21,6 +21,9 @@
     ~/.config/nvim/init.lua:
       path: nvim/init.lua
       create: true
+    ~/.config/nvim/lazy-lock.json:
+      path: nvim/lazy-lock.json
+      create: true
     ~/.config/nvim/lua/plugins/init.lua:
       path: nvim/plugins/init.lua
       create: true
