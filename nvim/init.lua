@@ -110,8 +110,8 @@ vim.keymap.set('n', '+', '"+y')
 vim.keymap.set('n', '+', '"+y')
 
 -- https://stackoverflow.com/a/42071865/5444033
--- :bda or :Bda close all buffers but not this
-vim.cmd [[command! BufOnly silent! execute "%bd|e#|bd#"]]
+-- :bda or :Bda force deletes all buffers but not this
+vim.cmd [[command! BufOnly silent! execute "%bd|e#|bd!#"]]
 vim.cmd.cnoreabbrev({ 'bda', 'BufOnly' })
 vim.cmd.cnoreabbrev({ 'Bda', 'BufOnly' })
 
@@ -199,19 +199,19 @@ require('colorizer').setup({
 require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all"
   ensure_installed = {
-    --  "bash", 
+    -- "bash", 
     -- "css",
     -- "dockerfile",
-    -- "gitingore",
-    -- "go",
+    "gitignore",
+    "go",
     -- "html",
     -- "java",
     "javascript",
     "json",
-    -- "kotlin",
+    "kotlin",
     -- "latex",
-    -- "make",
-    -- "markdown",
+    "make",
+    "markdown",
     -- "prisma",
     "lua",
     "tsx",
@@ -262,7 +262,9 @@ require('nvim-treesitter.configs').setup {
       show_help = '?',
     },
   },
-  autotag = { enable = true }
+  autotag = {
+    enable = true,
+  }
 };
 
 require("bufferline").setup {
@@ -354,7 +356,14 @@ require('telescope').setup {
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_better,
         ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_worse,
         ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
-        ["<C-x>"] = actions.delete_buffer,
+        ["<C-x>"] = function(prompt_bufnr) 
+          -- force delete the buffer even if unsaved
+          local current_picker = require"telescope.actions.state".get_current_picker(prompt_bufnr)
+          current_picker:delete_selection(function(selection)
+            local ok = pcall(vim.api.nvim_buf_delete, selection.bufnr, { force = true })
+            return ok
+          end)
+        end
       },
     },
   }
@@ -622,12 +631,13 @@ cmp.setup {
       compare.order,
     }
   },
+  preselect = cmp.PreselectMode.None,
   mapping = cmp.mapping.preset.insert {
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
+      behavior = cmp.ConfirmBehavior.Insert,
       select = false,
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
