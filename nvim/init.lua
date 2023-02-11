@@ -101,13 +101,8 @@ vim.opt.foldmethod = 'indent'
 -- Stamp _ register into word over cursor
 vim.keymap.set('n', 'S', '"_diwP')
 
--- = will yank word into the clipcoard
--- nnoremap = 
-vim.keymap.set('n', '=', '"+yiw')
-
--- = will yank motion into the clipcoard
-vim.keymap.set('n', '+', '"+y')
-vim.keymap.set('n', '+', '"+y')
+-- = will copy register " to clipcoard 
+vim.keymap.set('n', '=', ':let @*=@"<CR>')
 
 -- https://stackoverflow.com/a/42071865/5444033
 -- :bda or :Bda force deletes all buffers but not this
@@ -158,9 +153,6 @@ vim.keymap.set('n', '<c-k>', ':wincmd k<CR>', { silent = true })
 vim.keymap.set('n', '<c-j>', ':wincmd j<CR>', { silent = true })
 vim.keymap.set('n', '<c-h>', ':wincmd h<CR>', { silent = true })
 vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', { silent = true })
-
--- open registers on space y 
-vim.keymap.set('n', '<space>y', ':registers<CR>') 
 
 -- Treesitter
 
@@ -390,6 +382,7 @@ require('telescope').setup {
 pcall(require('telescope').load_extension, 'fzf')
 
 -- telescope bindings
+vim.keymap.set('n', '<space>y', ':Telescope registers<CR>') 
 vim.cmd.cnoreabbrev({ 'Ag', ":Telescope live_grep" })
 vim.cmd.cnoreabbrev({ 'A', ":Telescope live_grep" })
 vim.keymap.set('n', '<space>a', function ()
