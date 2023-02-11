@@ -21,6 +21,12 @@
     ~/.config/nvim/init.lua:
       path: nvim/init.lua
       create: true
+    ~/.config/yarn/global/package.json:
+      path: yarn/package.json
+      create: true
+    ~/.config/yarn/global/yarn.lock:
+      path: yarn/yarn.lock
+      create: true
     ~/.config/nvim/lazy-lock.json:
       path: nvim/lazy-lock.json
       create: true
