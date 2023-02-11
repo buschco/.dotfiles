@@ -78,14 +78,10 @@ nmap <leader>gh :diffget //3<CR>
 " set filetypes as typescript.tsx
 autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
 
-
 " https://stackoverflow.com/a/42071865/5444033
 command! BufOnly silent! execute "%bd|e#|bd#"
 " :bda close all buffers but not this
 cnoreabbrev bda BufOnly
-
-" :Bda behaves like :bda
-cnoreabbrev Bd bd
 
 " :Bd behaves like :bd
 cnoreabbrev Bd bd

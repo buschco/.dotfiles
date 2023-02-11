@@ -115,6 +115,29 @@ vim.cmd [[command! BufOnly silent! execute "%bd|e#|bd!#"]]
 vim.cmd.cnoreabbrev({ 'bda', 'BufOnly' })
 vim.cmd.cnoreabbrev({ 'Bda', 'BufOnly' })
 
+local filetypeDetect = function()
+  vim.cmd(":filetype detect")
+  vim.cmd("if getline(1) =~ '// @flow' | setlocal ft=javascriptreact | endif")
+end
+
+vim.api.nvim_create_user_command('F', filetypeDetect, {})
+
+-- fix FT for @flow files
+vim.api.nvim_create_autocmd({"BufRead"}, {
+  pattern = {"*.js"},
+  callback = filetypeDetect
+})
+
+local createFlowFile = function() 
+  vim.api.nvim_put({'// @flow'}, 'c', false, true)
+  vim.cmd(':w')
+  vim.cmd(':F')
+end
+
+vim.api.nvim_create_user_command('FF', createFlowFile, {})
+
+--:command Inshtml :normal i your text here^V<ESC>
+
 -- :Bd behaves like :bd
 vim.cmd.cnoreabbrev({ 'Bd', 'bd' })
 
@@ -140,12 +163,6 @@ vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', { silent = true })
 vim.keymap.set('n', '<space>y', ':registers<CR>') 
 
 -- Treesitter
-
--- fix FT for @flow files
-vim.api.nvim_create_autocmd({"BufRead"}, {
-  pattern = {"*.js"},
-  command = "if getline(1) =~ '// @flow' | setlocal ft=javascriptreact | endif",
-})
 
 -- autofix eslint
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
@@ -532,7 +549,7 @@ vim.diagnostic.config({
 
 local luasnip = require('luasnip')
 
--- fix FT for @flow files
+-- remove snippet linking after leaving snippet insert
 vim.api.nvim_create_autocmd({"InsertLeave"}, {
   pattern = {"*"},
   command = ":LuaSnipUnlinkCurrent"
@@ -585,7 +602,6 @@ luasnip.add_snippets("javascriptreact", {
     t(")")
   }),
 
--- // @flow
 -- import * as React from 'react';
 --
 -- function ${1}(): React.Node {
@@ -595,7 +611,6 @@ luasnip.add_snippets("javascriptreact", {
 -- export default ${1};
   s("fcomp", {
     t({
-      "// @flow",
       "import * as React from 'react';",
       "", "function "
     }),
