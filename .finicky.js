@@ -6,7 +6,7 @@ module.exports = {
   handlers: [
     {
       match: [
-        "https://sentry.io/organizations/dwins-gmbh/*",
+        "https://dwins-gmbh.sentry.io/*",
         "https://meet.google.com/*",
         "http://localhost:7007*",
         "http://localhost:3000*",
