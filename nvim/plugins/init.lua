@@ -31,6 +31,9 @@ return {
 
   'ray-x/lsp_signature.nvim',
   'jose-elias-alvarez/null-ls.nvim',
+  { 'sindrets/diffview.nvim',
+    dependencies  = { 'nvim-lua/plenary.nvim' }
+  },
 
   {
     'nvim-treesitter/nvim-treesitter',

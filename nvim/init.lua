@@ -14,6 +14,9 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = '\\'
 vim.g.maplocalleader = '\\'
 
+
+vim.cmd[[ set diffopt+=vertical ]]
+
 require('lazy').setup(
   'plugins',
   {
@@ -156,12 +159,6 @@ vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', { silent = true })
 
 -- Treesitter
 
--- autofix eslint
-vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  pattern = {"*.js", "*.ts", "*.txs", "*jsx"},
-  command = "EslintFixAll",
-})
-
 vim.api.nvim_create_autocmd({"BufNewFile","BufRead"}, {
   pattern = {"*.tsx"},
   command = "set filetype=typescript.tsx"
@@ -276,6 +273,12 @@ require('nvim-treesitter.configs').setup {
   }
 };
 
+-- https://www.reddit.com/r/neovim/comments/1144spy/will_treesitter_ever_be_stable_on_big_files/
+vim.treesitter.set_query("javascript", "injections", "")
+vim.treesitter.set_query("typescript", "injections", "")
+vim.treesitter.set_query("tsx", "injections", "")
+vim.treesitter.set_query("lua", "injections", "")
+
 require("bufferline").setup {
   options = {
     left_trunc_marker = '…',
@@ -343,8 +346,21 @@ require('gitsigns').setup {
 local actions = require("telescope.actions")
 
 -- Telescope 
+local telescope = require("telescope")
+local telescopeConfig = require("telescope.config")
+
+-- Clone the default Telescope configuration
+local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
+
 require('telescope').setup {
+  pickers = {
+    find_files = {
+    -- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
+      find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+    },
+  },
   defaults = {
+    vimgrep_arguments = vimgrep_arguments,
     preview = {
       treesitter = true,
       title = false,
@@ -396,12 +412,6 @@ vim.keymap.set('n', '<space>c',
  {silent = true, desc = 'find files', expr = true }
 )
 
-local telescope = require("telescope")
-local telescopeConfig = require("telescope.config")
-
--- Clone the default Telescope configuration
-local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
-
 -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#file-and-text-search-in-hidden-files-and-directories
 -- I want to search in hidden/dot files.
 table.insert(vimgrep_arguments, "--hidden")
@@ -409,32 +419,17 @@ table.insert(vimgrep_arguments, "--hidden")
 table.insert(vimgrep_arguments, "--glob")
 table.insert(vimgrep_arguments, "!**/.git/*")
 
-telescope.setup({
-  defaults = {
-    -- `hidden = true` is not supported in text grep commands.
-      vimgrep_arguments = vimgrep_arguments,
-    },
-    pickers = {
-      find_files = {
-      -- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
-      find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
-    },
-  },
-})
-
 vim.keymap.set('n', '<C-p>', ":Telescope find_files<cr>", { silent = true, desc = 'find files' })
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
 
 -- LSP
 
-require("lsp-format").setup {}
+require("lsp-format").setup({})
 
 local lspconfig = require('lspconfig')
 
 local on_attach = function(client, bufnr)
-  require("lsp-format").on_attach(client)
-
   require "lsp_signature".on_attach({
     bind = true,
     hint_prefix = "",
@@ -465,6 +460,18 @@ local on_attach = function(client, bufnr)
   nmap(']g', function() vim.diagnostic.goto_next({ 
       severity = { min = vim.diagnostic.severity["WARN"] }
   }) end, 'next error')
+
+  -- use this if eslint_d (provided by null-ls) is not used 
+  -- vim.api.nvim_create_autocmd({"BufWritePre"}, {
+  --   pattern = {"*.js", "*.ts", "*.txs", "*jsx"},
+  --   -- buffer = bufnr,
+  --   command = "EslintFixAll",
+  -- })
+end
+
+local on_attach_with_format = function(client, bufnr)
+  require("lsp-format").on_attach(client)
+  on_attach()
 end
 
 local null_ls = require("null-ls")
@@ -473,7 +480,7 @@ null_ls.setup({
   sources = {
     --null_ls.builtins.diagnostics.eslint_d,
     --null_ls.builtins.code_actions.eslint_d,
-    --null_ls.builtins.formatting.eslint_d,
+    null_ls.builtins.formatting.eslint_d,
     null_ls.builtins.diagnostics.cspell.with({
       extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
       diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
@@ -481,7 +488,7 @@ null_ls.setup({
     null_ls.builtins.code_actions.cspell,
     null_ls.builtins.formatting.prettierd
   },
-  on_attach = on_attach
+  on_attach = on_attach_with_format 
 })
 
 lspconfig.flow.setup{
@@ -520,7 +527,7 @@ lspconfig.eslint.setup{
 }
 
 lspconfig.jsonls.setup{
-  on_attach = on_attach,
+  on_attach = on_attach_with_format,
   capabilities = capabilities,
   settings = {
     json = {
@@ -557,7 +564,7 @@ lspconfig.jsonls.setup{
 
 lspconfig.yamlls.setup {
   capabilities = capabilities,
-  on_attach = on_attach,
+  on_attach = on_attach_with_format,
   settings = {
     yaml = {
       schemas = {
