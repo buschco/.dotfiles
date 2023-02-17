@@ -176,6 +176,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
 ft_to_parser.javascriptreact = "tsx"
 
+-- diffview
+require("diffview").setup({ 
+  use_icons = false
+})
+
 -- Comment
 require('Comment').setup()
 
@@ -358,6 +363,18 @@ require('telescope').setup {
     -- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
       find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
     },
+    git_bcommits = {
+      mappings = {
+        i = {
+          ['<CR>'] = function(prompt_bufnr)
+            actions.close(prompt_bufnr)
+            local value = require('telescope.actions.state').get_selected_entry().value
+            local cmd = "DiffviewOpen " .. value
+            return pcall(vim.cmd(cmd))
+          end,
+        }
+      }
+    }
   },
   defaults = {
     vimgrep_arguments = vimgrep_arguments,
@@ -422,6 +439,9 @@ table.insert(vimgrep_arguments, "!**/.git/*")
 vim.keymap.set('n', '<C-p>', ":Telescope find_files<cr>", { silent = true, desc = 'find files' })
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
+vim.keymap.set('n', '<space>g', require('telescope.builtin').git_bcommits, 
+  { desc = 'git history for current file' }
+)
 
 -- LSP
 
