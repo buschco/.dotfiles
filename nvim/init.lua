@@ -16,6 +16,7 @@ vim.g.maplocalleader = '\\'
 
 
 vim.cmd[[ set diffopt+=vertical ]]
+vim.cmd[[ set hidden ]]
 
 require('lazy').setup(
   'plugins',
@@ -398,6 +399,17 @@ require('telescope').setup {
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_better,
         ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_worse,
         ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        ["<CR>"] = function(prompt_bufnr)
+          local picker = require"telescope.actions.state".get_current_picker(prompt_bufnr)
+          local multi = picker:get_multi_selection()
+          -- vim.cmd("tabnew")
+          actions.select_default(prompt_bufnr)
+          for _, j in pairs(multi) do
+            if j.path ~= nil then
+              vim.cmd(string.format("%s %s", "edit", j.path))
+            end
+          end
+        end,
         ["<C-x>"] = function(prompt_bufnr) 
           -- force delete the buffer even if unsaved
           local current_picker = require"telescope.actions.state".get_current_picker(prompt_bufnr)
@@ -547,7 +559,7 @@ lspconfig.eslint.setup{
 }
 
 lspconfig.jsonls.setup{
-  on_attach = on_attach_with_format,
+  on_attach = on_attach,
   capabilities = capabilities,
   settings = {
     json = {

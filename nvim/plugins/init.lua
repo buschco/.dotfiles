@@ -43,7 +43,7 @@ return {
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
       'windwp/nvim-ts-autotag',
-      -- 'nvim-treesitter/playground', 
+      --'nvim-treesitter/playground', 
     }
   },
 
