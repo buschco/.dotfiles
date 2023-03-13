@@ -72,6 +72,7 @@ vim.opt.virtualedit = 'onemore'
 -- intend fix
 vim.opt.expandtab = true 
 vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
 
 -- remove --- INSERT ---
 vim.opt.laststatus = 2
@@ -276,6 +277,7 @@ require('nvim-treesitter.configs').setup {
   },
   autotag = {
     enable = true,
+    enable_rename = false
   }
 };
 
@@ -493,12 +495,6 @@ local on_attach = function(client, bufnr)
       severity = { min = vim.diagnostic.severity["WARN"] }
   }) end, 'next error')
 
-  -- use this if eslint_d (provided by null-ls) is not used 
-  -- vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  --   pattern = {"*.js", "*.ts", "*.txs", "*jsx"},
-  --   -- buffer = bufnr,
-  --   command = "EslintFixAll",
-  -- })
 end
 
 local on_attach_with_format = function(client, bufnr)
@@ -511,8 +507,8 @@ local null_ls = require("null-ls")
 null_ls.setup({
   sources = {
     --null_ls.builtins.diagnostics.eslint_d,
-    --null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.formatting.eslint_d,
+    null_ls.builtins.code_actions.eslint_d,
+    --null_ls.builtins.formatting.eslint_d,
     null_ls.builtins.diagnostics.cspell.with({
       extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
       diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
@@ -551,9 +547,23 @@ lspconfig.fiona.setup{
 lspconfig.tailwindcss.setup{
   on_attach = on_attach,
   capabilities = capabilities,
+  filetypes = { "html", "javascript", "javascriptreact", "typescript", "typescript.tsx", "typescriptreact" }
 }
 
 lspconfig.eslint.setup{
+  on_attach = function(client, bufnr)
+    on_attach(client, bufmr)
+    -- use this if eslint_d (provided by null-ls) is not used 
+    vim.api.nvim_create_autocmd({"BufWritePre"}, {
+      buffer = bufnr,
+      command = "EslintFixAll",
+    })
+  end,
+  capabilities = capabilities,
+  settings = { packageManager = "yarn", },
+}
+
+lspconfig.gopls.setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
@@ -628,7 +638,7 @@ vim.diagnostic.config({
   update_in_insert = false,
   severity_sort = false,
   -- disables `Diagnostig:\n` header in float preview
-  float = { header = false }
+  float = {source = true, header = false }
 })
 
 local luasnip = require('luasnip')
@@ -717,6 +727,14 @@ cmp.setup {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
+  },
+  formatting = {
+    format = function(entry, vim_item)
+      require("tailwindcss-colorizer-cmp").formatter(entry, vim_item)
+      vim_item.kind = '■'
+      vim_item.menu = '' 
+      return vim_item
+    end
   },
   sorting = {
     comparators = {

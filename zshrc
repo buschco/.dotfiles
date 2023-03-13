@@ -7,6 +7,13 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:
 export PATH=$PATH:$HOME/esp/xtensa-lx106-elf/bin
 export IDF_PATH="/Users/colin/Documents/code.nosync/ESP8266_RTOS_SDK"
 
+# add GO
+export PATH=$PATH:/usr/local/go/bin
+export PATH="$HOME/go/bin:$PATH"
+
+# https://github.com/nvim-treesitter/nvim-treesitter/issues/4482#issuecomment-1464499238
+export CPLUS_INCLUDE_PATH=/Library/Developer/CommandLineTools/usr/include/c++/v1:/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include
+
 # Add MacGPG2 to PATH (do I need this?)
 #export PATH="/usr/local/MacGPG2/bin:$PATH"
 
