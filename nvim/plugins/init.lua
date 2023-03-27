@@ -10,12 +10,7 @@ return {
   'unblevable/quick-scope',
   'NvChad/nvim-colorizer.lua',
 
-  { 'neovim/nvim-lspconfig',
-    dependencies  = {
-      'j-hui/fidget.nvim',
-      'folke/neodev.nvim', 
-    } 
-  },
+  'neovim/nvim-lspconfig',
 
   'lukas-reineke/lsp-format.nvim',
 
@@ -24,6 +19,7 @@ return {
     dependencies = {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-path',
       { 'L3MON4D3/LuaSnip', version = "1.*" },
       'saadparwaiz1/cmp_luasnip',
       'roobert/tailwindcss-colorizer-cmp.nvim'
@@ -59,13 +55,11 @@ return {
   { 'nvim-telescope/telescope.nvim', 
     branch = '0.1.x',
     dependencies  = { 
-      'nvim-lua/plenary.nvim'
+      'nvim-lua/plenary.nvim',
+      {
+        'nvim-telescope/telescope-fzf-native.nvim', 
+        build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+      }
     }
   },
-
-  {
-    'nvim-telescope/telescope-fzf-native.nvim', 
-    run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
-  },
-
 }

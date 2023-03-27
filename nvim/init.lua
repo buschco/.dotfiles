@@ -723,6 +723,7 @@ local cmp = require('cmp')
 local compare = cmp.config.compare
 
 cmp.setup {
+  -- performance = { debounce = 120 },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -774,7 +775,8 @@ cmp.setup {
   },
   sources = {
     { name = 'nvim_lsp' },
-    { name = 'buffer' },
+    { name = 'path' },
+    { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
 }
