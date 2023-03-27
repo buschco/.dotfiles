@@ -363,7 +363,7 @@ local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
 require('telescope').setup {
   pickers = {
     find_files = {
-    -- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
+      -- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
       find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
     },
     git_bcommits = {
@@ -426,7 +426,7 @@ require('telescope').setup {
 }
 
 -- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
+require('telescope').load_extension('fzf')
 
 -- telescope bindings
 vim.keymap.set('n', '<space>y', ':Telescope registers<CR>') 
