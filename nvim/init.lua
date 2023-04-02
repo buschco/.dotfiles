@@ -107,7 +107,9 @@ vim.opt.foldmethod = 'indent'
 vim.keymap.set('n', 'S', '"_diwP')
 
 -- = will copy register " to clipcoard 
-vim.keymap.set('n', '=', ':let @*=@"<CR>')
+-- nowait because vim-unimpaired binds some =
+-- https://github.com/tpope/vim-unimpaired/blob/master/plugin/unimpaired.vim#L441-L442
+vim.cmd[[ nmap <nowait> = :let @*=@"<CR>]]
 
 -- https://stackoverflow.com/a/42071865/5444033
 -- :bda or :Bda force deletes all buffers but not this
@@ -275,10 +277,6 @@ require('nvim-treesitter.configs').setup {
       show_help = '?',
     },
   },
-  autotag = {
-    enable = true,
-    enable_rename = false
-  }
 };
 
 -- https://www.reddit.com/r/neovim/comments/1144spy/will_treesitter_ever_be_stable_on_big_files/
@@ -564,7 +562,7 @@ lspconfig.eslint.setup{
 }
 
 lspconfig.gopls.setup{
-  on_attach = on_attach,
+  on_attach = on_attach_with_format,
   capabilities = capabilities,
 }
 
@@ -719,8 +717,10 @@ luasnip.add_snippets("javascriptreact", {
   })
 })
 
+
 local cmp = require('cmp')
 local compare = cmp.config.compare
+require('nvim-cmp-ts-tag-close').setup({ skip_tags = { 'FGlyphIcon' } })
 
 cmp.setup {
   -- performance = { debounce = 120 },
@@ -774,9 +774,9 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
+    { name = 'nvim-cmp-ts-tag-close' },
     { name = 'nvim_lsp' },
     { name = 'path' },
-    { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
 }

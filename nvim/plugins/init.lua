@@ -22,8 +22,9 @@ return {
       'hrsh7th/cmp-path',
       { 'L3MON4D3/LuaSnip', version = "1.*" },
       'saadparwaiz1/cmp_luasnip',
-      'roobert/tailwindcss-colorizer-cmp.nvim'
-    },
+      'roobert/tailwindcss-colorizer-cmp.nvim',
+      { dir = '~/Documents/code.nosync/nvim-cmp-ts-tag-close' },
+    }
   },
 
   'ray-x/lsp_signature.nvim',
@@ -39,7 +40,6 @@ return {
     end,
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
-      'windwp/nvim-ts-autotag',
       --'nvim-treesitter/playground', 
     }
   },
