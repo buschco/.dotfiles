@@ -130,13 +130,31 @@ vim.api.nvim_create_autocmd({"BufRead"}, {
   callback = filetypeDetect
 })
 
-local createFlowFile = function() 
-  vim.api.nvim_put({'// @flow'}, 'c', false, true)
+local fillFlowFile = function() 
+  local name = vim.fn.expand('%:t:r')
+  vim.api.nvim_put({
+    '// @flow',
+    "import * as React from 'react';",
+    "",
+    "function ".. name .. "(): React.Node {",
+    "  return <></>;",
+    "}",
+    "",
+    "export default "..name
+  }, 'c', false, true)
   vim.cmd(':w')
   vim.cmd(':F')
 end
 
-vim.api.nvim_create_user_command('FF', createFlowFile, {})
+local createAndFillFlowFile = function()
+  local name = vim.fn.expand('<cword>')
+  vim.cmd("e %:h/"..name..".js")
+  vim.cmd(":FF")
+end
+
+vim.api.nvim_create_user_command('FF', fillFlowFile , {})
+
+vim.api.nvim_create_user_command('CF', createAndFillFlowFile, {})
 
 --:command Inshtml :normal i your text here^V<ESC>
 
@@ -163,10 +181,10 @@ vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', { silent = true })
 
 -- Treesitter
 
-vim.api.nvim_create_autocmd({"BufNewFile","BufRead"}, {
-  pattern = {"*.tsx"},
-  command = "set filetype=typescript.tsx"
-})
+-- vim.api.nvim_create_autocmd({"BufNewFile","BufRead"}, {
+--   pattern = {"*.tsx"},
+--   command = "set filetype=typescript.tsx"
+-- })
 
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -524,7 +542,7 @@ lspconfig.flow.setup{
 
 local configs = require('lspconfig.configs')
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 if not configs.fiona then
@@ -543,14 +561,21 @@ lspconfig.fiona.setup{
 }
 
 lspconfig.tailwindcss.setup{
-  on_attach = on_attach,
+  -- on_attach = on_attach,
   capabilities = capabilities,
-  filetypes = { "html", "javascript", "javascriptreact", "typescript", "typescript.tsx", "typescriptreact" }
+  filetypes = {
+    "html",
+    "javascript", 
+    "javascriptreact", 
+    "typescript", 
+    -- "typescript.tsx",
+    "typescriptreact"
+  }
 }
 
 lspconfig.eslint.setup{
   on_attach = function(client, bufnr)
-    on_attach(client, bufmr)
+    on_attach(client, bufnr)
     -- use this if eslint_d (provided by null-ls) is not used 
     vim.api.nvim_create_autocmd({"BufWritePre"}, {
       buffer = bufnr,
@@ -620,9 +645,31 @@ lspconfig.tsserver.setup{
   on_attach = on_attach,
   filetypes = {
     'typescript', 
-    'typescript.tsx',
+    'typescriptreact',
+    -- 'typescript.tsx',
     --'javascriptreact',
   }
+}
+
+lspconfig.lua_ls.setup {
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = { enable = false },
+    },
+  },
 }
 
 vim.diagnostic.config({
