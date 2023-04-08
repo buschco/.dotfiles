@@ -130,31 +130,13 @@ vim.api.nvim_create_autocmd({"BufRead"}, {
   callback = filetypeDetect
 })
 
-local fillFlowFile = function() 
-  local name = vim.fn.expand('%:t:r')
-  vim.api.nvim_put({
-    '// @flow',
-    "import * as React from 'react';",
-    "",
-    "function ".. name .. "(): React.Node {",
-    "  return <></>;",
-    "}",
-    "",
-    "export default "..name
-  }, 'c', false, true)
+local createFlowFile = function() 
+  vim.api.nvim_put({'// @flow'}, 'c', false, true)
   vim.cmd(':w')
   vim.cmd(':F')
 end
 
-local createAndFillFlowFile = function()
-  local name = vim.fn.expand('<cword>')
-  vim.cmd("e %:h/"..name..".js")
-  vim.cmd(":FF")
-end
-
-vim.api.nvim_create_user_command('FF', fillFlowFile , {})
-
-vim.api.nvim_create_user_command('CF', createAndFillFlowFile, {})
+vim.api.nvim_create_user_command('FF', createFlowFile, {})
 
 --:command Inshtml :normal i your text here^V<ESC>
 
@@ -195,8 +177,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
-local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
-ft_to_parser.javascriptreact = "tsx"
+--local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
+--ft_to_parser.javascriptreact = "tsx"
+vim.treesitter.language.register('tsx', 'javascriptreact')
 
 -- diffview
 require("diffview").setup({ 
@@ -298,10 +281,10 @@ require('nvim-treesitter.configs').setup {
 };
 
 -- https://www.reddit.com/r/neovim/comments/1144spy/will_treesitter_ever_be_stable_on_big_files/
-vim.treesitter.set_query("javascript", "injections", "")
-vim.treesitter.set_query("typescript", "injections", "")
-vim.treesitter.set_query("tsx", "injections", "")
-vim.treesitter.set_query("lua", "injections", "")
+vim.treesitter.query.set("javascript", "injections", "")
+vim.treesitter.query.set("typescript", "injections", "")
+vim.treesitter.query.set("tsx", "injections", "")
+vim.treesitter.query.set("lua", "injections", "")
 
 require("bufferline").setup {
   options = {
@@ -575,7 +558,7 @@ lspconfig.tailwindcss.setup{
 
 lspconfig.eslint.setup{
   on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
+    on_attach(client, bufmr)
     -- use this if eslint_d (provided by null-ls) is not used 
     vim.api.nvim_create_autocmd({"BufWritePre"}, {
       buffer = bufnr,
@@ -649,27 +632,6 @@ lspconfig.tsserver.setup{
     -- 'typescript.tsx',
     --'javascriptreact',
   }
-}
-
-lspconfig.lua_ls.setup {
-  settings = {
-    Lua = {
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT',
-      },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = {'vim'},
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = vim.api.nvim_get_runtime_file("", true),
-      },
-      -- Do not send telemetry data containing a randomized but unique identifier
-      telemetry = { enable = false },
-    },
-  },
 }
 
 vim.diagnostic.config({

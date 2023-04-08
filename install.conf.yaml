@@ -14,8 +14,14 @@
     /usr/local/bin/git-cleanup-branches:
       path: bin/git-cleanup-branches
     #~/.config/nvim/init.vim:
-      #path: nvim/init.vim
-      #create: true
+    #path: nvim/init.vim
+    #create: true
+    ~/.Brewfile:
+      path: .Brewfile
+      create: true
+    ~/.Brewfile.lock.json:
+      path: .Brewfile.lock.json
+      create: true
     ~/.cspell.json:
       path: .cspell.json
     ~/.config/nvim/init.lua:
@@ -29,9 +35,6 @@
       create: true
     ~/.config/nvim/lazy-lock.json:
       path: nvim/lazy-lock.json
-      create: true
-    ~/.config/nvim/lua/plugins/init.lua:
-      path: nvim/plugins/init.lua
       create: true
     ~/.config/nvim/lua/plugins/init.lua:
       path: nvim/plugins/init.lua
