@@ -488,7 +488,7 @@ local on_attach = function(client, bufnr)
   }) end, 'next error')
 end
 
-local lsp_fomat = require("lsp-format")
+local lsp_format = require("lsp-format")
 lsp_format.setup({})
 
 local on_attach_with_format = function(client, bufnr)
