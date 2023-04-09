@@ -20,6 +20,7 @@ return {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
       { 'L3MON4D3/LuaSnip', version = "1.*" },
       'saadparwaiz1/cmp_luasnip',
       'roobert/tailwindcss-colorizer-cmp.nvim',
@@ -27,7 +28,7 @@ return {
     }
   },
 
-  'ray-x/lsp_signature.nvim',
+  --'ray-x/lsp_signature.nvim',
   'jose-elias-alvarez/null-ls.nvim',
   { 'sindrets/diffview.nvim',
     dependencies  = { 'nvim-lua/plenary.nvim' }

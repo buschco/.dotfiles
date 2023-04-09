@@ -458,17 +458,10 @@ vim.keymap.set('n', '<space>g', require('telescope.builtin').git_bcommits,
 
 -- LSP
 
-require("lsp-format").setup({})
 
 local lspconfig = require('lspconfig')
 
 local on_attach = function(client, bufnr)
-  require "lsp_signature".on_attach({
-    bind = true,
-    hint_prefix = "",
-    handler_opts = { border = "none" },
-  }, bufnr)
-
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -477,7 +470,7 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+  --nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>aw', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
   nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
@@ -493,11 +486,13 @@ local on_attach = function(client, bufnr)
   nmap(']g', function() vim.diagnostic.goto_next({ 
       severity = { min = vim.diagnostic.severity["WARN"] }
   }) end, 'next error')
-
 end
 
+local lsp_fomat = require("lsp-format")
+lsp_format.setup({})
+
 local on_attach_with_format = function(client, bufnr)
-  require("lsp-format").on_attach(client)
+  lsp_format.on_attach(client)
   on_attach()
 end
 
@@ -783,6 +778,7 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
+    { name = 'nvim_lsp_signature_help' },
     { name = 'nvim-cmp-ts-tag-close' },
     { name = 'nvim_lsp' },
     { name = 'path' },
