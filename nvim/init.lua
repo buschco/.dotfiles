@@ -9,11 +9,11 @@ if not vim.loop.fs_stat(lazypath) then
     lazypath,
   })
 end
+
 vim.opt.rtp:prepend(lazypath)
 
 vim.g.mapleader = '\\'
 vim.g.maplocalleader = '\\'
-
 
 vim.cmd[[ set diffopt+=vertical ]]
 vim.cmd[[ set hidden ]]
@@ -117,27 +117,6 @@ vim.cmd [[command! BufOnly silent! execute "%bd|e#|bd!#"]]
 vim.cmd.cnoreabbrev({ 'bda', 'BufOnly' })
 vim.cmd.cnoreabbrev({ 'Bda', 'BufOnly' })
 
-local filetypeDetect = function()
-  vim.cmd(":filetype detect")
-  vim.cmd("if getline(1) =~ '// @flow' | setlocal ft=javascriptreact | endif")
-end
-
-vim.api.nvim_create_user_command('F', filetypeDetect, {})
-
--- fix FT for @flow files
-vim.api.nvim_create_autocmd({"BufRead"}, {
-  pattern = {"*.js"},
-  callback = filetypeDetect
-})
-
-local createFlowFile = function() 
-  vim.api.nvim_put({'// @flow'}, 'c', false, true)
-  vim.cmd(':w')
-  vim.cmd(':F')
-end
-
-vim.api.nvim_create_user_command('FF', createFlowFile, {})
-
 --:command Inshtml :normal i your text here^V<ESC>
 
 -- :Bd behaves like :bd
@@ -161,12 +140,31 @@ vim.keymap.set('n', '<c-j>', ':wincmd j<CR>', { silent = true })
 vim.keymap.set('n', '<c-h>', ':wincmd h<CR>', { silent = true })
 vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', { silent = true })
 
--- Treesitter
+local fillFlowFile = function() 
+  local name = vim.fn.expand('%:t:r')
+  vim.api.nvim_put({
+    '// @flow',
+    "import * as React from 'react';",
+    "",
+    "function ".. name .. "(): React.Node {",
+    "  return <></>;",
+    "}",
+    "",
+    "export default "..name
+  }, 'c', false, true)
+  vim.cmd(':w')
+end
 
--- vim.api.nvim_create_autocmd({"BufNewFile","BufRead"}, {
---   pattern = {"*.tsx"},
---   command = "set filetype=typescript.tsx"
--- })
+local createAndFillFlowFile = function()
+  local name = vim.fn.expand('<cword>')
+  vim.cmd("e %:h/"..name..".js")
+  fillFlowFile()
+  vim.cmd(":filetype detect")
+end
+
+vim.api.nvim_create_user_command('CF', createAndFillFlowFile, {})
+
+-- Treesitter
 
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -176,6 +174,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+vim.filetype.add {
+  pattern = {
+    ['.*.js'] = {
+      priority = math.huge,
+      function(path, bufnr)
+        local content = vim.filetype.getlines(bufnr, 1)
+        if vim.filetype.matchregex(content, '// @flow') then
+          return 'javascriptreact'
+        else
+          return 'javascript'
+        end
+      end,
+    },
+  },
+}
 
 --local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
 --ft_to_parser.javascriptreact = "tsx"

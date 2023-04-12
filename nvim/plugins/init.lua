@@ -15,6 +15,7 @@ return {
   'lukas-reineke/lsp-format.nvim',
 
   { -- Autocompletion
+    --'yioneko/nvim-cmp',
     'hrsh7th/nvim-cmp',
     dependencies = {
       'hrsh7th/cmp-buffer',
