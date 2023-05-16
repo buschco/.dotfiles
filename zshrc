@@ -1,4 +1,4 @@
-# If you come from bash you might have to change your $PATH.
+# If you come from bash you might have to change your $PATH.z
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:
 
 # for esp flashing
@@ -10,6 +10,7 @@ export IDF_PATH="/Users/colin/Documents/code.nosync/ESP8266_RTOS_SDK"
 # add GO
 export PATH=$PATH:/usr/local/go/bin
 export PATH="$HOME/go/bin:$PATH"
+export HUSKY=0
 
 # https://github.com/nvim-treesitter/nvim-treesitter/issues/4482#issuecomment-1464499238
 export CPLUS_INCLUDE_PATH=/Library/Developer/CommandLineTools/usr/include/c++/v1:/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include
@@ -88,7 +89,9 @@ export ZSH="/Users/colin/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="spaceship"
+source $(brew --prefix)/opt/spaceship/spaceship.zsh
+# source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
@@ -215,7 +218,7 @@ SPACESHIP_GIT_BRANCH_COLOR='red'
 SPACESHIP_PROMPT_SEPARATE_LINE=true
 SPACESHIP_PROMPT_ADD_NEWLINE=true
 SPACESHIP_CHAR_PREFIX="\n"
-SPACESHIP_CHAR_SUFFIX=" "
+SPACESHIP_CHAR_SUFFIX=""
 SPACESHIP_CHAR_SYMBOL="➜"
 SPACESHIP_PROMPT_ORDER=(
   time          # Time stamps section
@@ -348,6 +351,8 @@ gli() {
   $gitlog | $fzf
 }
 
+alias check='yarn flow && yarn eslint $(git show --pretty="format:" --name-only) --fix'
+alias check!='yarn flow && yarn eslint $(git show --pretty="format:" --name-only) --fix && gpu'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

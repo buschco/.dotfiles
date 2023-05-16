@@ -175,6 +175,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
+vim.api.nvim_set_hl(0, "shorthand_property_identifier_pattern", { link = "Identifier" })
+
 vim.filetype.add {
   pattern = {
     ['.*.js'] = {
@@ -258,6 +260,7 @@ require('nvim-treesitter.configs').setup {
   -- ignore_install = { },
 
   highlight = {
+    custom_captures = {["shorthand_property_identifier_pattern"] = "@property"},
     -- `false` will disable the whole extension
     enable = true,
 
@@ -272,25 +275,6 @@ require('nvim-treesitter.configs').setup {
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
-  },
-
-  playground = {
-    enable = true,
-    disable = {},
-    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-    persist_queries = false, -- Whether the query persists across vim sessions
-    keybindings = {
-      toggle_query_editor = 'o',
-      toggle_hl_groups = 'i',
-      toggle_injected_languages = 't',
-      toggle_anonymous_nodes = 'a',
-      toggle_language_display = 'I',
-      focus_language = 'f',
-      unfocus_language = 'F',
-      update = 'R',
-      goto_node = '<cr>',
-      show_help = '?',
-    },
   },
 };
 
@@ -324,7 +308,7 @@ require('lualine').setup {
    sections = {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename', "vim.fn.reg_recording()" },
+    lualine_c = {'filename', "vim.fn.reg_recording()", "searchcount" },
     lualine_x = {"require'lsp-status'.status()", 'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
@@ -372,6 +356,15 @@ local telescopeConfig = require("telescope.config")
 
 -- Clone the default Telescope configuration
 local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
+
+local closeBuffFromPicker = function(prompt_bufnr) 
+  -- force delete the buffer even if unsaved
+  local current_picker = require"telescope.actions.state".get_current_picker(prompt_bufnr)
+  current_picker:delete_selection(function(selection)
+    local ok = pcall(vim.api.nvim_buf_delete, selection.bufnr, { force = true })
+    return ok
+  end)
+end
 
 require('telescope').setup {
   pickers = {
@@ -425,14 +418,8 @@ require('telescope').setup {
             end
           end
         end,
-        ["<C-x>"] = function(prompt_bufnr) 
-          -- force delete the buffer even if unsaved
-          local current_picker = require"telescope.actions.state".get_current_picker(prompt_bufnr)
-          current_picker:delete_selection(function(selection)
-            local ok = pcall(vim.api.nvim_buf_delete, selection.bufnr, { force = true })
-            return ok
-          end)
-        end
+        ["<C-x>"] = closeBuffFromPicker,
+        ["<C-z>"] = closeBuffFromPicker 
       },
     },
   }
@@ -476,6 +463,13 @@ vim.keymap.set('n', '<space>g', require('telescope.builtin').git_bcommits,
 local lspconfig = require('lspconfig')
 
 local on_attach = function(client, bufnr)
+
+  -- disable lsp highlighing 
+  -- https://www.reddit.com/r/neovim/comments/109vgtl/how_to_disable_highlight_from_lsp/
+  if client ~= nil then
+    client.server_capabilities.semanticTokensProvider = nil
+  end
+
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -512,16 +506,27 @@ end
 
 local null_ls = require("null-ls")
 
+local cspell = require("cspell")
+local cSpellJsonPath = vim.fn.expand("~/.cspell.json")
+
+local cSpellConfig = {
+  find_json = function(cwd)
+    return cSpellJsonPath 
+  end,
+}
+
 null_ls.setup({
   sources = {
     --null_ls.builtins.diagnostics.eslint_d,
     null_ls.builtins.code_actions.eslint_d,
     --null_ls.builtins.formatting.eslint_d,
-    null_ls.builtins.diagnostics.cspell.with({
-      extra_args = { "--config", vim.fn.expand("~/.cspell.json") },
-      diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity["HINT"] end,
+    cspell.diagnostics.with({ 
+      config = cSpellConfig,
+      diagnostics_postprocess = function(diagnostic)
+        diagnostic.severity = vim.diagnostic.severity["HINT"]
+      end,
     }),
-    null_ls.builtins.code_actions.cspell,
+    cspell.code_actions.with({ config = cSpellConfig }),
     null_ls.builtins.formatting.prettierd
   },
   on_attach = on_attach_with_format 
@@ -635,6 +640,42 @@ lspconfig.yamlls.setup {
 lspconfig.tsserver.setup{
   capabilities = capabilities,
   on_attach = on_attach,
+  handlers = {
+    -- https://www.reddit.com/r/neovim/comments/vfc7hc/lsp_definition_in_tsserver/?utm_source=share&utm_medium=web2x&context=3
+    ["textDocument/definition"] = function(_, result, params)
+        local util = require("vim.lsp.util")
+        if result == nil or vim.tbl_isempty(result) then
+            -- local _ = vim.lsp.log.info() and vim.lsp.log.info(params.method, "No location found")
+            return nil
+        end
+
+        if vim.tbl_islist(result) then
+            -- this is opens a buffer to that result
+            --  you could loop the result and choose what you want
+            util.jump_to_location(result[1])
+
+            if #result > 1 then
+                local isReactDTs = false
+                ---@diagnostic disable-next-line: unused-local
+                for key, value in pairs(result) do
+                    if string.match(value.targetUri, "react/index.d.ts") then
+                        isReactDTs = true
+                        break
+                    end
+                end
+                if not isReactDTs then
+                    -- this sets the value for the quickfix list
+                    util.set_qflist(util.locations_to_items(result))
+                    -- this opens the quickfix window
+                    vim.api.nvim_command("copen")
+                    vim.api.nvim_command("wincmd p")
+                end
+            end
+        else
+            util.jump_to_location(result)
+        end
+    end,
+  },
   filetypes = {
     'typescript', 
     'typescriptreact',
@@ -741,7 +782,7 @@ local compare = cmp.config.compare
 require('nvim-cmp-ts-tag-close').setup({ skip_tags = { 'FGlyphIcon' } })
 
 cmp.setup {
-  -- performance = { debounce = 120 },
+  --performance = { debounce = 150 },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -769,8 +810,6 @@ cmp.setup {
   },
   preselect = cmp.PreselectMode.None,
   mapping = cmp.mapping.preset.insert {
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Insert,

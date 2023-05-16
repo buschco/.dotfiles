@@ -16,7 +16,8 @@ return {
 
   { -- Autocompletion
     --'yioneko/nvim-cmp',
-    'hrsh7th/nvim-cmp',
+    --'buschco/nvim-cmp',
+    dir = '~/Documents/code.nosync/nvim-cmp',
     dependencies = {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-nvim-lsp',
@@ -29,11 +30,9 @@ return {
     }
   },
 
-  --'ray-x/lsp_signature.nvim',
-  'jose-elias-alvarez/null-ls.nvim',
-  { 'sindrets/diffview.nvim',
-    dependencies  = { 'nvim-lua/plenary.nvim' }
-  },
+  { 'jose-elias-alvarez/null-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
+
+  { 'sindrets/diffview.nvim', dependencies  = { 'nvim-lua/plenary.nvim' } },
 
   {
     'nvim-treesitter/nvim-treesitter',
