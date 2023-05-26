@@ -14,6 +14,7 @@ module.exports = {
         "http://127.0.0.1:5173/*",
         "http://localhost:5173/*",
         "http://localhost:8081/debugger-ui/",
+        "https://github.com/finanzguru/*",
       ],
       browser: "Google Chrome",
     },

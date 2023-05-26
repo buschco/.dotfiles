@@ -15,9 +15,9 @@ return {
   'lukas-reineke/lsp-format.nvim',
 
   { -- Autocompletion
-    --'yioneko/nvim-cmp',
+    'hrsh7th/nvim-cmp',
     --'buschco/nvim-cmp',
-    dir = '~/Documents/code.nosync/nvim-cmp',
+    -- dir = '~/Documents/code.nosync/nvim-cmp',
     dependencies = {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-nvim-lsp',
