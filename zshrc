@@ -38,6 +38,9 @@ export PATH="/usr/local/opt/curl/bin:$PATH"
 alias python=/usr/local/bin/python3 
 alias python3=/usr/local/bin/python3 
 
+# alias for pnpm - no shit
+alias pn=pnpm
+
 # Add fastlane to PATH (react-native)
 export PATH="$HOME/.fastlane/bin:$PATH"
 
