@@ -354,8 +354,10 @@ gli() {
   $gitlog | $fzf
 }
 
-alias check='yarn flow && yarn eslint $(git show --pretty="format:" --name-only) --fix'
-alias check!='yarn flow && yarn eslint $(git show --pretty="format:" --name-only) --fix && gpu'
+alias check='yarn flow &&\
+  yarn eslint $(git show --pretty="format:" --name-only) --fix &&\
+  yarn prettier --check $(git show --pretty="format:" --name-only)'
+alias check!='check && gpu'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -367,5 +369,8 @@ export SDKMAN_DIR="/Users/colin/.sdkman"
 
 # pnpm
 export PNPM_HOME="/Users/colin/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
 # pnpm end
