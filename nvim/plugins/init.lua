@@ -7,7 +7,7 @@ return {
   'tpope/vim-surround',
   'tpope/vim-unimpaired',
   'tpope/vim-repeat',
-  'unblevable/quick-scope',
+  -- 'unblevable/quick-scope',
   'NvChad/nvim-colorizer.lua',
 
   'neovim/nvim-lspconfig',
