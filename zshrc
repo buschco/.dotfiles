@@ -355,7 +355,7 @@ gli() {
 }
 
 alias check='yarn flow &&\
-  yarn eslint $(git show --pretty="format:" --name-only) --fix &&\
+  yarn eslint $(git show --pretty="format:" --name-only) &&\
   yarn prettier --check $(git show --pretty="format:" --name-only)'
 alias check!='check && gpu'
 

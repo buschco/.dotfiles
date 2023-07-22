@@ -166,6 +166,13 @@ vim.api.nvim_create_user_command('CF', createAndFillFlowFile, {})
 
 -- Treesitter
 
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = { 'Fastfile', 'Appfile', 'Matchfile', 'Pluginfile' },
+	callback = function()
+    vim.o.filetype = 'ruby'
+	end,
+})
+
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -446,6 +453,7 @@ vim.keymap.set('n', '<space>c',
 -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#file-and-text-search-in-hidden-files-and-directories
 -- I want to search in hidden/dot files.
 table.insert(vimgrep_arguments, "--hidden")
+table.insert(vimgrep_arguments, "-F")
 -- I don't want to search in the `.git` directory.
 table.insert(vimgrep_arguments, "--glob")
 table.insert(vimgrep_arguments, "!**/.git/*")
