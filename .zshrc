@@ -41,6 +41,10 @@ alias python3=/usr/local/bin/python3
 # alias for pnpm - no shit
 alias pn=pnpm
 
+# alias for quick config edit
+alias zshrc=nvim ~/.zshrc
+alias cs="source ~/.zshrc"
+
 # Add fastlane to PATH (react-native)
 export PATH="$HOME/.fastlane/bin:$PATH"
 
@@ -48,7 +52,7 @@ export PATH="$HOME/.fastlane/bin:$PATH"
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 
 # Add rust to Path
-source "$HOME/.cargo/env"
+# source "$HOME/.cargo/env"
 
 # editor of choice
 export EDITOR=nvim
@@ -61,9 +65,6 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/emulator
-
-# init rbenv (see: https://github.com/rbenv/rbenv)
-eval "$(rbenv init -)"
 
 # enable nvm (see: https://github.com/nvm-sh/nvm)
 export NVM_DIR="$HOME/.nvm"
@@ -153,9 +154,9 @@ source $(brew --prefix)/opt/spaceship/spaceship.zsh
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 plugins=(
   git
-  zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -384,3 +385,7 @@ esac
 # tabtab source for packages
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
+
+
+# init rbenv (see: https://github.com/rbenv/rbenv)
+eval "$(rbenv init - zsh)"
