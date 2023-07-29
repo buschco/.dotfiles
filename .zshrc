@@ -42,8 +42,10 @@ alias python3=/usr/local/bin/python3
 alias pn=pnpm
 
 # alias for quick config edit
-alias zshrc=nvim ~/.zshrc
+alias zshrc="nvim ~/.zshrc"
 alias cs="source ~/.zshrc"
+alias neo="nvim ~/.config/nvim/init.lua"
+alias neop="nvim ~/.config/nvim/lua/plugins/init.lua"
 
 # Add fastlane to PATH (react-native)
 export PATH="$HOME/.fastlane/bin:$PATH"
@@ -57,7 +59,13 @@ export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 # editor of choice
 export EDITOR=nvim
 
-alias config='/usr/bin/git --git-dir=$HOME/github.com/dotfiles --work-tree=$HOME'
+# https://apple.stackexchange.com/a/340718
+autoload -Uz compinit
+compinit
+
+# https://stackoverflow.com/a/14307127/5444033
+alias fig='/usr/bin/git --git-dir=$HOME/github.com.nosync/dotfiles --work-tree=$HOME'
+compdef fig='git'
 
 # Add android tools to PATH (react-native)
 export ANDROID_HOME=$HOME/Library/Android/sdk
@@ -190,11 +198,9 @@ export LANG=en_US.UTF-8
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias c=clear
-alias fga="cd ~/Documents/dwins.nosync/Financeguru"
-alias dwins="cd ~/Documents/dwins.nosync"
-alias priv="cd ~/Documents/code.nosync/"
-alias c4="cd ~/Documents/code.nosync/fourwins"
-alias dotfiles="cd ~/.dotfiles"
+alias fga="cd ~/build.dwins.de.nosync/Financeguru"
+alias dwins="cd ~/build.dwins.de.nosync"
+alias priv="cd ~/github.com.nosync/"
 
 # git aliases
 alias gfm="git co main && git fetch --all && git pull && git co -"
@@ -317,7 +323,7 @@ chpwd_profile_default() {
   export AWS_PROFILE="private"
 }
 
-zstyle ':chpwd:profiles:/Users/colin/Documents/dwins.nosync(|/|/*)' profile dwins
+zstyle ':chpwd:profiles:/Users/colin/build.dwins.de.nosync(|/|/*)' profile dwins
 
 chpwd_profiles
 
@@ -386,6 +392,8 @@ esac
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
-
 # init rbenv (see: https://github.com/rbenv/rbenv)
 eval "$(rbenv init - zsh)"
+
+# add yarn binaries to PATH
+export PATH="$PATH:$(yarn global bin)"

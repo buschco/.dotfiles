@@ -2,7 +2,7 @@ return {
 
   -- Theme
   -- use 'buschco/vim-horizon'
-  { dir = '~/github.com/vim-horizon' },
+  { dir = '~/github.com.nosync/vim-horizon' },
 
   'tpope/vim-surround',
   'tpope/vim-unimpaired',
@@ -26,7 +26,7 @@ return {
       { 'L3MON4D3/LuaSnip', version = "1.*" },
       'saadparwaiz1/cmp_luasnip',
       'roobert/tailwindcss-colorizer-cmp.nvim',
-      { dir = '~/github.com/nvim-cmp-ts-tag-close' },
+      { dir = '~/github.com.nosync/nvim-cmp-ts-tag-close' },
     }
   },
 
