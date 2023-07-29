@@ -71,6 +71,7 @@ compinit
 # https://stackoverflow.com/a/14307127/5444033
 alias fig='/usr/bin/git --git-dir=$HOME/github.com.nosync/dotfiles --work-tree=$HOME'
 compdef fig='git'
+alias figpu='fig commit -am update && fig push'
 
 # Add android tools to PATH (react-native)
 export ANDROID_HOME=$HOME/Library/Android/sdk

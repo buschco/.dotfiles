@@ -33,4 +33,5 @@ brew install awscli
 brew install diff-so-fancy
 # install go https://go.dev/dl/
 go install golang.org/x/tools/gopls@latest
+cspell link add @cspell/dict-de-de
 ```
