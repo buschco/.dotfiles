@@ -10,7 +10,9 @@ export IDF_PATH="/Users/colin/Documents/code.nosync/ESP8266_RTOS_SDK"
 # add GO
 export PATH=$PATH:/usr/local/go/bin
 export PATH="$HOME/go/bin:$PATH"
+
 export HUSKY=0
+export FG_SKIP_ARM_CHECK=1
 
 # https://github.com/nvim-treesitter/nvim-treesitter/issues/4482#issuecomment-1464499238
 export CPLUS_INCLUDE_PATH=/Library/Developer/CommandLineTools/usr/include/c++/v1:/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include
@@ -30,6 +32,9 @@ export PATH="$HOME/.latex-docker-scripts/bin:$PATH"
 
 # Add homebrew curl to path
 export PATH="/usr/local/opt/curl/bin:$PATH"
+
+# add idea to path
+export PATH="/Applications/IntelliJ IDEA CE.app/Contents/MacOS:$PATH"
 
 # Add homebrew sbin to PATH
 # export PATH="/usr/local/sbin:$PATH"
