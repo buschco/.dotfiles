@@ -43,7 +43,7 @@ require('lazy').setup(
 local find_git_dir_job = vim.fn.jobstart({ "git", "rev-parse", "--git-dir" })
 local find_git_dir_exit_code = vim.fn.jobwait({find_git_dir_job })[1]
 
-local is_dotfiles = find_git_dir_exit_code > 0 -- her must be a check if cwd == ~
+local is_dotfiles = find_git_dir_exit_code > 0 and vim.fn.getcwd() == "/Users/colin"
 
 -- Theme
 vim.opt.syntax = 'enable'
@@ -477,7 +477,7 @@ table.insert(vimgrep_arguments, "--glob")
 table.insert(vimgrep_arguments, "!**/.git/*")
 
 
-if find_git_dir_exit_code > 0 then
+if is_dotfiles then
   -- no git dir in curren path
   vim.env.GIT_DIR = vim.fn.expand("~/github.com.nosync/dotfiles")
   vim.env.GIT_WORK_TREE = vim.fn.expand("~")
