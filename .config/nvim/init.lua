@@ -40,6 +40,11 @@ require('lazy').setup(
   }
 )
 
+local find_git_dir_job = vim.fn.jobstart({ "git", "rev-parse", "--git-dir" })
+local find_git_dir_exit_code = vim.fn.jobwait({find_git_dir_job })[1]
+
+local is_dotfiles = find_git_dir_exit_code > 0 -- her must be a check if cwd == ~
+
 -- Theme
 vim.opt.syntax = 'enable'
 vim.opt.termguicolors = true
@@ -48,8 +53,8 @@ vim.cmd [[colorscheme horizon]]
 -- Coc Related options
 
 -- Some servers have issues with backup files, see #649
---vim.opt.backup = false
---vim.opt.writebackup = false
+-- vim.opt.backup = false
+-- vim.opt.writebackup = false
 
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
@@ -322,8 +327,16 @@ require('lualine').setup {
   },
 }
 
+local gs = require("gitsigns")
+
 -- Gitsigns
-require('gitsigns').setup {
+gs.setup {
+   worktrees = {
+    {
+      toplevel = vim.env.HOME,
+      gitdir = vim.env.HOME .. '/github.com.nosync/dotfiles'
+    }
+  },
   signs = {
     add = { text = '+' },
     change = { text = '~' },
@@ -393,6 +406,12 @@ require('telescope').setup {
     }
   },
   defaults = {
+    git_worktrees = {
+      {
+        toplevel = vim.env.HOME,
+        gitdir = vim.env.HOME .. '/github.com.nosync/dotfiles'
+      }
+    },
     vimgrep_arguments = vimgrep_arguments,
     preview = {
       treesitter = true,
@@ -432,7 +451,6 @@ require('telescope').setup {
   }
 }
 
--- Enable telescope fzf native, if installed
 require('telescope').load_extension('fzf')
 
 -- telescope bindings
@@ -444,7 +462,7 @@ vim.keymap.set('n', '<space>a', function ()
     severity_limit = 2
   })
 end
-) 
+)
 vim.keymap.set('n', '<space>c', 
  function () return ':Telescope live_grep default_text=<' ..  vim.fn.expand '<cword>' .. '<cr>' end,
  {silent = true, desc = 'find files', expr = true }
@@ -458,7 +476,16 @@ table.insert(vimgrep_arguments, "-F")
 table.insert(vimgrep_arguments, "--glob")
 table.insert(vimgrep_arguments, "!**/.git/*")
 
-vim.keymap.set('n', '<C-p>', ":Telescope find_files<cr>", { silent = true, desc = 'find files' })
+
+if find_git_dir_exit_code > 0 then
+  -- no git dir in curren path
+  vim.env.GIT_DIR = vim.fn.expand("~/github.com.nosync/dotfiles")
+  vim.env.GIT_WORK_TREE = vim.fn.expand("~")
+  vim.keymap.set('n', '<C-p>', ":Telescope git_files<cr>", { silent = true, desc = 'find files' })
+else
+  vim.keymap.set('n', '<C-p>', ":Telescope find_files<cr>", { silent = true, desc = 'find files' })
+end
+
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
 vim.keymap.set('n', '<space>f', require('telescope.builtin').git_status, { desc = 'git status' })

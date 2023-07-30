@@ -47,6 +47,7 @@ return {
 
   'tpope/vim-fugitive',
   'lewis6991/gitsigns.nvim',
+  -- { dir = '~/github.com.nosync/gitsigns.nvim' },
 
   'nvim-lualine/lualine.nvim',
   {'akinsho/bufferline.nvim', version = "v3.*" },

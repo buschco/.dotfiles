@@ -46,12 +46,6 @@ alias python3=/usr/local/bin/python3
 # alias for pnpm - no shit
 alias pn=pnpm
 
-# alias for quick config edit
-alias zshrc="nvim ~/.zshrc"
-alias cs="source ~/.zshrc"
-alias neo="nvim ~/.config/nvim/init.lua"
-alias neop="nvim ~/.config/nvim/lua/plugins/init.lua"
-
 # Add fastlane to PATH (react-native)
 export PATH="$HOME/.fastlane/bin:$PATH"
 
@@ -72,6 +66,14 @@ compinit
 alias fig='/usr/bin/git --git-dir=$HOME/github.com.nosync/dotfiles --work-tree=$HOME'
 compdef fig='git'
 alias figpu='fig commit -am update && fig push'
+
+# alias for quick config edit
+alias zshrc="nvim ~/.zshrc"
+alias cs="source ~/.zshrc"
+alias neo="nvim ~/.config/nvim/init.lua"
+alias neop="nvim ~/.config/nvim/lua/plugins/init.lua"
+#alias dotfiles="cd $HOME && GIT_DIR=$HOME/github.com.nosync/dotfiles/ GIT_WORK_TREE=$HOME nvim $HOME"
+alias dotfiles="cd $HOME && nvim"
 
 # Add android tools to PATH (react-native)
 export ANDROID_HOME=$HOME/Library/Android/sdk
@@ -333,6 +335,8 @@ chpwd_profile_default() {
 zstyle ':chpwd:profiles:/Users/colin/build.dwins.de.nosync(|/|/*)' profile dwins
 
 chpwd_profiles
+
+alias dosh="docker run -it --entrypoint bash"
 
 docker-run() {
   docker run -it --rm -v $(pwd):/project -w /project "$@"
