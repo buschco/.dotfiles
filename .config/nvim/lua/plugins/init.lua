@@ -30,6 +30,7 @@ return {
     }
   },
 
+  { 'mhartington/formatter.nvim' },
   { 'jose-elias-alvarez/null-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
 
   { 'sindrets/diffview.nvim', dependencies  = { 'nvim-lua/plenary.nvim' } },

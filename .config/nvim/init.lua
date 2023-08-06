@@ -540,6 +540,35 @@ local on_attach_with_format = function(client, bufnr)
   on_attach()
 end
 
+require("formatter").setup {
+  filetype = {
+    css = { require("formatter.filetypes.css").prettierd },
+    html = { require("formatter.filetypes.html").prettierd },
+    javascript = { require("formatter.filetypes.javascript").prettierd },
+    javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
+    json = { require("formatter.filetypes.json").prettierd },
+    markdown = { require("formatter.filetypes.markdown").prettierd },
+    typescript = { require("formatter.filetypes.typescript").prettierd },
+    typescriptreact = { require("formatter.filetypes.typescriptreact").prettierd },
+    yaml = { require("formatter.filetypes.yaml").prettierd },
+  }
+}
+
+vim.api.nvim_create_autocmd('TextYankPost', {
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+  group = highlight_group,
+  pattern = '*',
+})
+
+vim.cmd([[
+  augroup FormatAutogroup
+    autocmd!
+    autocmd BufWritePost * FormatWrite
+  augroup END
+]])
+
 local null_ls = require("null-ls")
 
 local cspell = require("cspell")
@@ -553,9 +582,6 @@ local cSpellConfig = {
 
 null_ls.setup({
   sources = {
-    --null_ls.builtins.diagnostics.eslint_d,
-    null_ls.builtins.code_actions.eslint_d,
-    --null_ls.builtins.formatting.eslint_d,
     cspell.diagnostics.with({ 
       config = cSpellConfig,
       diagnostics_postprocess = function(diagnostic)
@@ -563,7 +589,6 @@ null_ls.setup({
       end,
     }),
     cspell.code_actions.with({ config = cSpellConfig }),
-    null_ls.builtins.formatting.prettierd
   },
   on_attach = on_attach_with_format 
 })
