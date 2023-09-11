@@ -547,20 +547,13 @@ require("formatter").setup {
     javascript = { require("formatter.filetypes.javascript").prettierd },
     javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
     json = { require("formatter.filetypes.json").prettierd },
+    jsonc = { require("formatter.filetypes.json").prettierd },
     markdown = { require("formatter.filetypes.markdown").prettierd },
     typescript = { require("formatter.filetypes.typescript").prettierd },
     typescriptreact = { require("formatter.filetypes.typescriptreact").prettierd },
     yaml = { require("formatter.filetypes.yaml").prettierd },
   }
 }
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-  group = highlight_group,
-  pattern = '*',
-})
 
 vim.cmd([[
   augroup FormatAutogroup
@@ -775,7 +768,14 @@ local function copy(args)
   return args[1]
 end
 
--- TODO typescript
+
+-- console.log('cbu', ${1})
+local conso = s("conso", {
+  t("console.log('cbu',"), 
+  i(1),
+  t(")")
+})
+
 luasnip.add_snippets("javascriptreact", {
 -- const get${1}: Selector<${2}> = createFSelector(
 --     'get${1}',
@@ -807,12 +807,8 @@ luasnip.add_snippets("javascriptreact", {
       "}"
     })
   }),
--- console.log('cbu', ${1})
-  s("conso", {
-    t("console.log('cbu',"), 
-    i(1),
-    t(")")
-  }),
+
+  conso,
 
 -- import * as React from 'react';
 --
@@ -822,10 +818,7 @@ luasnip.add_snippets("javascriptreact", {
 --
 -- export default ${1};
   s("fcomp", {
-    t({
-      "import * as React from 'react';",
-      "", "function "
-    }),
+    t({ "", "function " }),
     i(1),
     t({
       "(): React.Node {",
@@ -834,9 +827,21 @@ luasnip.add_snippets("javascriptreact", {
       "export default "
     }),
     f(copy, 1), 
-  })
+  }),
+  
+-- .navigationOptions = (): NavigationOptions => ({
+-- });
+  s("nav", {
+    t({ 
+      ".navigationOptions = (): NavigationOptions => ({",
+      "  ",
+      "})",
+    }),
+  }),
 })
 
+luasnip.add_snippets("typescript", { conso })
+luasnip.add_snippets("typescriptreact", { conso })
 
 local cmp = require('cmp')
 local compare = cmp.config.compare
@@ -892,6 +897,7 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
+ --   { name = 'cmp-tw2css' },
     { name = 'nvim_lsp_signature_help' },
     { name = 'nvim-cmp-ts-tag-close' },
     { name = 'nvim_lsp' },

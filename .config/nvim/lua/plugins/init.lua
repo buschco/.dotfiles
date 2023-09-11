@@ -14,11 +14,14 @@ return {
 
   'lukas-reineke/lsp-format.nvim',
 
+  --'dhruvasagar/vim-table-mode',
+
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
     --'buschco/nvim-cmp',
     -- dir = '~/Documents/code.nosync/nvim-cmp',
     dependencies = {
+    -- { dir = '~/github.com.nosync/cmp-tw2css' },
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
@@ -31,7 +34,7 @@ return {
   },
 
   { 'mhartington/formatter.nvim' },
-  { 'jose-elias-alvarez/null-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
+  { dir = '~/github.com.nosync/null-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
 
   { 'sindrets/diffview.nvim', dependencies  = { 'nvim-lua/plenary.nvim' } },
 
