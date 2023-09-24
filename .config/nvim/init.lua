@@ -734,7 +734,7 @@ lspconfig.tsserver.setup{
     'typescript', 
     'typescriptreact',
     -- 'typescript.tsx',
-    --'javascriptreact',
+    'javascript',
   }
 }
 
@@ -841,6 +841,7 @@ luasnip.add_snippets("javascriptreact", {
 })
 
 luasnip.add_snippets("typescript", { conso })
+luasnip.add_snippets("javascript", { conso })
 luasnip.add_snippets("typescriptreact", { conso })
 
 local cmp = require('cmp')

@@ -1,11 +1,10 @@
 # If you come from bash you might have to change your $PATH.z
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:
-
 # for esp flashing
 # export SDK_PATH="/Users/colin/Documents/code.nosync/esp-open-rtos"
 
-export PATH=$PATH:$HOME/esp/xtensa-lx106-elf/bin
-export IDF_PATH="/Users/colin/Documents/code.nosync/ESP8266_RTOS_SDK"
+# export PATH=$PATH:$HOME/esp/xtensa-lx106-elf/bin
+# export IDF_PATH="/Users/colin/Documents/code.nosync/ESP8266_RTOS_SDK"
 
 # add GO
 export PATH=$PATH:/usr/local/go/bin
@@ -15,7 +14,7 @@ export HUSKY=0
 export FG_SKIP_ARM_CHECK=1
 
 # https://github.com/nvim-treesitter/nvim-treesitter/issues/4482#issuecomment-1464499238
-export CPLUS_INCLUDE_PATH=/Library/Developer/CommandLineTools/usr/include/c++/v1:/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include
+# export CPLUS_INCLUDE_PATH=/Library/Developer/CommandLineTools/usr/include/c++/v1:/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include
 
 # Add MacGPG2 to PATH (do I need this?)
 #export PATH="/usr/local/MacGPG2/bin:$PATH"
@@ -47,7 +46,7 @@ alias python3=/usr/local/bin/python3
 alias pn=pnpm
 
 # Add fastlane to PATH (react-native)
-export PATH="$HOME/.fastlane/bin:$PATH"
+# export PATH="$HOME/.fastlane/bin:$PATH"
 
 # Add open ssl to Path
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
@@ -224,19 +223,6 @@ alias git-cleanup-branches="~/.git-cleanup-branches.sh"
 
 export AWS_DEFAULT_REGION="eu-central-1"
 
-function bwaws() {
-  export BW_SESSION=$(bw unlock --raw)
-  export AWS_ACCESS_KEY_ID=$(bw get username c4ba157d-b6fe-4291-9396-ac3c009d9c10)
-  export AWS_SECRET_ACCESS_KEY=$(bw get password c4ba157d-b6fe-4291-9396-ac3c009d9c10)
-}
-
-
-function bwawsdwins() {
-  export BW_SESSION=$(bw unlock --raw)
-  export AWS_ACCESS_KEY_ID=$(bw get username 0eae59de-f6f9-4206-91c2-ac4d00b9ee15) 
-  export AWS_SECRET_ACCESS_KEY=$(bw get password 0eae59de-f6f9-4206-91c2-ac4d00b9ee15)
-}
-
 SPACESHIP_JOBS_SHOW=true
 SPACESHIP_JOBS_AMOUNT_THRESHOLD=1
 SPACESHIP_GIT_BRANCH_COLOR='red'
@@ -273,10 +259,6 @@ SPACESHIP_GIT_STATUS_UNMERGED="☄️ "  #Indicator for unmerged changes
 SPACESHIP_GIT_STATUS_AHEAD="🔥 "     #Indicator for unpushed changes (ahead of remote branch)
 SPACESHIP_GIT_STATUS_BEHIND="❄️ "    #Indicator for unpulled changes (behind of remote branch)
 SPACESHIP_GIT_STATUS_DIVERGED="🌱 "  #Indicator for diverged changes (diverged with remote branch)
-
-function s3link() {
-    aws s3 cp "$1" s3://share.busch.dev/ && aws s3 presign s3://share.busch.dev/"$1" --expires-in 600000
-}
 
 function chpwd_profiles() {
     local profile context
@@ -368,6 +350,35 @@ gli() {
     fzf
     --ansi --no-sort --reverse --tiebreak=index
     --preview "f() { set -- \$(echo -- \$@ | grep -o '[a-f0-9]\{7\}'); [ \$# -eq 0 ] || git show --color=always \$1 $filter; }; f {}"
+    --bind "ctrl-q:abort,ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % $filter | less -R') << 'FZF-EOF'
+                {}
+                FZF-EOF"
+   --preview-window=right:60%
+  )
+  $gitlog | $fzf
+}
+
+gln() {
+  if [[ ! `git log -n 1 $@ | head -n 1` ]] ;then
+    return
+  fi
+  local filter
+  if [ -n $@ ] && [ -f $@ ]; then
+    filter="-- $@"
+  fi
+  local gitlog=(
+    git log
+    --graph --color=always
+    --abbrev=7
+    --format='%C(auto)%h %an %C(blue)%s %C(yellow)%cr'
+    $@
+  )
+  local fzf=(
+    fzf
+    --ansi --no-sort --reverse --tiebreak=index
+    --preview "f() { set -- \$(echo -- \$@ | grep -o '[a-f0-9]\{7\}'); [ \$# -eq 0 ] || git show --name-only --color=always \$1 $filter; }; f {}"
     --bind "ctrl-q:abort,ctrl-m:execute:
                 (grep -o '[a-f0-9]\{7\}' | head -1 |
                 xargs -I % sh -c 'git show --color=always % $filter | less -R') << 'FZF-EOF'
