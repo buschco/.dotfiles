@@ -160,6 +160,21 @@ local fillFlowFile = function()
   vim.cmd(':w')
 end
 
+
+local fillTsxFile = function() 
+  local name = vim.fn.expand('%:t:r')
+  vim.api.nvim_put({
+    "import { ReactNode } from 'react';",
+    "",
+    "function ".. name .. "(): ReactNode {",
+    "  return <></>;",
+    "}",
+    "",
+    "export default "..name
+  }, 'c', false, true)
+  vim.cmd(':w')
+end
+
 local createAndFillFlowFile = function()
   local name = vim.fn.expand('<cword>')
   vim.cmd("e %:h/"..name..".js")
@@ -167,7 +182,16 @@ local createAndFillFlowFile = function()
   vim.cmd(":filetype detect")
 end
 
+
+local createAndFillTsxFile = function()
+  local name = vim.fn.expand('<cword>')
+  vim.cmd("e %:h/"..name..".tsx")
+  fillTsxFile()
+  vim.cmd(":filetype detect")
+end
+
 vim.api.nvim_create_user_command('CF', createAndFillFlowFile, {})
+vim.api.nvim_create_user_command('CT', createAndFillTsxFile , {})
 
 -- Treesitter
 
@@ -175,6 +199,14 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = { 'Fastfile', 'Appfile', 'Matchfile', 'Pluginfile' },
 	callback = function()
     vim.o.filetype = 'ruby'
+	end,
+})
+
+
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = { '*.plist' },
+	callback = function()
+    vim.o.filetype = 'xml'
 	end,
 })
 
@@ -544,6 +576,7 @@ require("formatter").setup {
   filetype = {
     css = { require("formatter.filetypes.css").prettierd },
     html = { require("formatter.filetypes.html").prettierd },
+    xml = { require("formatter.filetypes.xml").tidy },
     javascript = { require("formatter.filetypes.javascript").prettierd },
     javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
     json = { require("formatter.filetypes.json").prettierd },
