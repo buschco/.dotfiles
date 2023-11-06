@@ -521,7 +521,10 @@ end
 vim.keymap.set('n', '<space>w', require('telescope.builtin').grep_string, { desc = 'find word' })
 vim.keymap.set('n', '<space>b', require('telescope.builtin').buffers, { desc = 'list buffers' })
 vim.keymap.set('n', '<space>f', require('telescope.builtin').git_status, { desc = 'git status' })
-vim.keymap.set('n', '<space>g', require('telescope.builtin').git_bcommits, 
+vim.keymap.set(
+  'n',
+  '<space>g',
+  require('telescope.builtin').git_bcommits, 
   { desc = 'git history for current file' }
 )
 
@@ -622,6 +625,7 @@ null_ls.setup({
 lspconfig.flow.setup{
   cmd = { 'yarn', 'flow', 'lsp' },
   on_attach = on_attach,
+  filetypes = { 'javascriptreact' },
 }
 
 local configs = require('lspconfig.configs')
@@ -939,4 +943,6 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+require('nvim-autopairs').setup({})
 

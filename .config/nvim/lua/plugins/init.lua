@@ -18,6 +18,7 @@ return {
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
+    -- dir = '~/github.com.nosync/nvim-cmp',
     --'buschco/nvim-cmp',
     -- dir = '~/Documents/code.nosync/nvim-cmp',
     dependencies = {
@@ -33,7 +34,10 @@ return {
     }
   },
 
+  { 'windwp/nvim-autopairs' },
   { 'mhartington/formatter.nvim' },
+
+  -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim
   { dir = '~/github.com.nosync/null-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
 
   { 'sindrets/diffview.nvim', dependencies  = { 'nvim-lua/plenary.nvim' } },
