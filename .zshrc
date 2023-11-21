@@ -204,7 +204,11 @@ export LANG=en_US.UTF-8
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+kbmappingint='{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000035,"HIDKeyboardModifierMappingDst":0x700000064},{"HIDKeyboardModifierMappingSrc":0x700000064,"HIDKeyboardModifierMappingDst":0x700000035}]}'
+kbmappingext='{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000035,"HIDKeyboardModifierMappingDst":0x700000035},{"HIDKeyboardModifierMappingSrc":0x700000064,"HIDKeyboardModifierMappingDst":0x700000064}]}'
 alias c=clear
+alias kbint="hidutil property --set '$kbmappingint'"
+alias kbext="hidutil property --set '$kbmappingext'"
 alias fga="cd ~/build.dwins.de.nosync/Financeguru"
 alias dwins="cd ~/build.dwins.de.nosync"
 alias priv="cd ~/github.com.nosync/"
