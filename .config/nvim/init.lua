@@ -320,6 +320,19 @@ require('nvim-treesitter.configs').setup {
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
+
+  textobjects = {
+    select = {
+      enable = true,
+      keymaps = {
+        ["as"] = {
+          query = "@scope", 
+          query_group = "locals", 
+          desc = "Select language scope" 
+        },
+      }
+    }
+  }
 };
 
 -- https://www.reddit.com/r/neovim/comments/1144spy/will_treesitter_ever_be_stable_on_big_files/
@@ -597,6 +610,11 @@ vim.cmd([[
     autocmd BufWritePost * FormatWrite
   augroup END
 ]])
+
+-- vim.opt.spelllang = 'en,de'
+-- vim.opt.syntax.spell = "toplevel"
+-- vim.opt.spelloptions = "camel"
+-- vim.opt.spell = true
 
 local null_ls = require("null-ls")
 
@@ -944,5 +962,4 @@ cmp.setup {
   },
 }
 
-require('nvim-autopairs').setup({})
-
+vim.keymap.set('n', '<C-S-p>', ':vsplit <CR>:Oil<CR>', { silent = true })

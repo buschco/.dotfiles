@@ -34,7 +34,17 @@ return {
     }
   },
 
-  { 'windwp/nvim-autopairs' },
+  { 'stevearc/oil.nvim', opts = {
+    default_file_explorer = false,
+    view_options = {
+      is_hidden_file = function(name, bufnr)
+        return vim.startswith(name, ".")
+      end,
+      show_hidden = true
+      }
+  } },
+
+  -- { 'windwp/nvim-autopairs' },
   { 'mhartington/formatter.nvim' },
 
   -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim

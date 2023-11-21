@@ -7,6 +7,7 @@ module.exports = {
     {
       match: [
         "https://dwins-gmbh.sentry.io/*",
+        "https://sentry.dwins.de/organizations/finanzguru/issues/659",
         "https://meet.google.com/*",
         "http://localhost:7007*",
         "http://localhost:3000*",
