@@ -10,6 +10,10 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 
+
+-- sync clipboards
+vim.cmd([[set clipboard=unnamed ]])
+
 vim.opt.rtp:prepend(lazypath)
 
 vim.g.mapleader = '\\'
@@ -46,7 +50,6 @@ local find_git_dir_exit_code = vim.fn.jobwait({find_git_dir_job })[1]
 local is_dotfiles = find_git_dir_exit_code > 0 and vim.fn.getcwd() == "/Users/colin"
 
 -- Theme
-vim.opt.syntax = 'enable'
 vim.opt.termguicolors = true
 vim.cmd [[colorscheme horizon]]
 
@@ -611,13 +614,10 @@ vim.cmd([[
   augroup END
 ]])
 
--- vim.opt.spelllang = 'en,de'
--- vim.opt.syntax.spell = "toplevel"
--- vim.opt.spelloptions = "camel"
--- vim.opt.spell = true
-
+-- vim.opt.syntax = 'enable'
+-- vim.cmd([[ set spell spelllang=en,de ]])
+--
 local null_ls = require("null-ls")
-
 local cspell = require("cspell")
 local cSpellJsonPath = vim.fn.expand("~/.cspell.json")
 
@@ -629,6 +629,9 @@ local cSpellConfig = {
 
 null_ls.setup({
   sources = {
+    null_ls.builtins.diagnostics.tsc.with({
+        prefer_local = "node_modules/.bin",
+    }),
     cspell.diagnostics.with({ 
       config = cSpellConfig,
       diagnostics_postprocess = function(diagnostic)
@@ -662,6 +665,16 @@ if not configs.fiona then
 end
 
 lspconfig.fiona.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+lspconfig.clangd.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+lspconfig.rust_analyzer.setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
@@ -747,8 +760,6 @@ lspconfig.yamlls.setup {
 }
 
 lspconfig.tsserver.setup{
-  capabilities = capabilities,
-  on_attach = on_attach,
   handlers = {
     -- https://www.reddit.com/r/neovim/comments/vfc7hc/lsp_definition_in_tsserver/?utm_source=share&utm_medium=web2x&context=3
     ["textDocument/definition"] = function(_, result, params)
