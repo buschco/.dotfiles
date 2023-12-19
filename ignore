@@ -1,8 +1,0 @@
-ios/Pods/
-node_modules/
-licenses/
-*.map
-*.bundle
-src/reducers/__tests__/bigdata-user.json
-test-utils/data/insuranceTariffSearchResponse.json
-
