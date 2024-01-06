@@ -591,6 +591,8 @@ local on_attach_with_format = function(client, bufnr)
   on_attach()
 end
 
+local formatter_util = require "formatter.util"
+
 require("formatter").setup {
   filetype = {
     css = { require("formatter.filetypes.css").prettierd },
@@ -604,6 +606,17 @@ require("formatter").setup {
     typescript = { require("formatter.filetypes.typescript").prettierd },
     typescriptreact = { require("formatter.filetypes.typescriptreact").prettierd },
     yaml = { require("formatter.filetypes.yaml").prettierd },
+    swift = { 
+      function()
+        return {
+          exe = "swift-format",
+          args = {
+              formatter_util.escape_path(formatter_util.get_current_buffer_file_path()),
+          },
+          stdin = true,
+        }
+       end
+    }
   }
 }
 
@@ -668,6 +681,20 @@ lspconfig.fiona.setup{
   on_attach = on_attach,
   capabilities = capabilities,
 }
+
+lspconfig.sourcekit.setup({
+  capabilities = capabilities,
+  on_attach = on_attach_with_format,
+  cmd = {
+    "/Applications/Xcode-15.0.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+  },
+  root_dir = function(filename, _)
+    return lspconfig.util.root_pattern("buildServer.json")(filename)
+      or lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
+      or lspconfig.util.find_git_ancestor(filename)
+      or lspconfig.util.root_pattern("Package.swift")(filename)
+  end,
+})
 
 lspconfig.clangd.setup{
   on_attach = on_attach,

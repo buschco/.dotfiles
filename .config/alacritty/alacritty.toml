@@ -1,0 +1,46 @@
+[window]
+decorations = "Buttonless"
+padding = { x = 6, y = 6 }
+option_as_alt = "Both"
+
+[font]
+normal = { family = "Fira Code", style = "Light" }
+bold = { family = "Fira Code", style = "Bold" }
+italic = { family = "Fira Code", style = "Light" }
+bold_italic = { family = "Fira Code", style = "Bold" }
+size = 17
+builtin_box_drawing = false
+
+[terminal]
+osc52 = "CopyPaste"
+
+[cursor]
+vi_mode_style = { shape = "Beam", blinking = "Off" }
+
+[colors]
+selection = { text = "#000000", background = "#6C6F93" }
+
+[colors.primary]
+foreground = "#d5d8da"
+background = "#1c1e26"
+
+[colors.normal]
+    black = "#16161c"
+    red = "#e95678"
+    green = "#29d398"
+    yellow = "#fab795"
+    blue = "#26bbd9"
+    magenta = "#ee64ae"
+    cyan = "#59e3e3"
+    white = "#c7c7c7"
+
+[colors.bright]
+    black = "#2e303e"
+    red = "#ec6a88"
+    green = "#3fdaa4"
+    yellow = "#fbc3a7"
+    blue = "#3fc6de"
+    magenta = "#f075b7"
+    cyan = "#6be6e6"
+    white = "#fffeff"
+

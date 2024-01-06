@@ -170,7 +170,9 @@ source $(brew --prefix)/opt/spaceship/spaceship.zsh
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 plugins=(
+  zsh-vi-mode
   git
 )
 
