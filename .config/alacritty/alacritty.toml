@@ -1,6 +1,6 @@
 [window]
 decorations = "Buttonless"
-padding = { x = 6, y = 6 }
+padding = { x = 4, y = 4 }
 option_as_alt = "Both"
 
 [font]
@@ -16,6 +16,9 @@ osc52 = "CopyPaste"
 
 [cursor]
 vi_mode_style = { shape = "Beam", blinking = "Off" }
+
+[mouse]
+hide_when_typing = true
 
 [colors]
 selection = { text = "#000000", background = "#6C6F93" }
