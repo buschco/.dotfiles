@@ -6,6 +6,9 @@ config.enable_tab_bar = false
 config.window_decorations = "RESIZE"
 
 config.font_size = 17.0
+config.send_composed_key_when_left_alt_is_pressed = true
+config.send_composed_key_when_right_alt_is_pressed = false
+config.use_dead_keys = true
 
 config.window_close_confirmation = 'NeverPrompt'
 
@@ -19,18 +22,22 @@ config.window_padding = {
   bottom = y_padding,
 }
 
-config.font = wezterm.font( { family = 'Fira Code' } )
+
+config.font = wezterm.font_with_fallback({
+  { family = 'Fira Code' },
+  'Apple Color Emoji',
+})
+
 
 config.font_rules = {
   {
     intensity = 'Bold',
-    font = wezterm.font {
-      family = 'Fira Code',
-      weight = 'Bold'
-    },
+    font = wezterm.font_with_fallback({
+      { family = 'Fira Code', weight = 'Bold' },
+      'Apple Color Emoji',
+    })
   }
 }
-
 
 config.harfbuzz_features = { 'calt=0' }
 
@@ -64,6 +71,23 @@ config.colors = {
     '#6be6e6',
     '#fffeff'
   },
+}
+
+local act = wezterm.action
+
+-- disable this line and execute `wezterm show-keys --lua` to see default mappings
+config.disable_default_key_bindings = true
+
+config.keys = {
+  { key = 'Enter', mods = 'ALT', action = act.ToggleFullScreen },
+  { key = '-', mods = 'SUPER', action = act.DecreaseFontSize },
+  { key = '=', mods = 'SUPER', action = act.IncreaseFontSize },
+  { key = 'c', mods = 'SUPER', action = act.CopyTo 'Clipboard' },
+  { key = 'n', mods = 'SUPER', action = act.SpawnWindow },
+  { key = 'q', mods = 'SUPER', action = act.QuitApplication },
+  { key = 'r', mods = 'SUPER', action = act.ReloadConfiguration },
+  { key = 'v', mods = 'SUPER', action = act.PasteFrom 'Clipboard' },
+  { key = 'w', mods = 'SUPER', action = act.CloseCurrentTab{ confirm = true } },
 }
 
 return config

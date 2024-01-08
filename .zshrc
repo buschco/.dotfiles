@@ -256,15 +256,15 @@ SPACESHIP_PROMPT_ORDER=(
 SPACESHIP_GIT_STATUS_PREFIX=" "
 SPACESHIP_GIT_STATUS_SUFFIX=""
 SPACESHIP_GIT_STATUS_UNTRACKED="🔍 " #Indicator for untracked changes
-SPACESHIP_GIT_STATUS_ADDED="🌟 "     #Indicator for added changes
-SPACESHIP_GIT_STATUS_MODIFIED="💫 "  #Indicator for unstaged files
+SPACESHIP_GIT_STATUS_ADDED="🌟"     #Indicator for added changes
+SPACESHIP_GIT_STATUS_MODIFIED="💫"  #Indicator for unstaged files
 SPACESHIP_GIT_STATUS_RENAMED="🗯 "   #Indicator for renamed files
 SPACESHIP_GIT_STATUS_DELETED="🗑 "   #Indicator for deleted files
-SPACESHIP_GIT_STATUS_STASHED="📨 "   #Indicator for stashed changes
-SPACESHIP_GIT_STATUS_UNMERGED="☄️ "  #Indicator for unmerged changes
-SPACESHIP_GIT_STATUS_AHEAD="🔥 "     #Indicator for unpushed changes (ahead of remote branch)
-SPACESHIP_GIT_STATUS_BEHIND="❄️ "    #Indicator for unpulled changes (behind of remote branch)
-SPACESHIP_GIT_STATUS_DIVERGED="🌱 "  #Indicator for diverged changes (diverged with remote branch)
+SPACESHIP_GIT_STATUS_STASHED="📨"   #Indicator for stashed changes
+SPACESHIP_GIT_STATUS_UNMERGED="☄️"  #Indicator for unmerged changes
+SPACESHIP_GIT_STATUS_AHEAD="🔥"     #Indicator for unpushed changes (ahead of remote branch)
+SPACESHIP_GIT_STATUS_BEHIND="❄️"    #Indicator for unpulled changes (behind of remote branch)
+SPACESHIP_GIT_STATUS_DIVERGED="🌱"  #Indicator for diverged changes (diverged with remote branch)
 
 function chpwd_profiles() {
     local profile context
