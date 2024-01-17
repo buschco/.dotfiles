@@ -79,16 +79,16 @@ local act = wezterm.action
 config.disable_default_key_bindings = true
 
 config.keys = {
-  { key = 'Enter', mods = 'ALT', action = act.ToggleFullScreen },
-  { key = '-', mods = 'SUPER', action = act.DecreaseFontSize },
-  { key = '=', mods = 'SUPER', action = act.IncreaseFontSize },
-  { key = 'c', mods = 'SUPER', action = act.CopyTo 'Clipboard' },
-  { key = 'n', mods = 'SUPER', action = act.SpawnWindow },
-  { key = 'q', mods = 'SUPER', action = act.QuitApplication },
-  { key = 'r', mods = 'SUPER', action = act.ReloadConfiguration },
-  { key = 'v', mods = 'SUPER', action = act.PasteFrom 'Clipboard' },
-  { key = 'w', mods = 'SUPER', action = act.CloseCurrentTab{ confirm = true } },
+  { key = "l",     mods = 'SUPER', action = act.ShowDebugOverlay },
+  { key = 'Enter', mods = 'ALT',   action = act.ToggleFullScreen },
+  { key = '-',     mods = 'SUPER', action = act.DecreaseFontSize },
+  { key = '=',     mods = 'SUPER', action = act.IncreaseFontSize },
+  { key = 'c',     mods = 'SUPER', action = act.CopyTo 'Clipboard' },
+  { key = 'n',     mods = 'SUPER', action = act.SpawnWindow },
+  { key = 'q',     mods = 'SUPER', action = act.QuitApplication },
+  { key = 'r',     mods = 'SUPER', action = act.ReloadConfiguration },
+  { key = 'v',     mods = 'SUPER', action = act.PasteFrom 'Clipboard' },
+  { key = 'w',     mods = 'SUPER', action = act.CloseCurrentTab { confirm = true } },
 }
 
 return config
-
