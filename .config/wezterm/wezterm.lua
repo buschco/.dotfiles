@@ -12,6 +12,9 @@ config.use_dead_keys = true
 
 config.window_close_confirmation = 'NeverPrompt'
 
+-- config.window_background_opacity = 0.6
+-- config.macos_window_background_blur = 30
+
 local x_padding = 0
 local y_padding = 0
 

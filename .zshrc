@@ -229,6 +229,7 @@ alias gbdel="git branch -D"
 alias gpu="git pu" # requires another git alias 
 alias gpu!="git pu --force" # requires another git alias
 alias git-cleanup-branches="~/.git-cleanup-branches.sh"
+alias lsg="~/.lsg.sh"
 
 export AWS_DEFAULT_REGION="eu-central-1"
 

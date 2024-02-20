@@ -1,3 +1,5 @@
+---@diagnostic disable: undefined-global
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -109,6 +111,10 @@ vim.opt.foldmethod = "indent"
 
 -- Stamp _ register into word over cursor
 vim.keymap.set("n", "S", '"_diwP')
+
+vim.keymap.set({ "n", "v" }, "<space>r", ":%s/<C-r><C-w>//gI<left><left><left>")
+vim.keymap.set({ "n", "v" }, "<space>e", ":s///gI<left><left><left>")
+vim.keymap.set({ "n", "v" }, "<space>t", ":%s/\\(.*\\)//gI<left><left><left>")
 
 -- = will copy register " to clipcoard
 -- nowait because vim-unimpaired binds some =
@@ -318,13 +324,19 @@ require("nvim-treesitter.configs").setup({
   },
 
   textobjects = {
-    select = {
+    move = {
       enable = true,
-      keymaps = {
-        ["as"] = {
-          query = "@scope",
-          query_group = "locals",
-          desc = "Select language scope",
+      set_jumps = true,
+      goto_previous_start = {
+        ["[["] = {
+          query = "@function.inner",
+          desc = "jump to start of function body",
+        },
+      },
+      goto_next_end = {
+        ["]]"] = {
+          query = "@function.inner",
+          desc = "jump to start of function body",
         },
       },
     },
@@ -423,8 +435,13 @@ local actions = require("telescope.actions")
 local telescope = require("telescope")
 local telescopeConfig = require("telescope.config")
 
+-- handle unpack deprecation
+table.unpack = table.unpack or unpack
+
 -- Clone the default Telescope configuration
-local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
+local vimgrep_arguments = {
+  table.unpack(telescopeConfig.values.vimgrep_arguments)
+}
 
 local closeBuffFromPicker = function(prompt_bufnr)
   -- force delete the buffer even if unsaved
@@ -594,7 +611,7 @@ require("formatter").setup({
     html = { require("formatter.filetypes.html").prettierd },
     xml = { require("formatter.filetypes.xml").tidy },
     javascript = { require("formatter.filetypes.javascript").prettierd },
-    javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
+    javascriptreact = { require("formatter.filetypes.javascriptreact").prettier },
     json = { require("formatter.filetypes.json").prettierd },
     jsonc = { require("formatter.filetypes.json").prettierd },
     markdown = { require("formatter.filetypes.markdown").prettierd },
@@ -682,7 +699,7 @@ lspconfig.sourcekit.setup({
   on_attach = on_attach_with_format,
   cmd = {
     --"$(xcode-select -p)
-    "/Applications/Xcode-15.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+    "/Applications/Xcode-15.2.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
   },
   root_dir = function(filename, _)
     return lspconfig.util.root_pattern("buildServer.json")(filename)
