@@ -3,7 +3,7 @@
     "@cspell/dict-de-de": "^3.1.0",
     "@fsouza/prettierd": "^0.24.2",
     "@tailwindcss/language-server": "^0.0.13",
-    "create-vite": "^5.0.0",
+    "create-vite": "^5.2.3",
     "cspell": "^6.31.2",
     "eslint_d": "^12.2.1",
     "git-checkout-interactive": "^1.0.1",

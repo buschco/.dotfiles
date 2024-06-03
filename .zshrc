@@ -297,6 +297,12 @@ function chpwd_profiles() {
 chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
 
+function mrLink() {
+  local branch_clean=$(git rev-parse --abbrev-ref HEAD)
+  local branch_encoded=$(node -p "encodeURIComponent('"$branch_clean"'.toString().trim())")
+  open "https://build.dwins.de/financeguru/Financeguru/-/merge_requests/new?merge_request%5Bsource_branch%5D=$branch_encoded"
+}
+
 chpwd_profile_dwins() {
   [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
   print "Switching profile ${CHPWD_PROFILE} -> $profile"
@@ -310,6 +316,7 @@ chpwd_profile_dwins() {
   export VAULT_ADDR=https://vault-integ.dwins.de
   export AWS_REGION="eu-central-1"
   export AWS_PROFILE="work"
+  alias mr="mrLink"
 }
 
 chpwd_profile_default() {
@@ -429,3 +436,6 @@ eval "$(rbenv init - zsh)"
 
 # add yarn binaries to PATH
 export PATH="$PATH:$(yarn global bin)"
+
+# opam configuration
+[[ ! -r /Users/colin/.opam/opam-init/init.zsh ]] || source /Users/colin/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

@@ -11,7 +11,6 @@ module.exports = {
         "https://meet.google.com/*",
         "http://localhost:7007*",
         "http://localhost:3000*",
-        "http://www.blobby-online.com/*",
         "http://127.0.0.1:5173/*",
         "http://localhost:5173/*",
         "http://localhost:8081/debugger-ui/",
@@ -19,6 +18,10 @@ module.exports = {
         "http://localhost:8081/debugger-ui/",
       ],
       browser: "Firefox Developer Edition",
+    },
+    {
+      match: ["http://www.blobby-online.com/*"],
+      browser: "Google Chrome",
     },
   ],
 };

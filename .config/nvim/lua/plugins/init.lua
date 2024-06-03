@@ -22,13 +22,20 @@ return {
     --'buschco/nvim-cmp',
     -- dir = '~/Documents/code.nosync/nvim-cmp',
     dependencies = {
-    -- { dir = '~/github.com.nosync/cmp-tw2css' },
+      -- { dir = '~/github.com.nosync/cmp-tw2css' },
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp-signature-help',
-      { 'L3MON4D3/LuaSnip', version = "1.*" },
-      'saadparwaiz1/cmp_luasnip',
+      -- { 'L3MON4D3/LuaSnip', version = "1.*" },
+      {
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
+        dependencies = {
+          'saadparwaiz1/cmp_luasnip',
+        },
+      },
       'roobert/tailwindcss-colorizer-cmp.nvim',
       { dir = '~/github.com.nosync/nvim-cmp-ts-tag-close' },
     }
@@ -52,7 +59,7 @@ return {
   -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim
   { dir = '~/github.com.nosync/null-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
 
-  { 'sindrets/diffview.nvim', dependencies  = { 'nvim-lua/plenary.nvim' } },
+  { 'sindrets/diffview.nvim',                 dependencies = { 'nvim-lua/plenary.nvim' } },
   { 'AndrewRadev/linediff.vim' },
 
   {
@@ -71,17 +78,19 @@ return {
   -- { dir = '~/github.com.nosync/gitsigns.nvim' },
 
   'nvim-lualine/lualine.nvim',
-  {'akinsho/bufferline.nvim', version = "v3.*" },
+  { 'akinsho/bufferline.nvim', version = "v3.*" },
 
   'numToStr/Comment.nvim',
 
-  { 'nvim-telescope/telescope.nvim', 
-    branch = '0.1.x',
-    dependencies  = { 
+  {
+    'nvim-telescope/telescope.nvim',
+    branch       = '0.1.x',
+    dependencies = {
       'nvim-lua/plenary.nvim',
       {
-        'nvim-telescope/telescope-fzf-native.nvim', 
-        build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build =
+        'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
       }
     }
   },

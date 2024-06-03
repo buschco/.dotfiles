@@ -436,6 +436,7 @@ local telescope = require("telescope")
 local telescopeConfig = require("telescope.config")
 
 -- handle unpack deprecation
+---@diagnostic disable-next-line: deprecated
 table.unpack = table.unpack or unpack
 
 -- Clone the default Telescope configuration
@@ -654,9 +655,9 @@ local cSpellConfig = {
 
 null_ls.setup({
   sources = {
-    null_ls.builtins.diagnostics.tsc.with({
-      prefer_local = "node_modules/.bin",
-    }),
+    -- null_ls.builtins.diagnostics.tsc.with({
+    --   prefer_local = "node_modules/.bin",
+    -- }),
     cspell.diagnostics.with({
       config = cSpellConfig,
       diagnostics_postprocess = function(diagnostic)
@@ -682,6 +683,7 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 if not configs.fiona then
   configs.fiona = {
     default_config = {
+      -- cmd = { "node", "--inspect=6009", "../fiona/packages/fiona-lsp/out/fiona-lsp.js", "--stdio" },
       cmd = { "yarn", "fiona-lsp", "--stdio" },
       root_dir = lspconfig.util.find_package_json_ancestor,
       filetypes = { "javascriptreact" },
@@ -699,7 +701,7 @@ lspconfig.sourcekit.setup({
   on_attach = on_attach_with_format,
   cmd = {
     --"$(xcode-select -p)
-    "/Applications/Xcode-15.2.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+    "/Applications/Xcode-15.3.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
   },
   root_dir = function(filename, _)
     return lspconfig.util.root_pattern("buildServer.json")(filename)
@@ -887,6 +889,15 @@ local conso = s("conso", {
   t(")"),
 })
 
+local function uppercaseFirst(args)
+  return args[1][1]:sub(0, 1):upper() .. args[1][1]:sub(2)
+end
+
+
+local function lowercaseFirst(args)
+  return args[1][1]:sub(0, 1):lower() .. args[1][1]:sub(2)
+end
+
 luasnip.add_snippets("javascriptreact", {
   -- const get${1}: Selector<${2}> = createFSelector(
   --     'get${1}',
@@ -895,29 +906,59 @@ luasnip.add_snippets("javascriptreact", {
   --       return { };
   --     }
   -- );
-  s("selector", {
-    t("const get"),
-    f(copy, 1),
-    t(": Selector<number> = createFSelector('get"),
+  -- s("selector", {
+  --   t("const get"),
+  --   f(copy, 1),
+  --   t(": Selector<number> = createFSelector('get"),
+  --   i(1),
+  --   t({ "',", "[],", "() => {", "return { }", "}", ");" }),
+  -- }),
+
+  -- const [ state, setState ] = React.useState<mixed>()
+  s("useState", {
+    t("const [ "),
     i(1),
-    t({ "',", "[],", "() => {", "return { }", "}", ");" }),
+    t(", set"),
+    f(uppercaseFirst, 1),
+    t(" ] = React.useState<mixed>()"),
   }),
+
+  -- s("uPageSheet", {
+  --   t("const [ open"),
+  --   i(1),
+  --   t(", "),
+  --   f(lowercaseFirst, 1),
+  --   t('SheetProps ] = useFPageSheetProps("'),
+  --   f(copy, 1),
+  --   t('")')
+  -- }),
+  --
+  -- s("uBottomSheet", {
+  --   t("const [ open"),
+  --   i(1),
+  --   t(", "),
+  --   f(lowercaseFirst, 1),
+  --   t('SheetProps ] = useFBottomSheetProps("'),
+  --   f(copy, 1),
+  --   t('")'),
+  -- }),
+
   -- function ${1} ():ThunkAction {
   -- 	return (dispatch, getState) => {
   --
   -- 	}
   -- }
-  s("action", {
-    t("function "),
-    i(1),
-    t({
-      " ():ThunkAction {",
-      "return (dispatch, getState) => {",
-      "",
-      "}",
-      "}",
-    }),
-  }),
+  -- s("action", {
+  --   t("function "),
+  --   i(1),
+  --   t({
+  --     " ():ThunkAction {",
+  --     "return (dispatch, getState) => {",
+  --     "",
+  --     "}",
+  --     "}",
+  --   }),
+  -- }),
 
   conso,
 
@@ -942,13 +983,13 @@ luasnip.add_snippets("javascriptreact", {
 
   -- .navigationOptions = (): NavigationOptions => ({
   -- });
-  s("nav", {
-    t({
-      ".navigationOptions = (): NavigationOptions => ({",
-      "  ",
-      "})",
-    }),
-  }),
+  -- s("nav", {
+  --   t({
+  --     ".navigationOptions = (): NavigationOptions => ({",
+  --     "  ",
+  --     "})",
+  --   }),
+  -- }),
 })
 
 luasnip.add_snippets("typescript", { conso })
@@ -1010,12 +1051,10 @@ cmp.setup({
   }),
   sources = {
     --   { name = 'cmp-tw2css' },
-    { name = "nvim_lsp_signature_help" },
     { name = "nvim-cmp-ts-tag-close" },
     { name = "nvim_lsp" },
+    { name = "nvim_lsp_signature_help" },
     { name = "path" },
     { name = "luasnip" },
   },
 })
-
-vim.keymap.set("n", "<C-S-p>", ":vsplit <CR>:Oil<CR>", { silent = true })

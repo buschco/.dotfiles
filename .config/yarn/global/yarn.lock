@@ -708,10 +708,10 @@ cosmiconfig@8.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
 
-create-vite@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/create-vite/-/create-vite-5.0.0.tgz#f67a5048d1da15891904b8ed6e3fdce42c635bb0"
-  integrity sha512-whEVgshjPziiihkjvrhZVdxZ+KLrDi2OoGHjjPjavmkUfM1OJrwH1AtTsIDzL6tPcuWiNE9kO6GnTROzMGtIMw==
+create-vite@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/create-vite/-/create-vite-5.2.3.tgz#225d38cf93adebfaeb24b2a9037c29eaa85fb2e3"
+  integrity sha512-fTIAW0foFjj0+oNzG0zs7VXMdQ/C9NcaLeoB/kl91HQukFKCXYMPzmllJAWX2lJTgunRRz4K14HBiXfyuX9xGg==
 
 cross-spawn@^7.0.2:
   version "7.0.3"
