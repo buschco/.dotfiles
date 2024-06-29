@@ -10,14 +10,14 @@
 [push]
         default = current
 [alias]
-	dog = log --all --decorate --oneline --graph
 	s = status
 	br = branch
 	pu = push
-	putag = push --follow-tags
 	co = checkout
-	sco = !sh -c \"git branch -a | grep -v remotes | grep $1 | xargs git checkout\"
+	git = !exec git
+	gti = !exec git
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	dog = log --all --decorate --oneline --graph
 [core]
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	excludesfile = /Users/colin/.gitignore_global
@@ -34,4 +34,7 @@
 	process = git-lfs filter-process
 	required = true
 [init]
-	defaultBranch = main
+  defaultBranch = main
+
+[push]
+	autoSetupRemote = true
