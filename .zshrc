@@ -16,6 +16,9 @@ export FG_SKIP_ARM_CHECK=1
 # https://github.com/nvim-treesitter/nvim-treesitter/issues/4482#issuecomment-1464499238
 # export CPLUS_INCLUDE_PATH=/Library/Developer/CommandLineTools/usr/include/c++/v1:/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include
 
+# add bob (nvim version manager)
+export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+
 # Add MacGPG2 to PATH (do I need this?)
 #export PATH="/usr/local/MacGPG2/bin:$PATH"
 

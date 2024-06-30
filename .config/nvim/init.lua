@@ -228,8 +228,8 @@ vim.filetype.add({
     [".*.js"] = {
       priority = math.huge,
       function(path, bufnr)
-        local content = vim.filetype.getlines(bufnr, 1)
-        if vim.filetype.matchregex(content, "// @flow") then
+        local content = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ''
+        if content:find("// @flow") ~= nil then
           return "javascriptreact"
         else
           return "javascript"
@@ -360,8 +360,6 @@ require("bufferline").setup({
     show_close_icon = false,
   },
 })
-
-vim.keymap.set("n", "tt", ":BufferLinePick<CR>", { silent = true, desc = "pick tab" })
 
 require("lualine").setup({
   options = {
