@@ -78,7 +78,7 @@ return {
   -- { dir = '~/github.com.nosync/gitsigns.nvim' },
 
   'nvim-lualine/lualine.nvim',
-  { 'akinsho/bufferline.nvim', version = "v3.*" },
+  { 'akinsho/bufferline.nvim', version = "*" },
 
   'numToStr/Comment.nvim',
 

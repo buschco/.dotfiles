@@ -242,6 +242,7 @@ vim.filetype.add({
 --local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
 --ft_to_parser.javascriptreact = "tsx"
 vim.treesitter.language.register("tsx", "javascriptreact")
+vim.treesitter.language.register("tsx", "flow")
 
 -- diffview
 require("diffview").setup({
@@ -455,7 +456,13 @@ require("telescope").setup({
   pickers = {
     find_files = {
       -- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
-      find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+      find_command = {
+        "rg",
+        "--files",
+        "--hidden",
+        "--glob", "!**/.git/*",
+        "--ignore-file=./.vim/ignore"
+      },
     },
     git_bcommits = {
       mappings = {
@@ -538,6 +545,7 @@ table.insert(vimgrep_arguments, "-F")
 -- I don't want to search in the `.git` directory.
 table.insert(vimgrep_arguments, "--glob")
 table.insert(vimgrep_arguments, "!**/.git/*")
+table.insert(vimgrep_arguments, "--ignore-file=./.vim/ignore")
 
 if is_dotfiles then
   -- no git dir in curren path
@@ -556,6 +564,28 @@ vim.keymap.set("n", "<space>g", require("telescope.builtin").git_bcommits, { des
 -- LSP
 
 local lspconfig = require("lspconfig")
+
+local handler_without_border = function(handler)
+  return function(err, result, ctx, config)
+    local buf, win = handler(
+      err,
+      result,
+      ctx,
+      vim.tbl_deep_extend('force', config or {}, {
+        border = { "", "", "", "", "", "", "", "" },
+        max_height = vim.o.lines,
+        max_width = vim.o.columns,
+      })
+    )
+  end
+end
+
+
+local methods = vim.lsp.protocol.Methods
+vim.lsp.handlers[methods.textDocument_hover] =
+    handler_without_border(vim.lsp.handlers.hover)
+vim.lsp.handlers[methods.textDocument_signatureHelp] =
+    handler_without_border(vim.lsp.handlers.signature_help)
 
 local on_attach = function(client, bufnr)
   -- disable lsp highlighing
