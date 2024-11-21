@@ -12,6 +12,8 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 
+local max_filesize = 200 * 1024 -- 200 KB
+
 -- sync clipboards
 vim.cmd([[set clipboard=unnamed ]])
 
@@ -193,8 +195,14 @@ local createAndFillTsxFile = function()
   vim.cmd(":filetype detect")
 end
 
+local addPage = function()
+  local file_path = vim.fn.getreg('%')
+  os.execute('./bin/create-page.mjs ' .. file_path)
+end
+
 vim.api.nvim_create_user_command("CF", createAndFillFlowFile, {})
 vim.api.nvim_create_user_command("CT", createAndFillTsxFile, {})
+vim.api.nvim_create_user_command("Page", addPage, {})
 
 -- Treesitter
 
@@ -269,6 +277,7 @@ require("colorizer").setup({
     "go",
   },
   user_default_options = {
+    hsl_fn = true,
     rgb_fn = true,
     tailwind = true,
   },
@@ -315,13 +324,22 @@ require("nvim-treesitter.configs").setup({
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
     -- list of language that will be disabled
-    disable = { "txt", "help" },
 
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
+    -- disable slow treesitter highlight for large files
+    disable = function(lang, buf)
+      if lang == "txt" or lang == "help" then
+        return true
+      end
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then
+        return true
+      end
+    end,
   },
 
   textobjects = {
@@ -359,8 +377,63 @@ require("bufferline").setup({
     truncate_names = false,
     show_buffer_close_icons = false,
     show_close_icon = false,
+    name_formatter = function(buf)
+      return nice_filename(buf.path)
+    end
   },
 })
+
+local path = require("plenary").path
+
+function ends_with(str, ending)
+  return str:sub(- #ending) == ending
+end
+
+function nice_filename(input)
+  local cwd = vim.fn.getcwd()
+  local full = path.new(input):normalize(cwd)
+
+  if ends_with(full, "/index.js") then
+    full = full:gsub("index.js", "")
+  elseif ends_with(full, "/index.tsx") then
+    full = full:gsub("index.tsx", "")
+  elseif ends_with(full, "/index.ts") then
+    full = full:gsub("index.ts", "")
+  end
+
+  local iter = full:reverse():gmatch("([^/]+)")
+
+  return iter():reverse()
+end
+
+function search_result()
+  local function dump(o)
+    if type(o) == 'table' then
+      local s = '{ '
+      for k, v in pairs(o) do
+        if type(k) ~= 'number' then k = '"' .. k .. '"' end
+        s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+    else
+      return tostring(o)
+    end
+  end
+
+
+  if vim.v.hlsearch == 0 then
+    return ''
+  end
+  local last_search = vim.fn.getreg('/')
+  if not last_search or last_search == '' then
+    return ''
+  end
+  local searchcount = vim.fn.searchcount { maxcount = 9999 }
+  print(dump(searchcount))
+  -- return last_search .. '(' .. searchcount.current .. '/' .. searchcount.total .. ')'
+end
+
+vim.api.nvim_create_user_command("Sctest", search_result, {})
 
 require("lualine").setup({
   options = {
@@ -373,6 +446,7 @@ require("lualine").setup({
     lualine_a = { "mode" },
     lualine_b = { "branch", "diff", "diagnostics" },
     lualine_c = { "filename", "vim.fn.reg_recording()", "searchcount" },
+    --lualine_c = { "filename", "vim.fn.reg_recording()" },
     lualine_x = { "require'lsp-status'.status()", "filetype" },
     lualine_y = { "progress" },
     lualine_z = { "location" },
@@ -431,7 +505,6 @@ gs.setup({
 local actions = require("telescope.actions")
 
 -- Telescope
-local telescope = require("telescope")
 local telescopeConfig = require("telescope.config")
 
 -- handle unpack deprecation
@@ -587,6 +660,33 @@ vim.lsp.handlers[methods.textDocument_hover] =
 vim.lsp.handlers[methods.textDocument_signatureHelp] =
     handler_without_border(vim.lsp.handlers.signature_help)
 
+
+local function getWorkspaceEdit(client, old_name, new_name)
+  local will_rename_params = {
+    files = {
+      {
+        oldUri = vim.uri_from_fname(old_name),
+        newUri = vim.uri_from_fname(new_name),
+      },
+    },
+  }
+  local success, resp = pcall(
+    client.request_sync,
+    "workspace/willRenameFiles",
+    will_rename_params,
+    10000
+  )
+  if not success then
+    print("no success")
+    return nil
+  end
+  if resp == nil or resp.result == nil then
+    print("no response")
+    return nil
+  end
+  return resp.result
+end
+
 local on_attach = function(client, bufnr)
   -- disable lsp highlighing
   -- https://www.reddit.com/r/neovim/comments/109vgtl/how_to_disable_highlight_from_lsp/
@@ -600,6 +700,26 @@ local on_attach = function(client, bufnr)
     end
 
     vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+  end
+
+  if false and client.server_capabilities ~= nil and
+      client.server_capabilities.workspace ~= nil and
+      client.server_capabilities.workspace.fileOperations ~= nil then
+    local moveFile = function()
+      local file_path = vim.fn.getreg('%')
+      vim.ui.input({
+        prompt = 'Move file: ',
+        default = file_path,
+        completion = "dir",
+      }, function(next_file_path)
+        local edit = getWorkspaceEdit(client, file_path, next_file_path)
+        if edit ~= nil then
+          vim.lsp.util.apply_workspace_edit(edit, client.offset_encoding)
+        end
+      end)
+    end
+
+    nmap("<leader>mf", moveFile, "[M]ve [F]ile")
   end
 
   --nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -639,6 +759,7 @@ require("formatter").setup({
     css = { require("formatter.filetypes.css").prettierd },
     html = { require("formatter.filetypes.html").prettierd },
     xml = { require("formatter.filetypes.xml").tidy },
+    svg = { require("formatter.filetypes.xml").tidy },
     javascript = { require("formatter.filetypes.javascript").prettierd },
     javascriptreact = { require("formatter.filetypes.javascriptreact").prettier },
     json = { require("formatter.filetypes.json").prettierd },
@@ -670,10 +791,12 @@ vim.cmd([[
 
 -- vim.opt.syntax = 'enable'
 -- vim.cmd([[ set spell spelllang=en,de ]])
---
+-- vim.cmd([[ set spell spo=camel ]])
+
 local null_ls = require("null-ls")
 local cspell = require("cspell")
 local cSpellJsonPath = vim.fn.expand("~/.cspell.json")
+
 
 local cSpellConfig = {
   find_json = function(cwd)
@@ -682,6 +805,12 @@ local cSpellConfig = {
 }
 
 null_ls.setup({
+  should_attach = function(bufnr)
+    local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
+    if ok and stats and stats.size > max_filesize then
+      return false
+    end
+  end,
   sources = {
     -- null_ls.builtins.diagnostics.tsc.with({
     --   prefer_local = "node_modules/.bin",
@@ -729,7 +858,7 @@ lspconfig.sourcekit.setup({
   on_attach = on_attach_with_format,
   cmd = {
     --"$(xcode-select -p)
-    "/Applications/Xcode-15.3.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+    "/Applications/Xcode-16.0.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
   },
   root_dir = function(filename, _)
     return lspconfig.util.root_pattern("buildServer.json")(filename)
@@ -803,7 +932,7 @@ lspconfig.jsonls.setup({
         },
         {
           description = "ESLint config",
-          fileMatch = { ".eslintrc.json", ".eslintrc" },
+          fileMatch = { "eslint.config.js", ".eslintrc.json", ".eslintrc" },
           url = "http://json.schemastore.org/eslintrc",
         },
         {
@@ -835,7 +964,8 @@ lspconfig.yamlls.setup({
   },
 })
 
-lspconfig.tsserver.setup({
+lspconfig.ts_ls.setup({
+  on_attach = on_attach,
   handlers = {
     -- https://www.reddit.com/r/neovim/comments/vfc7hc/lsp_definition_in_tsserver/?utm_source=share&utm_medium=web2x&context=3
     ["textDocument/definition"] = function(_, result, params)
@@ -898,7 +1028,7 @@ local luasnip = require("luasnip")
 
 -- remove snippet linking after leaving snippet insert
 vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-  pattern = { "*" },
+  pattern = { "*.js", "*.ts", "*.jsx", "*.tsx" },
   command = ":LuaSnipUnlinkCurrent",
 })
 
