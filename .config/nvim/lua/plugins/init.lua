@@ -1,8 +1,8 @@
 return {
 
   -- Theme
-  -- use 'buschco/vim-horizon'
-  { dir = '~/github.com.nosync/vim-horizon' },
+  'buschco/vim-horizon',
+  -- { dir = '~/github.com.nosync/vim-horizon' },
 
   'tpope/vim-surround',
   'tpope/vim-unimpaired',
@@ -37,7 +37,8 @@ return {
         },
       },
       'roobert/tailwindcss-colorizer-cmp.nvim',
-      { dir = '~/github.com.nosync/nvim-cmp-ts-tag-close' },
+      --{ dir = '~/github.com.nosync/nvim-cmp-ts-tag-close' },
+      'buschco/nvim-cmp-ts-tag-close'
     }
   },
 
