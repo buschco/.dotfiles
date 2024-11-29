@@ -1,5 +1,30 @@
 # dotfiles
 
+## [Homebrew](brew.sh)
+
+## Copy Keys
+
+1. Enable SSH on old mac
+
+```sh
+cd ~/.shh
+sftp <ip_of_old_mac>
+get ~/.ssh/config
+get ~/.ssh/id_ed25519
+get ~/.ssh/id_ed25519.pub
+get ~/.ssh/known_hosts
+```
+
+## Clone Dotfiles
+
+```sh
+mkdir ~/github.com.nosync/
+git clone git@github.com:buschco/.dotfiles.git dotfiles
+git clone --separate-git-dir=~/github.com.nosync/dotfiles /path/to/repo ~
+```
+
+## [WezTerm]
+
 ```sh
 brew install --cask iterm2
 brew install spaceship
