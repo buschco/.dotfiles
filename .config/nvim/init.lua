@@ -810,6 +810,7 @@ null_ls.setup({
     if ok and stats and stats.size > max_filesize then
       return false
     end
+    return true
   end,
   sources = {
     -- null_ls.builtins.diagnostics.tsc.with({
@@ -858,7 +859,7 @@ lspconfig.sourcekit.setup({
   on_attach = on_attach_with_format,
   cmd = {
     --"$(xcode-select -p)
-    "/Applications/Xcode-16.0.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+    "/Applications/Xcode-16.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
   },
   root_dir = function(filename, _)
     return lspconfig.util.root_pattern("buildServer.json")(filename)
