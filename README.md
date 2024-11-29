@@ -19,16 +19,74 @@ get ~/.ssh/known_hosts
 
 ```sh
 mkdir ~/github.com.nosync/
-git clone git@github.com:buschco/.dotfiles.git dotfiles
-git clone --separate-git-dir=~/github.com.nosync/dotfiles /path/to/repo ~
+git clone --bare git@github.com:buschco/.dotfiles.git dotfiles
+git --git-dir=$HOME/github.com.nosync/dotfiles --work-tree=$HOME checkout
 ```
 
-## [WezTerm]
+### ZSH
+
+#### Oh My ZSH
 
 ```sh
-brew install --cask iterm2
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+#### Spaceship
+
+```sh
 brew install spaceship
-brew install --cask alfred
+```
+
+#### ZSH autosuggestions
+
+```sh
+brew install zsh-autosuggestions
+```
+
+#### [WezTerm](https://wezfurlong.org/wezterm/install/macos.html#homebrew)
+
+```sh
+brew install --cask wezterm
+```
+
+Font:
+
+```sh
+brew install --cask font-fira-code
+```
+
+### Firefox
+
+```sh
+brew install --cask firefox
+```
+
+### nvm
+
+```sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+```
+
+## Rust
+
+```sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### nvim (via bob)
+
+```sh
+cargo install bob-nvim
+bob use latest
+```
+
+### Bitwardem
+
+```sh
+brew install --cask bitwarden
+```
+
+```sh
 brew install --cask bitwarden
 brew install fzf
 xcode-select --install
