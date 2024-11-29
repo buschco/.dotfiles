@@ -48,9 +48,9 @@ return {
 
   -- mfussenegger/nvim-lint but seems old?
   -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim
-  { dir = '~/github.com.nosync/null-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
+  { 'nvimtools/none-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
 
-  { 'sindrets/diffview.nvim',                 dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'sindrets/diffview.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
   { 'AndrewRadev/linediff.vim' },
 
   {
