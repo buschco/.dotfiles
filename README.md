@@ -10,6 +10,7 @@
 cd ~/.shh
 sftp <ip_of_old_mac>
 get ~/.ssh/config
+get ~/.ssh/.zsh_history
 get ~/.ssh/id_ed25519
 get ~/.ssh/id_ed25519.pub
 get ~/.ssh/known_hosts
@@ -73,7 +74,7 @@ brew install --cask openvpn-connect
 
 ```sh
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-npm -g install cspell@latest @cspell/dict-de-de @fsouza/prettierd @tailwindcss/language-server typescript-language-server typescript vscode-langservers-extracted yarn
+npm -g install git-checkout-interactive cspell@latest @cspell/dict-de-de @fsouza/prettierd @tailwindcss/language-server typescript-language-server typescript vscode-langservers-extracted yarn
 cspell link add @cspell/dict-de-de
 
 ```
