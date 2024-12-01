@@ -1,14 +1,38 @@
 return {
 
   -- Theme
-  'buschco/vim-horizon',
-  -- { dir = '~/github.com.nosync/vim-horizon' },
+  --'buschco/vim-horizon',
+  { dir = '~/github.com.nosync/vim-horizon' },
 
   'tpope/vim-surround',
   'tpope/vim-unimpaired',
   'tpope/vim-repeat',
   -- 'unblevable/quick-scope',
-  'NvChad/nvim-colorizer.lua',
+  {
+    'NvChad/nvim-colorizer.lua',
+
+    opts = {
+      filetypes = {
+        "javascript",
+        "javascriptreact",
+        "kotlin",
+        "json",
+        "yaml",
+        "typescript",
+        "typescriptreact",
+        "markdown",
+        "css",
+        "html",
+        "rust",
+        "go",
+      },
+      user_default_options = {
+        hsl_fn = true,
+        rgb_fn = true,
+        tailwind = true,
+      },
+    }
+  },
 
   'neovim/nvim-lspconfig',
 
@@ -48,9 +72,14 @@ return {
 
   -- mfussenegger/nvim-lint but seems old?
   -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim
-  { 'nvimtools/none-ls.nvim', dependencies = { 'davidmh/cspell.nvim' } },
+  { 'nvimtools/none-ls.nvim',               dependencies = { 'davidmh/cspell.nvim' } },
 
-  { 'sindrets/diffview.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
+  {
+    'sindrets/diffview.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {}
+  },
+
   { 'AndrewRadev/linediff.vim' },
 
   {
@@ -70,9 +99,7 @@ return {
 
   'nvim-lualine/lualine.nvim',
 
-  { 'akinsho/bufferline.nvim', version = "*" },
-
-  'numToStr/Comment.nvim',
+  { 'numToStr/Comment.nvim',   opts = {} },
 
   {
     'nvim-telescope/telescope.nvim',

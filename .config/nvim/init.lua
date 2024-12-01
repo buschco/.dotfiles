@@ -26,6 +26,7 @@ vim.cmd([[ set diffopt+=vertical ]])
 vim.cmd([[ set hidden ]])
 
 require("lazy").setup("plugins", {
+  lazy = true,
   ui = {
     icons = {
       cmd = "⌘",
@@ -252,14 +253,6 @@ vim.filetype.add({
 vim.treesitter.language.register("tsx", "javascriptreact")
 vim.treesitter.language.register("tsx", "flow")
 
--- diffview
-require("diffview").setup({
-  use_icons = false,
-})
-
--- Comment
-require("Comment").setup()
-
 -- colorizer
 require("colorizer").setup({
   filetypes = {
@@ -368,21 +361,6 @@ vim.treesitter.query.set("typescript", "injections", "")
 vim.treesitter.query.set("tsx", "injections", "")
 vim.treesitter.query.set("lua", "injections", "")
 
-require("bufferline").setup({
-  options = {
-    left_trunc_marker = "…",
-    right_trunc_marker = "…",
-    mode = "tabs",
-    show_buffer_icons = false,
-    truncate_names = false,
-    show_buffer_close_icons = false,
-    show_close_icon = false,
-    name_formatter = function(buf)
-      return nice_filename(buf.path)
-    end
-  },
-})
-
 local path = require("plenary").path
 
 function ends_with(str, ending)
@@ -445,7 +423,7 @@ require("lualine").setup({
   sections = {
     lualine_a = { "mode" },
     lualine_b = { "branch", "diff", "diagnostics" },
-    lualine_c = { "filename", "vim.fn.reg_recording()", "searchcount" },
+    lualine_c = { { "filename", path = 4 }, "vim.fn.reg_recording()", "searchcount" },
     --lualine_c = { "filename", "vim.fn.reg_recording()" },
     lualine_x = { "require'lsp-status'.status()", "filetype" },
     lualine_y = { "progress" },

@@ -74,7 +74,7 @@ brew install --cask openvpn-connect
 
 ```sh
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-npm -g install git-checkout-interactive cspell@latest @cspell/dict-de-de @fsouza/prettierd @tailwindcss/language-server typescript-language-server typescript vscode-langservers-extracted yarn
+npm -g install git-checkout-interactive cspell@latest @cspell/dict-de-de @fsouza/prettierd @tailwindcss/language-server typescript-language-server yaml-language-server typescript vscode-langservers-extracted yarn
 cspell link add @cspell/dict-de-de
 
 ```
@@ -176,6 +176,20 @@ brew install --cask google-chrome
 
 ```sh
 brew install --cask android-studio
+```
+
+### Java
+
+```sh
+curl -s "https://get.sdkman.io" | bash
+sdk install java 21.0.3-tem
+brew install maven
+```
+
+### IntelliJ
+
+```sh
+brew install --cask intellij-idea-ce
 ```
 
 ### Inkscape
