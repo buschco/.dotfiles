@@ -835,10 +835,10 @@ lspconfig.fiona.setup({
 lspconfig.sourcekit.setup({
   capabilities = capabilities,
   on_attach = on_attach_with_format,
-  cmd = {
-    --"$(xcode-select -p)
-    "/Applications/Xcode-16.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
-  },
+  -- cmd = {
+  --   --"$(xcode-select -p)
+  --   "/Applications/Xcode-16.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+  -- },
   root_dir = function(filename, _)
     return lspconfig.util.root_pattern("buildServer.json")(filename)
         or lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
