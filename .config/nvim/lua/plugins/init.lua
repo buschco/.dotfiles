@@ -68,7 +68,7 @@ return {
 
   -- { 'windwp/nvim-autopairs' },
   { 'mhartington/formatter.nvim' },
-  -- { 'stevearc/conform.nvim', opts = {} },
+  { 'stevearc/conform.nvim',                opts = {} },
 
   -- mfussenegger/nvim-lint but seems old?
   -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim

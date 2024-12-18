@@ -544,9 +544,11 @@ require("telescope").setup({
     prompt_title = false,
     layout_strategy = "center",
     layout_config = {
-      anchor = "N",
+      anchor = "S",
+      center = { height = 0.4 },
       prompt_position = "bottom",
-      center = { width = 0.7 },
+      height = 1,
+      width = 1000,
     },
     mappings = {
       i = {
@@ -731,6 +733,18 @@ local on_attach_with_format = function(client, bufnr)
 end
 
 local formatter_util = require("formatter.util")
+require("conform").setup({
+  formatters_by_ft = {
+    javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+    typescript = { "prettierd", "prettier", stop_after_first = true },
+    typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+  },
+  format_on_save = {
+    -- These options will be passed to conform.format()
+    timeout_ms = 500,
+    lsp_format = "fallback",
+  },
+})
 
 require("formatter").setup({
   filetype = {
@@ -739,12 +753,10 @@ require("formatter").setup({
     xml = { require("formatter.filetypes.xml").tidy },
     svg = { require("formatter.filetypes.xml").tidy },
     javascript = { require("formatter.filetypes.javascript").prettierd },
-    javascriptreact = { require("formatter.filetypes.javascriptreact").prettier },
+    -- javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
     json = { require("formatter.filetypes.json").prettierd },
     jsonc = { require("formatter.filetypes.json").prettierd },
     markdown = { require("formatter.filetypes.markdown").prettierd },
-    typescript = { require("formatter.filetypes.typescript").prettierd },
-    typescriptreact = { require("formatter.filetypes.typescriptreact").prettierd },
     yaml = { require("formatter.filetypes.yaml").prettierd },
     swift = {
       function()
@@ -834,7 +846,7 @@ lspconfig.fiona.setup({
 
 lspconfig.sourcekit.setup({
   capabilities = capabilities,
-  on_attach = on_attach_with_format,
+  on_attach = on_attach,
   -- cmd = {
   --   --"$(xcode-select -p)
   --   "/Applications/Xcode-16.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
