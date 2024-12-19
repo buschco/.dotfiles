@@ -72,7 +72,9 @@ return {
 
   -- mfussenegger/nvim-lint but seems old?
   -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim
-  { 'nvimtools/none-ls.nvim',               dependencies = { 'davidmh/cspell.nvim' } },
+  --{ 'nvimtools/none-ls.nvim',               dependencies = { 'davidmh/cspell.nvim' } },
+  { 'jose-elias-alvarez/null-ls.nvim',      dependencies = { 'davidmh/cspell.nvim' } },
+
 
   {
     'sindrets/diffview.nvim',

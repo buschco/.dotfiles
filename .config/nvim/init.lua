@@ -779,9 +779,8 @@ vim.cmd([[
   augroup END
 ]])
 
--- vim.opt.syntax = 'enable'
--- vim.cmd([[ set spell spelllang=en,de ]])
--- vim.cmd([[ set spell spo=camel ]])
+-- vim.opt.spell = true
+-- vim.opt.spelllang = 'de,en'
 
 local null_ls = require("null-ls")
 local cspell = require("cspell")
@@ -814,7 +813,7 @@ null_ls.setup({
     }),
     cspell.code_actions.with({ config = cSpellConfig }),
   },
-  on_attach = on_attach_with_format,
+  on_attach = on_attach,
 })
 
 lspconfig.flow.setup({
@@ -822,6 +821,7 @@ lspconfig.flow.setup({
   on_attach = on_attach,
   filetypes = { "javascriptreact" },
 })
+
 
 local configs = require("lspconfig.configs")
 
@@ -943,7 +943,7 @@ lspconfig.jsonls.setup({
 
 lspconfig.yamlls.setup({
   capabilities = capabilities,
-  on_attach = on_attach_with_format,
+  on_attach = on_attach,
   settings = {
     yaml = {
       schemas = {
