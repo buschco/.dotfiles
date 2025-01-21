@@ -702,7 +702,7 @@ local on_attach = function(client, bufnr)
     nmap("<leader>mf", moveFile, "[M]ve [F]ile")
   end
 
-  --nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap("<leader>aw", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
   nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
@@ -722,6 +722,13 @@ local on_attach = function(client, bufnr)
       severity = { min = vim.diagnostic.severity["WARN"] },
     })
   end, "next error")
+
+  -- avoid warning for lua_ls
+  if client ~= nil then
+    if client.server_capabilities ~= nil then
+      client.server_capabilities.semanticTokensProvider = nil
+    end
+  end
 end
 
 local lsp_format = require("lsp-format")
@@ -761,7 +768,7 @@ require("formatter").setup({
     swift = {
       function()
         return {
-          exe = "swift-format",
+          exe = "swift format",
           args = {
             formatter_util.escape_path(formatter_util.get_current_buffer_file_path()),
           },
@@ -795,6 +802,9 @@ local cSpellConfig = {
 
 null_ls.setup({
   should_attach = function(bufnr)
+    if is_dotfiles then
+      return false
+    end
     local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
     if ok and stats and stats.size > max_filesize then
       return false
@@ -806,6 +816,7 @@ null_ls.setup({
     --   prefer_local = "node_modules/.bin",
     -- }),
     cspell.diagnostics.with({
+      timeout_ms = 5000,
       config = cSpellConfig,
       diagnostics_postprocess = function(diagnostic)
         diagnostic.severity = vim.diagnostic.severity["HINT"]
@@ -847,10 +858,10 @@ lspconfig.fiona.setup({
 lspconfig.sourcekit.setup({
   capabilities = capabilities,
   on_attach = on_attach,
-  -- cmd = {
-  --   --"$(xcode-select -p)
-  --   "/Applications/Xcode-16.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
-  -- },
+  cmd = {
+    --"$(xcode-select -p)
+    "/Applications/Xcode-16.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+  },
   root_dir = function(filename, _)
     return lspconfig.util.root_pattern("buildServer.json")(filename)
         or lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
@@ -939,6 +950,11 @@ lspconfig.jsonls.setup({
       },
     },
   },
+})
+
+lspconfig.ruby_lsp.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
 })
 
 lspconfig.yamlls.setup({
