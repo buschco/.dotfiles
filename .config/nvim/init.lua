@@ -515,6 +515,14 @@ require("telescope").setup({
         "--ignore-file=./.vim/ignore"
       },
     },
+    marks = {
+      attach_mappings = function(prompt_bufnr, map)
+        map({ "i", "n" }, "<C-x>", function()
+          actions.delete_mark(prompt_bufnr)
+        end)
+        return true
+      end,
+    },
     git_bcommits = {
       mappings = {
         i = {
@@ -527,6 +535,15 @@ require("telescope").setup({
         },
       },
     },
+    buffers = {
+      attach_mappings = function(promt_bufnr, map)
+        map({ "i", "n" }, "<C-x>", function()
+          closeBuffFromPicker(promt_bufnr)
+        end
+        )
+        return true
+      end
+    }
   },
   defaults = {
     git_worktrees = {
@@ -554,6 +571,7 @@ require("telescope").setup({
       i = {
         ["<esc>"] = actions.close,
         ["<C-u>"] = false,
+        ["<C-x>"] = false,
         ["<C-d>"] = false,
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_better,
         ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_worse,
@@ -569,8 +587,6 @@ require("telescope").setup({
             end
           end
         end,
-        ["<C-x>"] = closeBuffFromPicker,
-        ["<C-z>"] = closeBuffFromPicker,
       },
     },
   },
@@ -580,6 +596,7 @@ require("telescope").load_extension("fzf")
 
 -- telescope bindings
 vim.keymap.set("n", "<space>y", ":Telescope registers<CR>")
+vim.keymap.set("n", "<space>m", ":Telescope marks<CR>")
 vim.cmd.cnoreabbrev({ "Ag", ":Telescope live_grep" })
 vim.cmd.cnoreabbrev({ "A", ":Telescope live_grep" })
 vim.keymap.set("n", "<space>a", function()

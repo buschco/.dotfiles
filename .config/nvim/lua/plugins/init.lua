@@ -71,7 +71,7 @@ return {
   { 'stevearc/conform.nvim',                opts = {} },
 
   -- mfussenegger/nvim-lint but seems old?
-  -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim 
+  -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim
   { 'jose-elias-alvarez/null-ls.nvim',      dependencies = { 'davidmh/cspell.nvim' } },
 
 
@@ -104,7 +104,7 @@ return {
 
   {
     'nvim-telescope/telescope.nvim',
-    branch       = '0.1.x',
+    branch       = 'master',
     dependencies = {
       'nvim-lua/plenary.nvim',
       {
