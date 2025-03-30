@@ -305,6 +305,15 @@ function mrLink() {
   open "https://build.dwins.de/financeguru/Financeguru/-/merge_requests/new?merge_request%5Bsource_branch%5D=$branch_encoded"
 }
 
+
+function tm() {
+  tmux new -s $(basename $(realpath)) -d
+}
+
+function tma() {
+  tmux new -s $(basename $(realpath))
+}
+
 chpwd_profile_dwins() {
   [[ ${profile} == ${CHPWD_PROFILE} ]] && return 1
   print "Switching profile ${CHPWD_PROFILE} -> $profile"
