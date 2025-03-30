@@ -71,8 +71,7 @@ return {
   { 'stevearc/conform.nvim',                opts = {} },
 
   -- mfussenegger/nvim-lint but seems old?
-  -- if something breaks migrate to https://github.com/nvimtools/none-ls.nvim
-  { 'jose-elias-alvarez/null-ls.nvim',      dependencies = { 'davidmh/cspell.nvim' } },
+  { 'nvimtools/none-ls.nvim',               dependencies = { 'davidmh/cspell.nvim' } },
 
 
   {
@@ -114,4 +113,10 @@ return {
       }
     }
   },
+
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" }
+  }
 }

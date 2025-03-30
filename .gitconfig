@@ -36,6 +36,7 @@
 	required = true
 [init]
   defaultBranch = main
-
+[help]
+ autocorrect = 1
 [push]
 	autoSetupRemote = true

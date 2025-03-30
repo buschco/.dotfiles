@@ -759,7 +759,7 @@ end
 local formatter_util = require("formatter.util")
 require("conform").setup({
   formatters_by_ft = {
-    javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+    javascriptreact = { "prettier", stop_after_first = true },
     typescript = { "prettierd", "prettier", stop_after_first = true },
     typescriptreact = { "prettierd", "prettier", stop_after_first = true },
   },
@@ -776,7 +776,7 @@ require("formatter").setup({
     html = { require("formatter.filetypes.html").prettierd },
     xml = { require("formatter.filetypes.xml").tidy },
     svg = { require("formatter.filetypes.xml").tidy },
-    javascript = { require("formatter.filetypes.javascript").prettierd },
+    javascript = { require("formatter.filetypes.javascript").prettier },
     -- javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
     json = { require("formatter.filetypes.json").prettierd },
     jsonc = { require("formatter.filetypes.json").prettierd },
@@ -859,8 +859,8 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 if not configs.fiona then
   configs.fiona = {
     default_config = {
-      -- cmd = { "node", "--inspect=6009", "../fiona/packages/fiona-lsp/out/fiona-lsp.js", "--stdio" },
-      cmd = { "yarn", "fiona-lsp", "--stdio" },
+      cmd = { "node", "--inspect=6009", "../fiona/packages/fiona-lsp/out/fiona-lsp.js", "--stdio" },
+      --cmd = { "yarn", "fiona-lsp", "--stdio" },
       root_dir = lspconfig.util.find_package_json_ancestor,
       filetypes = { "javascriptreact" },
     },
@@ -876,16 +876,18 @@ lspconfig.sourcekit.setup({
   capabilities = capabilities,
   on_attach = on_attach,
   cmd = {
+    "sourcekit-lsp"
     --"$(xcode-select -p)
-    "/Applications/Xcode-16.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+    -- "/Applications/Xcode-16.2.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
   },
   root_dir = function(filename, _)
     return lspconfig.util.root_pattern("buildServer.json")(filename)
         or lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
         or lspconfig.util.find_git_ancestor(filename)
         or lspconfig.util.root_pattern("Package.swift")(filename)
-  end,
-})
+  end
+}
+)
 
 lspconfig.clangd.setup({
   on_attach = on_attach,
@@ -1240,3 +1242,42 @@ cmp.setup({
     { name = "luasnip" },
   },
 })
+
+local harpoon = require("harpoon")
+
+harpoon:setup()
+
+local function toggle_telescope(harpoon_files)
+  local finder = function()
+    local paths = {}
+    for _, item in ipairs(harpoon_files.items) do
+      table.insert(paths, item.value)
+    end
+
+    return require("telescope.finders").new_table({
+      results = paths,
+    })
+  end
+
+  require("telescope.pickers").new({}, {
+    prompt_title = "Harpoon",
+    finder = finder(),
+    sorter = require("telescope.config").values.generic_sorter({}),
+    attach_mappings = function(prompt_bufnr, map)
+      map("i", "<C-x>", function()
+        local state = require("telescope.actions.state")
+        local selected_entry = state.get_selected_entry()
+        local current_picker = state.get_current_picker(prompt_bufnr)
+
+        table.remove(harpoon_files.items, selected_entry.index)
+        current_picker:refresh(finder())
+      end)
+      return true
+    end,
+  }):find()
+end
+
+vim.keymap.set("n", "<leader>w", function() harpoon:list():add() end)
+vim.keymap.set("n", "<Space>d", function() toggle_telescope(harpoon:list()) end)
+vim.keymap.set("n", "[w", function() harpoon:list():next() end)
+vim.keymap.set("n", "]w", function() harpoon:list():prev() end)
