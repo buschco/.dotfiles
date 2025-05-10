@@ -35,6 +35,7 @@ return {
   },
 
   'neovim/nvim-lspconfig',
+  'artemave/workspace-diagnostics.nvim',
 
   'lukas-reineke/lsp-format.nvim',
 

@@ -760,8 +760,8 @@ local formatter_util = require("formatter.util")
 require("conform").setup({
   formatters_by_ft = {
     javascriptreact = { "prettier", stop_after_first = true },
-    typescript = { "prettierd", "prettier", stop_after_first = true },
-    typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+    typescript = { "prettier", "prettier", stop_after_first = true },
+    typescriptreact = { "prettier", "prettier", stop_after_first = true },
   },
   format_on_save = {
     -- These options will be passed to conform.format()
@@ -859,10 +859,10 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 if not configs.fiona then
   configs.fiona = {
     default_config = {
-      cmd = { "node", "--inspect=6009", "../fiona/packages/fiona-lsp/out/fiona-lsp.js", "--stdio" },
-      --cmd = { "yarn", "fiona-lsp", "--stdio" },
+      --cmd = { "node", "--inspect=6009", "../fiona/packages/fiona-lsp/out/fiona-lsp.js", "--stdio" },
+      cmd = { "npx", "fiona-lsp", "--stdio" },
       root_dir = lspconfig.util.find_package_json_ancestor,
-      filetypes = { "javascriptreact" },
+      filetypes = { "javascriptreact", "typescriptreact" },
     },
   }
 end
@@ -914,7 +914,7 @@ lspconfig.tailwindcss.setup({
 
 lspconfig.eslint.setup({
   on_attach = function(client, bufnr)
-    on_attach(client, bufmr)
+    on_attach(client, bufnr)
     -- use this if eslint_d (provided by null-ls) is not used
     vim.api.nvim_create_autocmd({ "BufWritePre" }, {
       buffer = bufnr,
@@ -991,43 +991,11 @@ lspconfig.yamlls.setup({
 })
 
 lspconfig.ts_ls.setup({
-  on_attach = on_attach,
-  handlers = {
-    -- https://www.reddit.com/r/neovim/comments/vfc7hc/lsp_definition_in_tsserver/?utm_source=share&utm_medium=web2x&context=3
-    ["textDocument/definition"] = function(_, result, params)
-      local util = require("vim.lsp.util")
-      if result == nil or vim.tbl_isempty(result) then
-        -- local _ = vim.lsp.log.info() and vim.lsp.log.info(params.method, "No location found")
-        return nil
-      end
-
-      if vim.tbl_islist(result) then
-        -- this is opens a buffer to that result
-        --  you could loop the result and choose what you want
-        util.jump_to_location(result[1])
-
-        if #result > 1 then
-          local isReactDTs = false
-          ---@diagnostic disable-next-line: unused-local
-          for key, value in pairs(result) do
-            if string.match(value.targetUri, "react/index.d.ts") then
-              isReactDTs = true
-              break
-            end
-          end
-          if not isReactDTs then
-            -- this sets the value for the quickfix list
-            util.set_qflist(util.locations_to_items(result))
-            -- this opens the quickfix window
-            vim.api.nvim_command("copen")
-            vim.api.nvim_command("wincmd p")
-          end
-        end
-      else
-        util.jump_to_location(result)
-      end
-    end,
-  },
+  on_attach = function(client, bufnr)
+    -- print(vim.bo.filetype)
+    -- require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+    on_attach(client, bufnr)
+  end,
   filetypes = {
     "typescript",
     "typescriptreact",
