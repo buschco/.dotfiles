@@ -760,8 +760,8 @@ local formatter_util = require("formatter.util")
 require("conform").setup({
   formatters_by_ft = {
     javascriptreact = { "prettier", stop_after_first = true },
-    typescript = { "prettier", "prettier", stop_after_first = true },
-    typescriptreact = { "prettier", "prettier", stop_after_first = true },
+    typescript = { "prettierd", "prettier", stop_after_first = true },
+    typescriptreact = { "prettierd", "prettier", stop_after_first = true },
   },
   format_on_save = {
     -- These options will be passed to conform.format()
@@ -776,7 +776,7 @@ require("formatter").setup({
     html = { require("formatter.filetypes.html").prettierd },
     xml = { require("formatter.filetypes.xml").tidy },
     svg = { require("formatter.filetypes.xml").tidy },
-    javascript = { require("formatter.filetypes.javascript").prettier },
+    -- javascript = { require("formatter.filetypes.javascript").prettier },
     -- javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
     json = { require("formatter.filetypes.json").prettierd },
     jsonc = { require("formatter.filetypes.json").prettierd },
@@ -862,7 +862,9 @@ if not configs.fiona then
       --cmd = { "node", "--inspect=6009", "../fiona/packages/fiona-lsp/out/fiona-lsp.js", "--stdio" },
       cmd = { "npx", "fiona-lsp", "--stdio" },
       root_dir = lspconfig.util.find_package_json_ancestor,
-      filetypes = { "javascriptreact", "typescriptreact" },
+      filetypes = { "javascriptreact",
+        --  "typescriptreact"
+      },
     },
   }
 end
@@ -988,6 +990,23 @@ lspconfig.yamlls.setup({
       },
     },
   },
+})
+
+if not configs.kotlin_lsp_alpha then
+  configs.kotlin_lsp_alpha = {
+    default_config = {
+      cmd = { "/Users/colin/Downloads/kotlin-0.252.17811/kotlin-lsp.sh", "--stdio" },
+      filetypes = { "kotlin" },
+      root_dir = function(filename, _)
+        return lspconfig.util.root_pattern("pom.xml")(filename)
+      end
+    }
+  }
+end
+
+lspconfig.kotlin_lsp_alpha.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
 })
 
 lspconfig.ts_ls.setup({
