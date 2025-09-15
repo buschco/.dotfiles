@@ -42,8 +42,8 @@ export PATH="/Applications/IntelliJ IDEA CE.app/Contents/MacOS:$PATH"
 # export PATH="/usr/local/sbin:$PATH"
 
 # add homebrew python to $PATH
-alias python=/usr/local/bin/python3 
-alias python3=/usr/local/bin/python3 
+# alias python=/usr/local/bin/python3 
+# alias python3=/usr/local/bin/python3 
 
 # alias for pnpm - no shit
 alias pn=pnpm
@@ -447,6 +447,10 @@ eval "$(rbenv init - zsh)"
 
 # add yarn binaries to PATH
 export PATH="$PATH:$(yarn global bin)"
+
+# add android studio after homebrew
+export PATH="/Applications/Android Studio.app/Contents/MacOS:$PATH"
+
 
 # opam configuration
 [[ ! -r /Users/colin/.opam/opam-init/init.zsh ]] || source /Users/colin/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
