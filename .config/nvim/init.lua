@@ -760,6 +760,7 @@ local formatter_util = require("formatter.util")
 require("conform").setup({
   formatters_by_ft = {
     javascriptreact = { "prettier", stop_after_first = true },
+    javascript = { "prettierd", stop_after_first = true },
     typescript = { "prettierd", "prettier", stop_after_first = true },
     typescriptreact = { "prettierd", "prettier", stop_after_first = true },
   },
