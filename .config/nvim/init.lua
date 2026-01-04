@@ -875,17 +875,23 @@ lspconfig.fiona.setup({
   capabilities = capabilities,
 })
 
+function on_attach_without_format(client, bufnr)
+  client.server_capabilities.documentFormattingProvider = false
+  client.server_capabilities.documentRangeFormattingProvider = false
+  on_attach(client, bufnr)
+end
+
 lspconfig.sourcekit.setup({
   capabilities = capabilities,
-  on_attach = on_attach,
+  on_attach = on_attach_without_format,
   cmd = {
     "sourcekit-lsp"
     --"$(xcode-select -p)
     -- "/Applications/Xcode-16.2.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
   },
   root_dir = function(filename, _)
-    return lspconfig.util.root_pattern("buildServer.json")(filename)
-        or lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
+    return lspconfig.util.root_pattern("buildServer.json")(filename) or
+        lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
         or lspconfig.util.find_git_ancestor(filename)
         or lspconfig.util.root_pattern("Package.swift")(filename)
   end
