@@ -17,7 +17,9 @@ export FG_SKIP_ARM_CHECK=1
 # export CPLUS_INCLUDE_PATH=/Library/Developer/CommandLineTools/usr/include/c++/v1:/Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/usr/include
 
 # add bob (nvim version manager)
-export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+# export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+# export PATH="$PATH:/Users/colin/.local/bin"
+# export PATH="$PATH:/Users/colin/.local/share/bob/nvim-bin"
 
 # Add MacGPG2 to PATH (do I need this?)
 #export PATH="/usr/local/MacGPG2/bin:$PATH"
@@ -417,9 +419,10 @@ gln() {
   $gitlog | $fzf
 }
 
-alias check='yarn flow &&\
-  yarn eslint $(git show --pretty="format:" --name-only) &&\
-  yarn prettier --check $(git show --pretty="format:" --name-only)'
+alias check='pnpm flow &&\
+  make lint_cycles &&\
+  pnpm eslint $(git show --pretty="format:" --name-only) &&\
+  pnpm prettier --check $(git show --pretty="format:" --name-only)' 
 alias check!='check && gpu'
 
 export NVM_DIR="$HOME/.nvm"
@@ -451,6 +454,8 @@ export PATH="$PATH:$(yarn global bin)"
 # add android studio after homebrew
 export PATH="/Applications/Android Studio.app/Contents/MacOS:$PATH"
 
+#
+alias mirror-android="scrcpy -d --screen-off-timeout=1800 --max-size=1080 --no-audio --video-codec=h265"
 
 # opam configuration
 [[ ! -r /Users/colin/.opam/opam-init/init.zsh ]] || source /Users/colin/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

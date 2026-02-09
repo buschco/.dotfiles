@@ -234,6 +234,12 @@ vim.api.nvim_set_hl(0, "shorthand_property_identifier_pattern", { link = "Identi
 
 vim.filetype.add({
   pattern = {
+    [".*.js.flow"] = {
+      priority = math.huge,
+      function()
+        return "javascriptreact"
+      end
+    },
     [".*.js"] = {
       priority = math.huge,
       function(path, bufnr)
@@ -633,8 +639,6 @@ vim.keymap.set("n", "<space>g", require("telescope.builtin").git_bcommits, { des
 
 -- LSP
 
-local lspconfig = require("lspconfig")
-
 local handler_without_border = function(handler)
   return function(err, result, ctx, config)
     local buf, win = handler(
@@ -760,9 +764,10 @@ local formatter_util = require("formatter.util")
 require("conform").setup({
   formatters_by_ft = {
     javascriptreact = { "prettier", stop_after_first = true },
-    javascript = { "prettierd", stop_after_first = true },
-    typescript = { "prettierd", "prettier", stop_after_first = true },
+    javascript      = { "prettierd", stop_after_first = true },
+    typescript      = { "prettierd", "prettier", stop_after_first = true },
     typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+    json            = { "prettierd", "prettier", stop_after_first = true },
   },
   format_on_save = {
     -- These options will be passed to conform.format()
@@ -779,7 +784,6 @@ require("formatter").setup({
     svg = { require("formatter.filetypes.xml").tidy },
     -- javascript = { require("formatter.filetypes.javascript").prettier },
     -- javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
-    json = { require("formatter.filetypes.json").prettierd },
     jsonc = { require("formatter.filetypes.json").prettierd },
     markdown = { require("formatter.filetypes.markdown").prettierd },
     yaml = { require("formatter.filetypes.yaml").prettierd },
@@ -845,32 +849,29 @@ null_ls.setup({
   on_attach = on_attach,
 })
 
-lspconfig.flow.setup({
+
+vim.lsp.config('flow', {
   cmd = { "yarn", "flow", "lsp" },
-  on_attach = on_attach,
   filetypes = { "javascriptreact" },
 })
 
-
-local configs = require("lspconfig.configs")
+vim.lsp.enable('flow', {
+  on_attach = on_attach,
+})
 
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-if not configs.fiona then
-  configs.fiona = {
-    default_config = {
-      --cmd = { "node", "--inspect=6009", "../fiona/packages/fiona-lsp/out/fiona-lsp.js", "--stdio" },
-      cmd = { "npx", "fiona-lsp", "--stdio" },
-      root_dir = lspconfig.util.find_package_json_ancestor,
-      filetypes = { "javascriptreact",
-        --  "typescriptreact"
-      },
-    },
-  }
-end
+vim.lsp.config('fiona', {
+  --cmd = { "node", "--inspect=6009", "../fiona/packages/fiona-lsp/out/fiona-lsp.js", "--stdio" },
+  cmd = { "npx", "fiona-lsp", "--stdio" },
+  root_dir = vim.fs.dirname(vim.fs.find('package.json', { path = startpath, upward = true })[1]),
+  filetypes = { "javascriptreact",
+    --  "typescriptreact"
+  },
+})
 
-lspconfig.fiona.setup({
+vim.lsp.enable('fiona', {
   on_attach = on_attach,
   capabilities = capabilities,
 })
@@ -881,7 +882,7 @@ function on_attach_without_format(client, bufnr)
   on_attach(client, bufnr)
 end
 
-lspconfig.sourcekit.setup({
+vim.lsp.config('sourcekit', {
   capabilities = capabilities,
   on_attach = on_attach_without_format,
   cmd = {
@@ -890,25 +891,31 @@ lspconfig.sourcekit.setup({
     -- "/Applications/Xcode-16.2.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
   },
   root_dir = function(filename, _)
-    return lspconfig.util.root_pattern("buildServer.json")(filename) or
-        lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
-        or lspconfig.util.find_git_ancestor(filename)
-        or lspconfig.util.root_pattern("Package.swift")(filename)
+    return vim.lsp.config.util.root_pattern("buildServer.json")(filename) or
+        vim.lsp.config.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
+        or vim.lsp.config.util.find_git_ancestor(filename)
+        or vim.lsp.config.util.root_pattern("Package.swift")(filename)
   end
 }
 )
 
-lspconfig.clangd.setup({
+vim.lsp.enable('sourcekit')
+
+vim.lsp.config('clangd', {
   on_attach = on_attach,
   capabilities = capabilities,
 })
 
-lspconfig.rust_analyzer.setup({
+vim.lsp.enable('clangd')
+
+vim.lsp.config('rust_analyzer', {
   on_attach = on_attach,
   capabilities = capabilities,
 })
 
-lspconfig.tailwindcss.setup({
+vim.lsp.enable('rust_analyzer')
+
+vim.lsp.config('tailwindcss', {
   -- on_attach = on_attach,
   capabilities = capabilities,
   filetypes = {
@@ -921,7 +928,9 @@ lspconfig.tailwindcss.setup({
   },
 })
 
-lspconfig.eslint.setup({
+vim.lsp.enable('tailwindcss')
+
+vim.lsp.config('eslint', {
   on_attach = function(client, bufnr)
     on_attach(client, bufnr)
     -- use this if eslint_d (provided by null-ls) is not used
@@ -934,17 +943,26 @@ lspconfig.eslint.setup({
   settings = { packageManager = "yarn" },
 })
 
-lspconfig.gopls.setup({
+
+vim.lsp.enable('eslint')
+
+vim.lsp.config('gopls', {
   on_attach = on_attach_with_format,
   capabilities = capabilities,
 })
 
-lspconfig.lua_ls.setup({
+
+vim.lsp.enable('gopls')
+
+vim.lsp.config('lua_ls', {
   on_attach = on_attach_with_format,
   capabilities = capabilities,
 })
 
-lspconfig.jsonls.setup({
+
+vim.lsp.enable('lua_ls')
+
+vim.lsp.config('jsonls', {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
@@ -980,12 +998,16 @@ lspconfig.jsonls.setup({
   },
 })
 
-lspconfig.ruby_lsp.setup({
+vim.lsp.enable('jsonls')
+
+vim.lsp.config('ruby_lsp', {
   capabilities = capabilities,
   on_attach = on_attach,
 })
 
-lspconfig.yamlls.setup({
+vim.lsp.enable('ruby_lsp')
+
+vim.lsp.config('yamlls', {
   capabilities = capabilities,
   on_attach = on_attach,
   settings = {
@@ -999,24 +1021,26 @@ lspconfig.yamlls.setup({
   },
 })
 
-if not configs.kotlin_lsp_alpha then
-  configs.kotlin_lsp_alpha = {
-    default_config = {
-      cmd = { "/Users/colin/Downloads/kotlin-0.252.17811/kotlin-lsp.sh", "--stdio" },
-      filetypes = { "kotlin" },
-      root_dir = function(filename, _)
-        return lspconfig.util.root_pattern("pom.xml")(filename)
-      end
-    }
-  }
-end
+vim.lsp.enable('yamlls')
 
-lspconfig.kotlin_lsp_alpha.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
+-- if not configs.kotlin_lsp_alpha then
+--   configs.kotlin_lsp_alpha = {
+--     default_config = {
+--       cmd = { "/Users/colin/Downloads/kotlin-0.252.17811/kotlin-lsp.sh", "--stdio" },
+--       filetypes = { "kotlin" },
+--       root_dir = function(filename, _)
+--         return vim.lsp.config.util.root_pattern("pom.xml")(filename)
+--       end
+--     }
+--   }
+-- end
+--
+-- vim.lsp.config.kotlin_lsp_alpha.setup({
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+-- })
 
-lspconfig.ts_ls.setup({
+vim.lsp.config('ts_ls', {
   on_attach = function(client, bufnr)
     -- print(vim.bo.filetype)
     -- require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
@@ -1029,6 +1053,9 @@ lspconfig.ts_ls.setup({
     "javascript",
   },
 })
+
+
+vim.lsp.enable('ts_ls')
 
 vim.diagnostic.config({
   virtual_text = false,

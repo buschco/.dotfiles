@@ -62,8 +62,8 @@ return {
         },
       },
       'roobert/tailwindcss-colorizer-cmp.nvim',
-      --{ dir = '~/github.com.nosync/nvim-cmp-ts-tag-close' },
-      'buschco/nvim-cmp-ts-tag-close'
+      { dir = '~/github.com.nosync/nvim-cmp-ts-tag-close' },
+      --- 'buschco/nvim-cmp-ts-tag-close'
     }
   },
 
