@@ -46,7 +46,7 @@ config.harfbuzz_features = { 'calt=0' }
 
 config.colors = {
   foreground = '#d5d8da',
-  background = '#1c1e26',
+  background = '#000000', --'#1c1e26',
   cursor_bg = '#d5d8da',
   cursor_fg = '#1c1e26',
   cursor_border = '#d5d8da',

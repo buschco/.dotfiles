@@ -201,9 +201,26 @@ local addPage = function()
   os.execute('./bin/create-page.mjs ' .. file_path)
 end
 
+
+local function addPages(opts)
+  local start_line = opts.line1 - 1
+  local end_line = opts.line2
+
+  local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
+  local path = vim.fn.expand("%:p:h")
+  local proc = vim.system(
+    { "./bin/create-page.mjs", path, "stdin" },
+    { stdin = table.concat(lines, "\n") .. "\n" }
+  ):wait()
+
+  print(proc.stderr)
+  print(proc.stdout)
+end
+
 vim.api.nvim_create_user_command("CF", createAndFillFlowFile, {})
 vim.api.nvim_create_user_command("CT", createAndFillTsxFile, {})
 vim.api.nvim_create_user_command("Page", addPage, {})
+vim.api.nvim_create_user_command("Pages", addPages, { range = true })
 
 -- Treesitter
 
@@ -890,12 +907,11 @@ vim.lsp.config('sourcekit', {
     --"$(xcode-select -p)
     -- "/Applications/Xcode-16.2.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
   },
-  root_dir = function(filename, _)
-    return vim.lsp.config.util.root_pattern("buildServer.json")(filename) or
-        vim.lsp.config.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
-        or vim.lsp.config.util.find_git_ancestor(filename)
-        or vim.lsp.config.util.root_pattern("Package.swift")(filename)
-  end
+  root_markers = {
+    "buildServer.json",
+    "*.xcodeproj", "*.xcworkspace",
+    "Package.swift"
+  }
 }
 )
 
